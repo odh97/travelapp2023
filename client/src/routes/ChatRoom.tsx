@@ -37,6 +37,9 @@ function ChatList(): JSX.Element{
       <li>chat item</li>
       <li>chat item</li>
       <li>chat item</li>
+      <li>chat item</li>
+      <li>chat item</li>
+      <li>chat item</li>
     </ul>
     <div>chatroom-create-btn</div>
   </div>
