@@ -25,7 +25,7 @@ const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
 
-  apiKey: "key값",
+  apiKey: "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",
   
 });
 const openai = new OpenAIApi(configuration);
@@ -47,7 +47,6 @@ openai.createCompletion({
           \n\nQ: continue
           \nA: 주변 자연을 눈길을 쏟을 수 있습니다. 방학 때 그리고 휴가 때 미국을 방문하실 때는 이런 여행지를 참고하세요.
           \n\nQ: Please make a trip to China for 2 nights and 3 days
-
           `,
   temperature: 0,
   max_tokens: 100,
