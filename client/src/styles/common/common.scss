@@ -15,31 +15,17 @@ textarea{
   resize: none;
 }
 
-textarea::-webkit-scrollbar {
+textarea::-webkit-scrollbar, div::-webkit-scrollbar {
   width: 8px;  // 스크롤바의 너비
 }
 
-textarea::-webkit-scrollbar-thumb {
+textarea::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
   height: 30%; // 스크롤바의 길이
   background: #79b1ff; // 스크롤바의 색상
   border-radius: 10px;
 }
 
-textarea::-webkit-scrollbar-track {
-  background: rgba(33, 122, 244, .1); //  스크롤바 뒷 배경 색
-}
-
-div::-webkit-scrollbar {
-  width: 8px;  // 스크롤바의 너비
-}
-
-div::-webkit-scrollbar-thumb {
-  height: 30%; // 스크롤바의 길이
-  background: #79b1ff; // 스크롤바의 색상
-  border-radius: 10px;
-}
-
-div::-webkit-scrollbar-track {
+textarea::-webkit-scrollbar-track, div::-webkit-scrollbar-track {
   background: rgba(33, 122, 244, .1); //  스크롤바 뒷 배경 색
 }
 
@@ -54,3 +40,4 @@ $font-base: 16px; // web-본문
 $font-lg: 18px;   // 소제목
 $font-xl: 20px;   // 대제목
 $font-NoSansKR: 'Noto Sans KR', sans-serif; //폰트
+$font-color: rgba(0,0,0,0.80);

@@ -6,7 +6,7 @@ import Header from '../_layout/Header';
 
 // icon 
 import { CiChat1,CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
-import { TbBrandTelegram } from "react-icons/tb";
+import { TbBrandTelegram, TbPlus } from "react-icons/tb";
 /* 챗봇 대화 내용
 
 1번) 새로운 대화창
@@ -98,9 +98,7 @@ let txtInput = ():void =>{
   return (
   <div className='chat'>
     <Header />
-
     <main>
-
       <ChatList />
       <div className='chat-room'>
         <div className='txt-box'>
@@ -125,12 +123,7 @@ let txtInput = ():void =>{
           })}
 
           </ul>
-          <div className='empty-box'>
-            {/* 나중에 삭제 */}
-            <ul> 
-              <li><CiUser/> <CiChat1/> <CiChat2/> <CiFolderOn/></li>
-            </ul>
-          </div>
+          <div className='empty-box'></div>
         </div>
         <div className='chat-input-box'>
           <div className='chat-input-box-inner' ref={divRef}>
@@ -141,7 +134,6 @@ let txtInput = ():void =>{
             <button><CiLocationArrow1/></button>
           </div>
         </div>
-        
       </div>
     </main>
   </div>
@@ -152,14 +144,13 @@ function ChatList(): JSX.Element{
   return (
   <div className='chat-list'>
     <ul>
-      <li><button>chat item btn1</button></li>
-      <li><button>chat item btn2</button></li>
-      <li><button>chat item btn3</button></li>
-      <li><button>chat item btn4</button></li>
-      <li><button>chat item btn5</button></li>
-      <li><button>chat item btn6</button></li>
+      <li><button><CiChat1/><span>새로운 채팅</span></button></li>
+      <li><button><CiChat1/><span>새로운 채팅</span></button></li>
+      <li><button><CiChat1/><span>새로운 채팅</span></button></li>
+      <li><button><CiChat1/><span>새로운 채팅</span></button></li>
+      <li><button><CiChat1/><span>새로운 채팅</span></button></li>
     </ul>
-    <div><button>chatroom-create-btn</button></div>
+    <div className='chatroom-create-btn'><button><TbPlus/><span>New chat</span></button></div>
   </div>
   )
 }

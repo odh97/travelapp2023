@@ -3,8 +3,19 @@
 header {
   width: 100%;
   height: 50px;
-  background-color: #fff29b;
   position: fixed;
   z-index: 100;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+
+  .header-inner{
+    width: 90%;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    div{
+    }
+  }
 }
 

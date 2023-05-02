@@ -1,9 +1,10 @@
-@import "./styles/reset/Reset.scss";
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400&display=swap');
+@import "./styles/reset/Reset.scss";
+@import "./styles/common/common.scss";
 
 // App scss
 .App {
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: $font-NoSansKR;
   text-align: center;
   margin: 0 auto;
   width: 100%;

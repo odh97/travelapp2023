@@ -3,7 +3,13 @@ import '../styles/layout/Header.scss'
 
 function Header(): JSX.Element{
   return (
-    <header>header Box</header>
+    <header>
+      <div className='header-inner'>
+        <div className='brand-Name'>Logo</div>
+        <div>nav</div>
+        <div>user</div>
+      </div>
+    </header>
   )
 }
 

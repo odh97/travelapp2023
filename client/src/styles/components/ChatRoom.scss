@@ -9,7 +9,40 @@
     min-width: 260px;
     height: calc(100vh - 50px);
     margin-top: 50px;
-    background-color: #f06cff;
+    background-color: #EFF0FF;
+    
+
+    ul > li > button,
+    .chatroom-create-btn > button{
+      margin-top: 10px;
+      padding: 10px 0;
+      width: 240px;
+      text-align: left;
+      font-size: 16px;
+      font-family: $font-NoSansKR;
+      border-radius: 5px;
+      background-color: #EFF0FF;
+      cursor: pointer;
+      color: $font-color;
+      
+      span{
+        display: inline-block;
+        text-indent: 15px;
+        }
+      svg{
+        position: relative;
+        left: 10px;
+        top: 2px;
+      }
+      
+    }
+    ul > li > button{
+      &:hover{background-color: #dfe0ff;}
+    }
+    .chatroom-create-btn > button{
+      border: 2px solid #fff;
+      &:hover{background-color: #dfe0ff;}
+    }
 
   }
   .chat-room{
@@ -17,7 +50,7 @@
     height: calc(100vh - 50px);
     margin-top: 50px;
     
-    // /* txt-box */
+    /* txt-box */
     .txt-box{
       text-align: left;
       height: calc(100vh - 50px);
@@ -44,16 +77,16 @@
           position: relative;
           width: 40px;
           height: 40px;
+          border: 1px solid #9298ff;
+          border-radius: 5px;
+          background-color: #fff;
           svg{
             position: absolute;
             left: 2px;
-            top: 2px;
+            top: 5px;
             width: 36px;
-            height: 36px;
-            background-color: #fff;
+            height: 30px;
             color: #9298ff;
-            border: 1px solid #9298ff;
-            border-radius: 5px;
           }
         }
         pre{
@@ -72,24 +105,22 @@
       }
       .empty-box{
         height: 190px;
-        background-color: #ff9c9c;
       }
     }
     // txt-box
 
-    // /* chat-input-box */
+    /* chat-input-box */
     .chat-input-box{
       position: fixed;
       left: 0;
       bottom: 50px;
       width: 100%;
       
-
       .chat-input-box-inner{
         width: 750px;
         min-height: 60px;
         max-height: 230px;
-        margin: 0 532px;
+        margin: 0 calc(50% - (382px - 130px));
         display: flex;
         align-items: center;
         justify-content: center;
@@ -121,8 +152,7 @@
           }
         }
       }
-
     }
-
+    // chat-input-box
   }
 }
