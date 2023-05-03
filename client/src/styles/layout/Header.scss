@@ -8,13 +8,57 @@ header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 
   .header-inner{
-    width: 90%;
     height: 100%;
     margin: 0 auto;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    div{
+    
+    .brand-Name{
+      width: 260px;
+      font-size: $font-xl;
+      text-transform: uppercase;
+      h1 > a{color: #7881ff;}
+    }
+    nav{
+      width: 70%;
+      text-align: left;
+      .nav-inner{
+        a{
+          color: $font-color;
+          font-size: $font-lg;
+          margin-right: 15px;
+          span{
+            display: inline-block;
+            height: 10px;
+            background-color: #7881ff;
+          }
+        }
+      }
+    }
+    .user{
+      width: calc(30% - 260px);
+      display: flex;
+      align-items: center;
+      .user-icon{
+        position: relative;
+        width: 36px;
+        height: 36px;
+        border: 1px solid #9298ff;
+        border-radius: 50%;
+        background-color: #fff;
+        svg{
+          position: absolute;
+          left: 3px;
+          top: 6px;
+          width: 30px;
+          height: 24px;
+          color: #9298ff;
+        }
+      }
+      .user-name{
+        margin-left: 10px;
+        padding-bottom: 1px;
+      }
     }
   }
 }
