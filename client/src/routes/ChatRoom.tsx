@@ -7,6 +7,8 @@ import Header from '../_layout/Header';
 // icon 
 import { CiChat1,CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
 import { TbBrandTelegram, TbPlus } from "react-icons/tb";
+// axios
+import axios from 'axios';
 /* 챗봇 대화 내용
 
 1번) 새로운 대화창
@@ -80,6 +82,17 @@ test_DB_data.push(user);
 test_DB_data.push(chatBot);
 
 
+// axios.get('https://codingapple1.github.io/shop/data'+dataNm+'.json')
+// 빌드했을 경우 axios.get('/주소명')
+axios.get('http://localhost:8080/testData')
+.then((result)=>{
+  console.log(result.data);
+})
+.catch((error)=>{
+  console.log(error);
+});
+
+
 
 
 function ChatRoom(): JSX.Element{
@@ -129,7 +142,11 @@ let txtInput = ():void =>{
           <div className='chat-input-box-inner' ref={divRef}>
             <textarea cols={85} rows={1}
               ref={textRef}
-              onChange={()=>{txtInput()}}>
+              onChange={()=>{txtInput()}}
+              onKeyDown={(e)=>{
+                if(!e.shiftKey && e.key === "Enter"){console.log("Enter 누르면 Data 전송 기능 구현");}
+                if(e.shiftKey && e.key === "Enter"){console.log("줄바꿈");}
+                }}>
             </textarea>
             <button><CiLocationArrow1/></button>
           </div>
