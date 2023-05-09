@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+var request = require('request');
 
 // cors / ajax
 app.use(express.json());
@@ -26,34 +27,124 @@ app.get('/testData', function(요청, 응답){
   응답.json({name : "ODae"});
 })
 
+
+
 // 번역 기능 구현
-// 네이버 Papago 언어감지 API 예제
+function papagoAPI(){
+
 var client_id = 'tyDodzGry78dFOOdgyA6'; // 배포 전 재발급
 var client_secret = 'Efl5YyRqwk'; // 배포 전 재발급
 
-var query = "안녕하세요 저는 오대현입니다";
+var query = "안녕하세요";
 
-app.get('/detectLangs', function (req, res) {
-  var api_url = 'https://openapi.naver.com/v1/papago/detectLangs';
-  var request = require('request');
-  var options = {
+  app.get('/userLangs', function (req, res) {
+    var api_url = 'https://openapi.naver.com/v1/papago/n2mt';
+    var request = require('request');
+    var options = {
+      url: api_url,
+      form: { source: "ko",target:"en", 'text': query },
+      headers: { 'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
+    };
+    request.post(options, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        let data = JSON.parse(body).message.result.translatedText;
+        console.log(data);
+      } else {
+        res.status(response.statusCode).end();
+        console.log('error = ' + response.statusCode);
+      }
+    });
+  });
+}
+
+
+
+
+
+
+
+
+
+
+// openai API
+const { Configuration, OpenAIApi } = require("openai");
+const configuration = new Configuration({ apiKey: "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",  /* 배포 전 재발급 */ });
+const openai = new OpenAIApi(configuration);
+
+// papago API
+var client_id = 'tyDodzGry78dFOOdgyA6'; // 배포 전 재발급
+var client_secret = 'Efl5YyRqwk'; // 배포 전 재발급
+var api_url = 'https://openapi.naver.com/v1/papago/n2mt';
+var papago_query_data = "잉글랜드 2박 3일 여행 추천해줘";
+
+
+
+
+
+app.post('/chatTest', function (req, res) {
+  console.log("chat Test start");
+
+  let options1 = {
     url: api_url,
-    form: { 'query': query },
+    form: { source: "ko",target: "en", 'text': papago_query_data },
     headers: { 'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
   };
-  request.post(options, function (error, response, body) {
+  request.post(options1, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      res.writeHead(200, { 'Content-Type': 'text/json;charset=utf-8' });
-      res.end(body);
+      let result1 = JSON.parse(body).message.result.translatedText;
+      console.log("ko ==> en translation 성공");
+      console.log(result1);
+
+      openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: result1,
+        temperature: 0,
+        max_tokens: 100,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+        stop: ["\n"],
+        temperature: 0.9,
+        max_tokens: 150,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0.6,
+        stop: [" Human:", " AI:"],
+      }).then((result)=>{
+        console.log("============ GPT success ============");
+        console.log(result.data.choices[0].text);
+
+        let options2 = {
+          url: api_url,
+          form: { source: "en",target: "ko", 'text': result.data.choices[0].text },
+          headers: { 'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
+        };
+        request.post(options2, function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            let result2 = JSON.parse(body).message.result.translatedText;
+            console.log("en ==> ko translation 성공");
+            console.log(result2);
+
+            res.send(result2);
+
+          } else {
+            res.status(response.statusCode).end();
+            console.log('error = ' + response.statusCode);
+          }
+        });
+
+      }).catch((error)=>{
+        console.log("============ 실패 ============");
+        console.log(error);
+      })
+
     } else {
       res.status(response.statusCode).end();
       console.log('error = ' + response.statusCode);
     }
   });
+
 });
-
-
-
 
 
 
@@ -67,11 +158,8 @@ app.get('/chatEnter', function(요청, 응답){
 
   // openai
   const { Configuration, OpenAIApi } = require("openai");
-
   const configuration = new Configuration({
-
-    // apiKey: "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",  // 배포 전 재발급
-    
+    apiKey: "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",  // 배포 전 재발급
   });
   const openai = new OpenAIApi(configuration);
 
