@@ -29,37 +29,6 @@ app.get('/testData', function(요청, 응답){
 
 
 
-// 번역 기능 구현
-function papagoAPI(){
-
-var client_id = 'tyDodzGry78dFOOdgyA6'; // 배포 전 재발급
-var client_secret = 'Efl5YyRqwk'; // 배포 전 재발급
-
-var query = "안녕하세요";
-
-  app.get('/userLangs', function (req, res) {
-    var api_url = 'https://openapi.naver.com/v1/papago/n2mt';
-    var request = require('request');
-    var options = {
-      url: api_url,
-      form: { source: "ko",target:"en", 'text': query },
-      headers: { 'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
-    };
-    request.post(options, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        let data = JSON.parse(body).message.result.translatedText;
-        console.log(data);
-      } else {
-        res.status(response.statusCode).end();
-        console.log('error = ' + response.statusCode);
-      }
-    });
-  });
-}
-
-
-
-
 
 
 

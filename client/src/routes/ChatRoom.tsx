@@ -1,14 +1,17 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import '../styles/components/ChatRoom.scss'
 
 // components import
 import Header from '../_layout/Header';
+import Alert from '../_layout/Alert';
 
 // icon 
 import { CiChat1,CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
 import { TbBrandTelegram, TbPlus } from "react-icons/tb";
 // axios
 import axios from 'axios';
+import { getValue } from '@testing-library/user-event/dist/utils';
+import { keyboard } from '@testing-library/user-event/dist/keyboard';
 /* 챗봇 대화 내용
 
 1번) 새로운 대화창
@@ -24,6 +27,8 @@ DB-data를 map으로 뿌려주고
 
 
 */
+
+
 let user_val = `유저가 질문한 데이터 입니다.`;
 let test_respones_data = `A: 성공했을때 리턴값입니다.`;
 let test_DB_data = [
@@ -74,6 +79,7 @@ Day 3:
 오사카에서의 마지막 저녁 식사를 즐긴 후 공항으로 이동
 이 일정은 오사카의 주요 명소인 오사카성, 도톤보리, 신세카이를 방문하며, 유니버설 스튜디오 재팬(USJ)을 경험하고 교토의 키요미즈데라 사원을 감상하는 것을 중점으로 한 일정입니다. 자유로운 시간을 가지고 현지의 다양한 음식과 문화를 즐기는 것도 추천드립니다. 여행 일정은 개인의 선호와 시기에 따라 변경될 수 있으니 참고 바랍니다. 즐거운 오사카 여행이 되길 바랍니다!`,
 ];
+let test_DB_data2 = [];
 
 let user = "Q:" + user_val;
 let chatBot = test_respones_data;
@@ -97,19 +103,43 @@ axios.get('http://localhost:8080/testData')
 
 function ChatRoom(): JSX.Element{
 
+// alert 컴포넌트
+let [AlertClick, setAlertClick] = useState(false);
+
+function handleAlert(){
+  setAlertClick(false);
+}
+
+// 채팅 인풋 줄바꿈 기능
 const textRef = useRef<HTMLTextAreaElement>(null);
 const divRef = useRef<HTMLDivElement>(null);
 
-let txtInput = ():void =>{
+let textInput = ():void =>{
   textRef.current!.style.height = 'auto';
   divRef.current!.style.height = 'auto';
   textRef.current!.style.height = textRef.current!.scrollHeight + "px";
   divRef.current!.style.height = (textRef.current!.scrollHeight+30) + "px";
 }
 
+// 채팅 기능
+let [chatInputValue, setChatInputValue]= useState(``);
+
+function chatBtnFn(event :any){
+  event.preventDefault();
+  if(chatInputValue === ""){setAlertClick(true);} // 빈값을 전송했을 경우
+  console.log(chatInputValue);
+
+  setChatInputValue(``);
+  textRef.current!.style.height = '30px';
+  divRef.current!.style.height = '60px';
+}
+
+
+
 
   return (
   <div className='chat'>
+    {AlertClick === true ? <Alert text={"질문을 작성해 주세요."} handleAlert={handleAlert} /> : null}
     <Header />
     <main>
       <ChatList />
@@ -140,15 +170,20 @@ let txtInput = ():void =>{
         </div>
         <div className='chat-input-box'>
           <div className='chat-input-box-inner' ref={divRef}>
-            <textarea cols={85} rows={1}
-              ref={textRef}
-              onChange={()=>{txtInput()}}
+            <textarea cols={85} rows={1} ref={textRef}
+              value={chatInputValue}
+              placeholder='여행 일정을 짜달라고 해보세요!'
+              onChange={(e)=>{
+                textInput();
+                setChatInputValue(e.target.value);
+              }}
               onKeyDown={(e)=>{
-                if(!e.shiftKey && e.key === "Enter"){console.log("Enter 누르면 Data 전송 기능 구현");}
-                if(e.shiftKey && e.key === "Enter"){console.log("줄바꿈");}
-                }}>
+                if(!e.shiftKey && e.key === "Enter") chatBtnFn(e);
+                if(e.shiftKey && e.key === "Enter") console.log("줄바꿈");
+              }}
+              >
             </textarea>
-            <button><CiLocationArrow1/></button>
+            <button onClick={(e)=>{chatBtnFn(e)}}><CiLocationArrow1/></button>
           </div>
         </div>
       </div>
@@ -156,6 +191,7 @@ let txtInput = ():void =>{
   </div>
   )
 }
+
 
 function ChatList(): JSX.Element{
   return (

@@ -24,13 +24,26 @@ header {
       text-align: left;
       .nav-inner{
         a{
+          position: relative;
           color: $font-color;
           font-size: $font-lg;
           margin-right: 15px;
           span{
-            display: inline-block;
+            z-index: -1;
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            display: block;
+            width: 0;
             height: 10px;
-            background-color: #7881ff;
+            background-color: $back-color2;
+            transition: all 0.5s ease;
+          }
+          &:hover{
+            span{
+              left: 0;
+              width: 100%;
+            }
           }
         }
       }
