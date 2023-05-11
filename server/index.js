@@ -23,8 +23,9 @@ app.get('/', function(요청, 응답){
 })
 
 // 데이터 조회 해보기
-app.get('/testData', function(요청, 응답){
-  응답.json({name : "ODae"});
+app.post('/testData', function(요청, 응답){
+  console.log(요청.body);
+  응답.json({data : 요청.body});
 })
 
 

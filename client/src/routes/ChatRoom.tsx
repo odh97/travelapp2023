@@ -90,13 +90,14 @@ test_DB_data.push(chatBot);
 
 // axios.get('https://codingapple1.github.io/shop/data'+dataNm+'.json')
 // 빌드했을 경우 axios.get('/주소명')
-axios.get('http://localhost:8080/testData')
-.then((result)=>{
-  console.log(result.data);
-})
-.catch((error)=>{
-  console.log(error);
-});
+
+// axios.get('http://localhost:8080/testData')
+// .then((result)=>{
+//   console.log(result.data);
+// })
+// .catch((error)=>{
+//   console.log(error);
+// });
 
 
 
@@ -123,15 +124,32 @@ let textInput = ():void =>{
 
 // 채팅 기능
 let [chatInputValue, setChatInputValue]= useState(``);
+let postData={
+  userValue : chatInputValue,
+  testData2 : "테스트용 데이터 입니다.",
+}
 
 function chatBtnFn(event :any){
+  // 예외처리
   event.preventDefault();
-  if(chatInputValue === ""){setAlertClick(true);} // 빈값을 전송했을 경우
-  console.log(chatInputValue);
+  if(!chatInputValue.trim() === true) return setAlertClick(true); // 빈값과 스페이스 값만을 전송했을 경우
 
-  setChatInputValue(``);
-  textRef.current!.style.height = '30px';
-  divRef.current!.style.height = '60px';
+  // ajax 요청 진행
+  axios.post('http://localhost:8080/testData', postData)
+  .then((result)=>{
+    console.log(result.data);
+
+    // data 가공
+
+
+    // input  값 초기화
+    setChatInputValue(``);
+    textRef.current!.style.height = '30px';
+    divRef.current!.style.height = '60px';
+  })
+  .catch((error)=>{
+    console.log(error);
+  });
 }
 
 

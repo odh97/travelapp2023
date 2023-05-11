@@ -8,7 +8,6 @@ type AlertPropsType = {
 };
 
 function Alert(props: AlertPropsType): JSX.Element{
-  console.log(props.text);
   return (
     <div className='alert-box'>
       <div className='alert-box-inner'>
