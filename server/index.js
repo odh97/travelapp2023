@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 var request = require('request');
+const rp = require('request-promise');
 
 // cors / ajax
 app.use(express.json());
@@ -75,6 +76,7 @@ let test_DB_data = [
   신오사카 스카이빌딩에서 오사카 도시의 아름다운 전망 감상
   오사카에서의 마지막 저녁 식사를 즐긴 후 공항으로 이동
   이 일정은 오사카의 주요 명소인 오사카성, 도톤보리, 신세카이를 방문하며, 유니버설 스튜디오 재팬(USJ)을 경험하고 교토의 키요미즈데라 사원을 감상하는 것을 중점으로 한 일정입니다. 자유로운 시간을 가지고 현지의 다양한 음식과 문화를 즐기는 것도 추천드립니다. 여행 일정은 개인의 선호와 시기에 따라 변경될 수 있으니 참고 바랍니다. 즐거운 오사카 여행이 되길 바랍니다!`,
+  `user: I'm going to LA for 2 nights and 3 days, so please make a travel schedule`,
   ];
 
 app.get('/', function(요청, 응답){
@@ -97,6 +99,114 @@ app.post('/testData', function(요청, 응답){
 
 
 
+
+
+// Promise async await start
+async function papagoAPI(sourcePram, targetPram, pram){
+  let options = {
+    method: 'POST',
+    uri: api_url,
+    form: {
+      source: sourcePram,
+      target: targetPram,
+      text: pram.ko_chat_user
+    },
+    headers: {
+      'X-Naver-Client-Id': client_id,
+      'X-Naver-Client-Secret': client_secret
+    },
+    json: true
+  };
+  try {
+    let body = await rp(options);
+    let result = body.message.result.translatedText;
+
+    // 한국어 데이터 영문 번역
+    if(sourcePram === "ko"){
+      console.log("ko ==> en translation 성공");
+      pram.en_user = result;
+  
+      return pram;
+    }
+    // 영문 데이터 한국어 번역
+    if(sourcePram === "en"){
+      console.log("en ==> ko translation 성공");
+      pram.ko_chat_bot = result;
+  
+      return pram;
+    }
+
+  } catch (error) {
+    console.log('error = ' + error.statusCode);
+    throw error;
+  }
+}
+async function chatGptAPI(pram) {
+  try {
+    const result = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: pram.en_user,
+      temperature: 0.9,
+      max_tokens: 150,
+      top_p: 0.7,
+      frequency_penalty: 0,
+      presence_penalty: 0.6,
+      stop: [" Human:", " AI:"],
+    });
+    
+    console.log(result.data.choices[0].text);
+
+
+  } catch(error) {
+    console.log(error);
+  }
+}
+
+let DB_Test_Data = {
+  en_chat_arr : [],
+  ko_chat_arr : [],
+  chat_Room_number : 302,
+  날짜 : null,
+  제목 : "new chat",
+
+}
+let test_Obj_Data2 = {
+  en_user : "",
+  en_chat_bot : "",
+  
+  ko_chat_bot : "",
+  ko_chat_user : "안녕하세요?",
+}
+
+async function chatting_API(pram){
+  try{
+    console.log("chatting_API start");
+    // API 처리
+    const result1 = await papagoAPI("ko", "en", pram);
+    console.log(result1);
+    console.log("첫번째 번역 API 작업이 끝났습니다.");
+
+    const result2 = await chatGptAPI(pram);
+    console.log(result2);
+    console.log("첫번째 번역 API 작업이 끝났습니다.");
+    
+    const result3 = await papagoAPI("en", "ko", pram);
+    console.log(result3);
+    console.log("마지막 번역 API 작업이 끝났습니다.");
+
+  }
+  catch(error){
+    console.log(error);
+  }
+}
+// chatting_API(test_Obj_Data2);
+
+// Promise async await end
+
+
+
+// 영어 chat arr list
+// 한글 chat arr list
 
 
 

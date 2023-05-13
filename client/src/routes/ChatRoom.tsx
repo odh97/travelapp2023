@@ -79,7 +79,7 @@ let [chatInputValue, setChatInputValue]= useState(``);
 
 let postData={
   userValue : chatInputValue.trim(),
-  testData2 : "테스트용 데이터 입니다.",
+  chatHistory : chatHistory,
 }
 
 function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLTextAreaElement>){
@@ -88,9 +88,9 @@ function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEv
   event.preventDefault();
   if(!chatInputValue.trim() === true) return setAlertClick(true); // 빈값과 스페이스 값만을 전송했을 경우
   historyFn(chatInputValue.trim()); // 데이터 관리
-/*
+
   // ajax 요청 진행
-  axios.post('http://localhost:8080/testData', postData)
+  axios.post('http://localhost:8080/chatEnter', postData)
   .then((result)=>{
     console.log(result.data);
 
@@ -105,7 +105,7 @@ function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEv
   .catch((error)=>{
     console.log(error);
   });
-*/
+
 }
 
 
