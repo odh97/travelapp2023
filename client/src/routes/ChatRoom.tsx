@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect, useCallback, useMemo} from 'react';
 import '../styles/components/ChatRoom.scss'
 
 // components import
@@ -11,29 +11,15 @@ import { TbBrandTelegram, TbPlus } from "react-icons/tb";
 // axios
 import axios from 'axios';
 
-/* 챗봇 대화 내용
-
-1번) 새로운 대화창
-신규 대화창 btn을 클릭시 이벤트 발생
-리스트에 대화창 하나가 추가되고 추가된 대화창 보여주기
-
-
-2번) 기존 대화창
-리스트 클릭시 DB에 있는 data 가져오기
-DB-data를 map으로 뿌려주고
-
-
-
-
-*/
-
-
-
+// type 지정
+type chatObjDB = {
+  [key:string] : string[],
+};
 
 
 
 function ChatRoom(): JSX.Element{
-  let [chatHistory, setChatHistory] = useState<String[]>([]);
+  let [chatDBHistory, setChatDBHistory] = useState<chatObjDB>({});
 
 // 마운트
 // 대화 내용 데이터 조회
@@ -41,8 +27,9 @@ useEffect(() => {
   // ajax 요청
   axios.get('http://localhost:8080/')
   .then((result)=>{
-    let copy:String[] = result.data.test_DB_data;
-    setChatHistory(copy);
+    let copy:chatObjDB = result.data.test_DB_data;
+    setChatDBHistory(copy);
+    console.log(copy);
   })
   .catch((error)=>{console.log(error)})
 }, []);
@@ -63,31 +50,37 @@ let textInput = ():void =>{
   divRef.current!.style.height = (textRef.current!.scrollHeight+30) + "px";
 }
 
-  // chatHistory 업데이트
+  // chatDBHistory 업데이트
   useEffect(() => {
-    console.log(chatHistory);
-  }, [chatHistory]);
+    console.log(chatDBHistory);
+  }, [chatDBHistory]);
 
-function historyFn(pram:string){
-  const copy = [...chatHistory, 'user: '+pram];
-  setChatHistory(copy);
+const updateChatHistory = (newMessage:string)=>{
+  const copy = chatDBHistory;
+  copy.ko_chat_arr.push(newMessage);
+  setChatDBHistory(copy)
 }
 
 
-// 채팅 기능
+
+/* 채팅 기능 */
 let [chatInputValue, setChatInputValue]= useState(``);
-
-let postData={
-  userValue : chatInputValue.trim(),
-  chatHistory : chatHistory,
-}
 
 function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLTextAreaElement>){
   console.log("chatBtnFn 실행 체크");
   // 예외처리
   event.preventDefault();
   if(!chatInputValue.trim() === true) return setAlertClick(true); // 빈값과 스페이스 값만을 전송했을 경우
-  historyFn(chatInputValue.trim()); // 데이터 관리
+
+  //POST data
+  updateChatHistory(`user: ${chatInputValue.trim()}`);
+  const chatDBHistory_copy = chatDBHistory;
+  const postData = {
+    userValue: `user: ${chatInputValue.trim()}`,
+    chatDBHistory: chatDBHistory_copy,
+  };
+
+
 
   // ajax 요청 진행
   axios.post('http://localhost:8080/chatEnter', postData)
@@ -95,9 +88,9 @@ function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEv
     console.log(result.data);
 
     // data 가공
+    
 
-
-    // input  값 초기화
+    // input 값 초기화
     setChatInputValue(``);
     textRef.current!.style.height = '30px';
     divRef.current!.style.height = '60px';
@@ -107,7 +100,7 @@ function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEv
   });
 
 }
-
+/* //채팅 기능 */
 
 
 
@@ -127,25 +120,28 @@ function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEv
       <div className='chat-room'>
         <div className='txt-box'>
           <ul>
-          {chatHistory.map((value, index)=>{
-            if(value.startsWith("user:") === true){
-              return(
-              <li className='user' key={index}>
-                <div className='icon-box'><CiUser/></div>
-                <pre>{value.replace("user:","")}</pre>
-              </li>
-              )
-            }
-            if(value.startsWith("AI:") === true){
-              return(
-                <li className='chat-bot' key={index}>
-                  <div className='icon-box'><TbBrandTelegram /></div>
-                  <pre>{value.replace("AI:","")}</pre>
+          {
+          chatDBHistory.ko_chat_arr ?
+            chatDBHistory.ko_chat_arr.map((value, index)=>{
+              if(value.startsWith("user:") === true){
+                return(
+                <li className='user' key={index}>
+                  <div className='icon-box'><CiUser/></div>
+                  <pre>{value.replace("user:","")}</pre>
                 </li>
                 )
-            }
-          })}
-
+              }
+              if(value.startsWith("AI:") === true){
+                return(
+                  <li className='chat-bot' key={index}>
+                    <div className='icon-box'><TbBrandTelegram /></div>
+                    <pre>{value.replace("AI:","")}</pre>
+                  </li>
+                  )
+              }
+            })
+          :<div>데이터가 없습니다. CSS 처리 해야됩니다.</div>
+          }
           </ul>
           <div className='empty-box'></div>
         </div>
