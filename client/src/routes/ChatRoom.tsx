@@ -19,8 +19,7 @@ type chatObjDB = {
 // window type 추적
 declare global {
   interface Window {
-    a: string,
-    chatDBHistory: chatObjDB,
+    a: string | number,
   }
 }
 window.a = "a";
@@ -44,18 +43,17 @@ function ChatRoom(): JSX.Element{
 
   // alert 컴포넌트
   let [AlertClick, setAlertClick] = useState(false);
-
   function handleAlert(){setAlertClick(false);}
 
-  // chatRoom scroll 높이 조작
-  const chatRoomDivRef = useRef<HTMLDivElement>(null);
-  if(chatRoomDivRef.current) chatRoomDivRef.current.scrollTop + 30;
 
-  // 채팅 인풋 줄바꿈 기능
+
+  // useRef HTML-Element
+  const txtBoxDivRef = useRef<HTMLDivElement>(null);
   const inputTextRef = useRef<HTMLTextAreaElement>(null);
   const inputDivRef = useRef<HTMLDivElement>(null);
 
   let textInput = ():void =>{
+    // 채팅 인풋 줄바꿈 기능
     inputTextRef.current!.style.height = 'auto';
     inputDivRef.current!.style.height = 'auto';
     inputTextRef.current!.style.height = inputTextRef.current!.scrollHeight + "px";
@@ -64,7 +62,14 @@ function ChatRoom(): JSX.Element{
 
   // chatDBHistory 업데이트
   useEffect(() => {
-    console.log(chatDBHistory);
+    // input 값 초기화
+    setChatInputValue(``);
+    inputTextRef.current!.style.height = '30px';
+    inputDivRef.current!.style.height = '60px';
+    
+    // chatRoom scroll 최신 콘텐츠 위치로 이동
+    if(txtBoxDivRef.current) txtBoxDivRef.current.scrollTop = txtBoxDivRef.current.scrollHeight;
+    
   }, [chatDBHistory]);
 
   const updateChatHistory = (newMessage:string)=>{
@@ -97,13 +102,7 @@ function ChatRoom(): JSX.Element{
     .then((result)=>{
       console.log(result.data.DB_chat_data);
 
-      // data 가공
       setChatDBHistory(result.data.DB_chat_data);
-
-      // input 값 초기화
-      setChatInputValue(``);
-      inputTextRef.current!.style.height = '30px';
-      inputDivRef.current!.style.height = '60px';
     })
     .catch((error)=>{
       console.log(error);
@@ -120,8 +119,8 @@ function ChatRoom(): JSX.Element{
     <Header />
     <main>
       <ChatList />
-      <div className='chat-room' ref={chatRoomDivRef}>
-        <div className='txt-box'>
+      <div className='chat-room'>
+        <div className='txt-box' ref={txtBoxDivRef}>
           <ul>
           {
           chatDBHistory.ko_chat_arr ?

@@ -55,6 +55,8 @@
       text-align: left;
       height: calc(100vh - 50px);
       overflow-y: scroll;
+      scroll-behavior: smooth;
+      transition: scroll-behavior 1s linear;
 
       > ul > li{
         position: relative;

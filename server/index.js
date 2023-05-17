@@ -4,6 +4,9 @@ const app = express();
 var request = require('request');
 const rp = require('request-promise');
 
+// DB
+const MongoClient = require('mongodb').MongoClient;
+
 // cors / ajax
 app.use(express.json());
 var cors = require('cors');
@@ -21,9 +24,19 @@ var client_secret = 'Efl5YyRqwk'; // 배포 전 재발급
 var api_url = 'https://openapi.naver.com/v1/papago/n2mt';
 
 // server open
-app.listen(8080, function () {
-  console.log('listening on 8080');
-});
+MongoClient.connect('mongodb+srv://eogus-travel-GPT-2023:4rTNhDpCitx6qRkr@cluster0.awi9wey.mongodb.net/?retryWrites=true&w=majority', function(error, client){
+  if (error) return console.log(error);
+  app.listen('8080', function(){
+
+  db = client.db('travel');
+
+  // db.collection('post').insertOne( {이름 : 'John', _id : 100} , function(에러, 결과){
+  //   console.log('저장완료'); 
+  // });
+
+  console.log('listening on 8080')
+  });
+})
 
 // app.use(express.static(path.join(__dirname, '/../client/build')));
 // app.get('/', function(요청, 응답){
@@ -180,7 +193,7 @@ app.post('/chatEnter', async function (req, res) {
     DB_chat_Obj_Data.en_chat_arr.push("AI: test Data string"+number+number+number+number);
     DB_chat_Obj_Data.ko_chat_arr.push("AI: AI 테스트 데이터 문자"+number+number+number+number);
     console.log(DB_chat_Obj_Data);
-      res.json({DB_chat_data : DB_chat_Obj_Data})
+    res.json({DB_chat_data : DB_chat_Obj_Data})
 
   }
   catch(error){
