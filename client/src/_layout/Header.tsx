@@ -1,6 +1,8 @@
 import React from 'react'
 import '../styles/layout/Header.scss'
 
+// router
+import { Link } from 'react-router-dom';
 // icon
 import { CiUser } from "react-icons/ci";
 
@@ -9,18 +11,20 @@ function Header(): JSX.Element{
   return (
     <header>
       <div className='header-inner'>
-        <div className='brand-Name'><h1><a href="">travel</a></h1></div>
+        <div className='brand-Name'><h1><a href="/">travel</a></h1></div>
         <nav>
           <div className='nav-inner'>
-            <a href="">게시판<span></span></a>
-            <a href="">item<span></span></a>
-            <a href="">item<span></span></a>
-            <a href="">item<span></span></a>
+            <Link to={"/"}>채팅<span></span></Link>
+            <Link to={"/community"}>커뮤니티<span></span></Link>
+            <Link to={"/updateHistory"}>업데이트 내역<span></span></Link>
+            <Link to={"/developer"}>개발자<span></span></Link>
+            <Link to={"/"}>item<span></span></Link>
+            <Link to={"/"}>item<span></span></Link>
           </div>
         </nav>
         <div className='user'>
           <div className='user-icon'><CiUser/></div>
-          <span className='user-name'>user</span>
+          {false ? <span className='user-name'>user</span> : <Link className='user-name' to={"/login"}>로그인</Link>}
         </div>
       </div>
     </header>

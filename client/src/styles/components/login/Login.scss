@@ -1,0 +1,71 @@
+@import "../../common/common.scss";
+
+.login{
+  width: 100%;
+  height: 100vh;
+  font-family: $font-NoSansKR;
+  color: $font-color;
+
+  .login-inner{
+    margin: 0 auto;
+    padding-top: 50px;
+    h2{
+      margin-top: 50px;
+      font-size: $font-xl;
+      font-weight: 600;
+      letter-spacing:2px;
+      color: #7881ff;
+    }
+    form{
+      > * {
+        margin: 20px auto 0;
+        display: block;
+        width: 300px;
+        height: 50px;
+        font-size: $font-base;
+        border-radius: 5px;
+      }
+      input{
+        text-indent: 7px;
+        border: 1px solid $back-color1;
+      }
+      button{
+        margin-top: 30px;
+        font-weight: bolder;
+        color: $font-color;
+        background-color: $back-color3;
+        &:hover{background-color: $back-color2;}
+      }
+    }
+    .auto-login{
+      position: relative;
+      margin: 5px auto 0;
+      width: 300px;
+      text-align: left;
+      input{
+        margin-top: -3px;
+        margin-right: 5px;
+      }
+      a{
+        position: absolute;
+        right: 0;
+        top: 0;
+        text-align: right;
+        color: $back-color1;
+      }
+    }
+  }
+}
+
+// <div className='auto-login'>
+  // <input type='checkbox' />
+  // <span>자동 로그인</span>
+  // <Link to={"register"}>회원가입</Link>
+// </div>
+// $font-xs: 12px; 
+// $font-sm: 14px;   // mobile-본문
+// $font-base
+// $font-lg
+// $back-color1: #79b1ff;
+// $back-color2: #dfe0ff;
+// $back-color3: #EFF0FF;

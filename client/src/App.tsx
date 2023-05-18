@@ -5,14 +5,17 @@ import {Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
 
 // components import
 import ChatRoom from './routes/ChatRoom';
-
+import Login from './routes/login/Login';
+import Register from './routes/login/Register';
 
 
 function App(): JSX.Element{
   return (
   <div className="App">
     <Routes>
-      <Route path='/' element={<ChatRoom />} />
+      <Route path='/:id' element={<ChatRoom />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/register' element={<Register />} />
     </Routes>
   </div>
   );

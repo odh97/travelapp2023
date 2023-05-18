@@ -8,6 +8,9 @@ import Alert from '../_layout/Alert';
 // icon 
 import { CiChat1,CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
 import { TbBrandTelegram, TbPlus } from "react-icons/tb";
+
+// router
+import { Link } from 'react-router-dom';
 // axios
 import axios from 'axios';
 
@@ -172,15 +175,18 @@ function ChatRoom(): JSX.Element{
 }
 
 
+
+
+
 function ChatList(): JSX.Element{
   return (
   <div className='chat-list'>
     <ul>
-      <li><button><CiChat1/><span>새로운 채팅</span></button></li>
-      <li><button><CiChat1/><span>새로운 채팅</span></button></li>
-      <li><button><CiChat1/><span>새로운 채팅</span></button></li>
-      <li><button><CiChat1/><span>새로운 채팅</span></button></li>
-      <li><button><CiChat1/><span>새로운 채팅</span></button></li>
+      <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
+      <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
+      <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
+      <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
+      <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
     </ul>
     <div className='chatroom-create-btn'><button><TbPlus/><span>New chat</span></button></div>
   </div>

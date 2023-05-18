@@ -92,8 +92,17 @@ app.post('/testData', function(요청, 응답){
 
 
 
-
-
+// counter 샘플
+app.post('/add', function(req, res){
+  db.collection('counter').findOne({name : 'postNumber'}, function(error, result){
+    let totalNumber = result.totalNumber;
+    db.collection('post').insertOne( { _id : (totalNumber + 1), title : req.body.title, date : req.body.date } , function(){
+      console.log('저장완료');
+      res.send('전송완료');
+    });
+  });
+  
+});
 
 
 
@@ -203,74 +212,8 @@ app.post('/chatEnter', async function (req, res) {
 });
 
 
-// Promise async await end
 
 
-// app.post('/chatEnter', function (req, res) {
-//   let papago_query_data = req.body.userValue;
-//   console.log("chat Enter start");
-
-//   let options1 = {
-//     url: api_url,
-//     form: { source: "ko",target: "en", 'text': papago_query_data },
-//     headers: { 'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
-//   };
-//   request.post(options1, function (error, response, body) {
-//     if (!error && response.statusCode == 200) {
-//       let result1 = JSON.parse(body).message.result.translatedText;
-//       console.log("ko ==> en translation 성공");
-//       console.log(result1);
-
-//       openai.createCompletion({
-//         model: "text-davinci-003",
-//         prompt: result1,
-//         temperature: 0,
-//         max_tokens: 100,
-//         top_p: 1,
-//         frequency_penalty: 0,
-//         presence_penalty: 0,
-//         stop: ["\n"],
-//         temperature: 0.9,
-//         max_tokens: 150,
-//         top_p: 1,
-//         frequency_penalty: 0,
-//         presence_penalty: 0.6,
-//         stop: [" Human:", " AI:"],
-//       }).then((result)=>{
-//         console.log("============ GPT success ============");
-//         console.log(result.data.choices[0].text);
-
-//         let options2 = {
-//           url: api_url,
-//           form: { source: "en",target: "ko", 'text': result.data.choices[0].text },
-//           headers: { 'X-Naver-Client-Id': client_id, 'X-Naver-Client-Secret': client_secret }
-//         };
-//         request.post(options2, function (error, response, body) {
-//           if (!error && response.statusCode == 200) {
-//             let result2 = JSON.parse(body).message.result.translatedText;
-//             console.log("en ==> ko translation 성공");
-//             console.log(result2);
-
-//             res.json({data : result2});
-
-//           } else {
-//             res.status(response.statusCode).end();
-//             console.log('error = ' + response.statusCode);
-//           }
-//         });
-
-//       }).catch((error)=>{
-//         console.log("============ 실패 ============");
-//         console.log(error);
-//       })
-
-//     } else {
-//       res.status(response.statusCode).end();
-//       console.log('error = ' + response.statusCode);
-//     }
-//   });
-
-// });
 
 
 // React Router (항상 최하단으로)
