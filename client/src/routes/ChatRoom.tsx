@@ -36,7 +36,7 @@ function ChatRoom(): JSX.Element{
   // 대화 내용 데이터 조회
   useEffect(() => {
     // ajax 요청
-    axios.get('http://localhost:8080/')
+    axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/')
     .then((result)=>{
       let copy:chatObjDB = result.data.test_DB_data;
       setChatDBHistory(copy);
@@ -81,8 +81,6 @@ function ChatRoom(): JSX.Element{
     setChatDBHistory(copy)
   }
 
-
-
   /* 채팅 기능 */
   let [chatInputValue, setChatInputValue]= useState(``);
 
@@ -101,7 +99,7 @@ function ChatRoom(): JSX.Element{
     };
 
     // ajax 요청 진행
-    axios.post('http://localhost:8080/chatEnter', postData)
+    axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
     .then((result)=>{
       console.log(result.data.DB_chat_data);
 
@@ -186,7 +184,7 @@ function ChatList(): JSX.Element{
       <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
       <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
       <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
-      <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
+      <li><Link to={"/"}><CiChat1/><span></span></Link></li>
     </ul>
     <div className='chatroom-create-btn'><button><TbPlus/><span>New chat</span></button></div>
   </div>

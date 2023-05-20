@@ -11,10 +11,10 @@ function Header(): JSX.Element{
   return (
     <header>
       <div className='header-inner'>
-        <div className='brand-Name'><h1><a href="/">travel</a></h1></div>
+        <div className='brand-Name'><h1><Link to={"/1"}>travel<span></span></Link></h1></div>
         <nav>
           <div className='nav-inner'>
-            <Link to={"/"}>채팅<span></span></Link>
+            <Link to={"/1"}>채팅<span></span></Link>
             <Link to={"/community"}>커뮤니티<span></span></Link>
             <Link to={"/updateHistory"}>업데이트 내역<span></span></Link>
             <Link to={"/developer"}>개발자<span></span></Link>

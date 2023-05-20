@@ -15,7 +15,8 @@ function App(): JSX.Element{
     <Routes>
       <Route path='/:id' element={<ChatRoom />} />
       <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
+      <Route path='register' element={<Register />} />
+      <Route path="*" element={ <div>없는페이지임</div> } />
     </Routes>
   </div>
   );

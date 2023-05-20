@@ -9,13 +9,12 @@ function Register(): JSX.Element{
     <div className='register'>
       <Header />
       <main className='register-inner'>
-        <h2>LOGIN</h2>
-          <form>
+        <h2>회원가입</h2>
+          <form action="/register" method="POST">
             <input placeholder='아이디'></input>
             <input placeholder='비밀번호'></input>
-            <button>로그인</button>
+            <button>회원가입</button>
           </form>
-
       </main>
     </div>
   )

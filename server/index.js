@@ -12,6 +12,15 @@ app.use(express.json());
 var cors = require('cors');
 app.use(cors());
 
+// login, session
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+
+app.use(session({secret : '비밀코드', resave : true, saveUninitialized: false}));
+app.use(passport.initialize());
+app.use(passport.session()); 
+
 // openai API
 const { Configuration, OpenAIApi } = require("openai");
 const { setTimeout } = require('timers/promises');
@@ -30,11 +39,7 @@ MongoClient.connect('mongodb+srv://eogus-travel-GPT-2023:4rTNhDpCitx6qRkr@cluste
 
   db = client.db('travel');
 
-  // db.collection('post').insertOne( {이름 : 'John', _id : 100} , function(에러, 결과){
-  //   console.log('저장완료'); 
-  // });
-
-  console.log('listening on 8080')
+  console.log('listening on 8080');
   });
 })
 
@@ -83,11 +88,7 @@ app.get('/', function(요청, 응답){
   응답.json({test_DB_data : test_DB_data2});
 })
 
-// 데이터 조회 해보기
-app.post('/testData', function(요청, 응답){
-  console.log(요청.body);
-  응답.json({data : 요청.body});
-})
+
 
 
 
@@ -107,10 +108,40 @@ app.post('/add', function(req, res){
 
 
 
+app.post('/login', passport.authenticate('local', {failureRedirect : '/fail'}), function(요청, 응답){
+  console.log("여기는 진입했어?");
+  응답.send("1234");
+});
 
 
+passport.use(new LocalStrategy({
+  usernameField: 'id',
+  passwordField: 'pw',
+  session: true,
+  passReqToCallback: false,
+}, function (inputID, inputPW, done) {
+  console.log(inputID, inputPW);
+  db.collection('login').findOne({ id: inputID }, function (error, result) {
+    if (error) return done(error)
 
-// Promise async await start
+    if (!result) return done(null, false, { message: '존재하지 않는 아이디입니다.' })
+    if (inputPW == result.pw) {
+      return done(null, result)
+    } else {
+      return done(null, false, { message: '패스워드가 틀렸습니다.' })
+    }
+  })
+}));
+
+passport.serializeUser(function (user, done) {
+  done(null, user.id)
+});
+
+passport.deserializeUser(function (아이디, done) {
+  done(null, {})
+}); 
+
+// 채팅 API 함수
 async function papagoAPI(sourcePram, targetPram, message){
   let options = {
     method: 'POST',
@@ -163,10 +194,6 @@ async function chatGptAPI(pram) {
     console.log(error);
   }
 }
-
-
-
-
 // 채팅 기능 구현
 app.post('/chatEnter', async function (req, res) {
   let DB_chat_Obj_Data = req.body.chatDBHistory
@@ -195,7 +222,6 @@ app.post('/chatEnter', async function (req, res) {
     // DB 저장
     // 미작성
 
-    console.log("aaaaaaaaaaaaaaaaaaaaaa");
     let number = 1;
     number++;
     DB_chat_Obj_Data.en_chat_arr.push("user: test Data string"+number+number+number+number);
