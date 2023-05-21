@@ -36,7 +36,7 @@ function ChatRoom(): JSX.Element{
   // 대화 내용 데이터 조회
   useEffect(() => {
     // ajax 요청
-    axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/')
+    axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/1')
     .then((result)=>{
       let copy:chatObjDB = result.data.test_DB_data;
       setChatDBHistory(copy);
@@ -143,7 +143,7 @@ function ChatRoom(): JSX.Element{
                   )
               }
             })
-          :<div>데이터가 없습니다. CSS 처리 해야됩니다.</div>
+          :<li>데이터가 없습니다. CSS 처리 해야됩니다.</li>
           }
           </ul>
           <div className='empty-box'></div>
