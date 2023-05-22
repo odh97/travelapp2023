@@ -131,7 +131,9 @@ app.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
+app.post('/register', function(req, res) {
 
+});
 
 
 

@@ -20,10 +20,10 @@ function Login(): JSX.Element{
 
   // alert 컴포넌트
   let [alertValue, setAlertValue] = useState("");
-  let [AlertClick, setAlertClick] = useState(false);
+  let [alertClick, setAlertClick] = useState(false);
   function handleAlert(){setAlertClick(false);}
 
-  // 로그인 기능 input value
+  // 로그인 기능
   let [idInput, setIdInput] = useState("");
   let [pwInput, setPwInput] = useState("");
 
@@ -39,7 +39,7 @@ function Login(): JSX.Element{
     .then((result)=>{
       console.log("성공");
       console.log(result);
-  
+
       navigate('/1');
 
     })
@@ -54,11 +54,15 @@ function Login(): JSX.Element{
     });
   }
 
-
+// 빠른 로그인 기능
+function fastLogin(idValue:string, pwValue:string){
+  setIdInput(idValue);
+  setPwInput(pwValue);
+}
 
 return (
   <div className='login'>
-    {AlertClick === true ? <Alert text={alertValue} handleAlert={handleAlert} /> : null}
+    {alertClick === true ? <Alert text={alertValue} handleAlert={handleAlert} /> : null}
     <Header />
     <main className='login-inner'>
       <h2>LOGIN</h2>
@@ -76,9 +80,9 @@ return (
           <h3>샘플 계정 리스트 <CiPlay1 /></h3>
           <div className='sample-list'>
             <ul>
-              <li>kim 계정</li>
-              <li>park 계정</li>
-              <li>test 계정</li>
+              <li onClick={()=>{fastLogin("kim","5327")}}>kim 계정</li>
+              <li onClick={()=>{fastLogin("park","5327")}}>park 계정</li>
+              <li onClick={()=>{fastLogin("test","5327")}}>test 계정</li>
             </ul>
           </div>
         </div>

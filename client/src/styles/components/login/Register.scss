@@ -16,11 +16,11 @@
       letter-spacing:2px;
       color: #7881ff;
     }
-    form{
+    .formBox{
       > * {
         margin: 20px auto 0;
         display: block;
-        width: 350px;
+        width: 300px;
         height: 50px;
         font-size: $font-base;
         border-radius: 5px;
@@ -35,23 +35,6 @@
         color: $font-color;
         background-color: $back-color3;
         &:hover{background-color: $back-color2;}
-      }
-    }
-    .auto-login{
-      position: relative;
-      margin: 5px auto 0;
-      width: 350px;
-      text-align: left;
-      input{
-        margin-top: -3px;
-        margin-right: 5px;
-      }
-      a{
-        position: absolute;
-        right: 0;
-        top: 0;
-        text-align: right;
-        color: $back-color1;
       }
     }
   }

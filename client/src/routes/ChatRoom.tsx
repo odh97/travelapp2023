@@ -45,7 +45,7 @@ function ChatRoom(): JSX.Element{
   }, []);
 
   // alert 컴포넌트
-  let [AlertClick, setAlertClick] = useState(false);
+  let [alertClick, setAlertClick] = useState(false);
   function handleAlert(){setAlertClick(false);}
 
 
@@ -116,7 +116,7 @@ function ChatRoom(): JSX.Element{
 
   return (
   <div className='chat'>
-    {AlertClick === true ? <Alert text={"질문을 작성해 주세요."} handleAlert={handleAlert} /> : null}
+    {alertClick === true ? <Alert text={"질문을 작성해 주세요."} handleAlert={handleAlert} /> : null}
     <Header />
     <main>
       <ChatList />
