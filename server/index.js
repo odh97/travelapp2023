@@ -115,6 +115,7 @@ app.post('/add', function(req, res){
 
 app.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
+    // 로그인 실패 처리
     if (err) { return next(err); }
     if (!user) {
       const { message } = info; // 인증 실패 메시지 가져오기
@@ -124,6 +125,7 @@ app.post('/login', function(req, res, next) {
       
       return res.status(401).json({ message: '인증 실패' });
     }
+    // 로그인 성공
     req.logIn(user, function(err) {
       if (err) { return next(err); }
       return res.json({ message: '로그인 성공' });
@@ -133,6 +135,24 @@ app.post('/login', function(req, res, next) {
 
 app.post('/register', function(req, res) {
 
+  // 회원가입 여부 조회
+  db.collection('login').findOne({id : req.body.id}, function(error, result_1){
+    // 가입된 아이디
+    if(!result_1 === false) return res.status(401).json({ message: '이미 가입된 아이디입니다. 다른 아이디로 가입을 진행해 주세요.' });
+
+    // 없는 아이디 회원가입 처리
+    if(result_1 === null){
+      const db_input_Obj = {
+        id : req.body.id,
+        pw : req.body.pw,
+        manager : false,
+      }
+      db.collection('login').insertOne( db_input_Obj , function(error, result_2){
+        console.log('회원가입완료');
+        res.json({join_result : "register_success"});
+      });
+    };
+  });
 });
 
 

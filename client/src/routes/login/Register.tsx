@@ -21,7 +21,9 @@ function Register(): JSX.Element{
   // alert 컴포넌트
   let [alertValue, setAlertValue] = useState("");
   let [alertClick, setAlertClick] = useState(false);
+  let [alertCheck, setalertCheck] = useState<undefined | string>(undefined);
   function handleAlert(){setAlertClick(false);}
+
 
 
   // 로그인 기능
@@ -30,8 +32,6 @@ function Register(): JSX.Element{
 
   function handleSubmit(e: React.MouseEvent<HTMLButtonElement>){
     e.preventDefault();
-    console.log(!idInput);
-    console.log(!pwInput);
 
     if(!idInput === true || !pwInput === true){
       setAlertValue("아이디 및 비밀번호를 기입해 주세요");
@@ -45,25 +45,31 @@ function Register(): JSX.Element{
     axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/register', formData)
     .then((result)=>{
       console.log("성공");
-      console.log(result);
 
-      navigate('/login');
+      setAlertValue("가입이 완료됐습니다!! 로그인 해주세요!!");
+      setalertCheck(result.data.join_result);
+      setAlertClick(true);
 
     })
     .catch((error)=>{
-      console.log('Error : ', error.message);
+      console.log('Error: ', error.message);
+      console.log(error.response.status); // 에러 응답 데이터
       console.log(error.response.data.message); // 에러 응답 데이터
 
       // 에러 처리 로직 추가
+      if(error.response.status === 401){
+        setAlertValue(error.response.data.message);
+        setAlertClick(true);
+        return false;
+      }
       setAlertValue("회원가입에 실패했습니다. 다시 가입해 주세요");
       setAlertClick(true);
-
     });
   }
 
   return (
     <div className='register'>
-      {alertClick === true ? <Alert text={alertValue} handleAlert={handleAlert} /> : null}
+      {alertClick === true ? <Alert text={alertValue} handleAlert={handleAlert} check={alertCheck}/> : null}
       <Header />
       <main className='register-inner'>
         <h2>회원가입</h2>

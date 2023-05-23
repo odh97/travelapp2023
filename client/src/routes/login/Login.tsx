@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, {useState, useEffect} from 'react';
 import '../../styles/components/login/Login.scss'
 
 // components import
@@ -21,7 +21,33 @@ function Login(): JSX.Element{
   // alert 컴포넌트
   let [alertValue, setAlertValue] = useState("");
   let [alertClick, setAlertClick] = useState(false);
-  function handleAlert(){setAlertClick(false);}
+  function handleAlert(){setAlertClick(false);};
+
+  // 마운트
+  // 자동 로그인 기능
+  let [autoLoginBtn,setAutoLoginBtn] = useState(false);
+
+  useEffect(() => {
+    let local_auto_login = localStorage.getItem('auto_login_local_obj');
+    if(local_auto_login !== null){
+      let auto_login_obj:{idValue : string,pwValue : string} = JSON.parse(local_auto_login);
+      setIdInput(auto_login_obj.idValue);
+      setPwInput(auto_login_obj.pwValue);
+      setAutoLoginBtn(!autoLoginBtn);
+    }
+  }, []);
+
+  // 언마운트 (로그인 기능) (상태 변수 업데이트로 언마운트 실행시 최신 변수 적용)
+  // 자동 로그인 해제
+  useEffect(()=>{
+    return()=>{
+      if(autoLoginBtn === false){
+        localStorage.removeItem("auto_login_local_obj");
+      }
+      console.log(autoLoginBtn);
+    }
+  },[autoLoginBtn]);
+
 
   // 로그인 기능
   let [idInput, setIdInput] = useState("");
@@ -40,6 +66,10 @@ function Login(): JSX.Element{
       console.log("성공");
       console.log(result);
 
+      if(autoLoginBtn === true){
+        localStorage.setItem("auto_login_local_obj",JSON.stringify({idValue : idInput, pwValue : pwInput,}));
+      }
+
       navigate('/1');
 
     })
@@ -54,11 +84,16 @@ function Login(): JSX.Element{
     });
   }
 
-// 빠른 로그인 기능
-function fastLogin(idValue:string, pwValue:string){
-  setIdInput(idValue);
-  setPwInput(pwValue);
-}
+
+  // 테스트용 빠른 로그인 기능
+  function fastLogin(idValue:string, pwValue:string){
+    setIdInput(idValue);
+    setPwInput(pwValue);
+  }
+
+useEffect(()=>{
+
+},[])
 
 return (
   <div className='login'>
@@ -72,7 +107,7 @@ return (
           <button onClick={(e)=>{handleSubmit(e)}}>로그인</button>
         </div>
         <div className='auto-login'>
-          <input type='checkbox' />
+          <input type='checkbox' onChange={()=>{setAutoLoginBtn(!autoLoginBtn)}} checked={autoLoginBtn} />
           <span>자동 로그인</span>
           <Link to={"/register"}>회원가입</Link>
         </div>
