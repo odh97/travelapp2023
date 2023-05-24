@@ -70,7 +70,7 @@ function Login(): JSX.Element{
         localStorage.setItem("auto_login_local_obj",JSON.stringify({idValue : idInput, pwValue : pwInput,}));
       }
 
-      navigate('/1');
+      navigate('/member/1');
 
     })
     .catch((error)=>{
@@ -85,15 +85,11 @@ function Login(): JSX.Element{
   }
 
 
-  // 테스트용 빠른 로그인 기능
+  // 빠른 로그인 계정 기능
   function fastLogin(idValue:string, pwValue:string){
     setIdInput(idValue);
     setPwInput(pwValue);
   }
-
-useEffect(()=>{
-
-},[])
 
 return (
   <div className='login'>

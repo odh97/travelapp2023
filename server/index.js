@@ -29,7 +29,6 @@ app.use(passport.session());
 
 // openai API
 const { Configuration, OpenAIApi } = require("openai");
-const { setTimeout } = require('timers/promises');
 const configuration = new Configuration({ apiKey: "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",  /* 배포 전 재발급 */ });
 const openai = new OpenAIApi(configuration);
 
@@ -39,6 +38,7 @@ var client_secret = 'Efl5YyRqwk'; // 배포 전 재발급
 var api_url = 'https://openapi.naver.com/v1/papago/n2mt';
 
 // server open
+var db;
 client.connect(function(error, client){
   if (error) return console.log(error);
   app.listen('8080', function(){
@@ -48,113 +48,6 @@ client.connect(function(error, client){
   console.log('listening on 8080');
   });
 })
-
-// app.use(express.static(path.join(__dirname, '/../client/build')));
-// app.get('/', function(요청, 응답){
-  // 응답.sendFile(path.join(__dirname, '/../client/build/index.html'));
-// })
-
-
-
-app.get('/:id', function(요청, 응답){
-  const test_DB_data2 = {
-    ko_chat_arr: [
-      'user: 너는 이제부터 여행컨설턴트야 관광지, 맛집, 유용한 정보 등등 여행에 관해서 좋은 정보를 알려줬으면 좋겠어',
-      'AI: 물론이죠! 기꺼이 돕겠습니다. 관광지부터 시작합시다. 세계에서 가장 인기 있는 관광 명소로는 프랑스 파리의 에펠탑, 인도 아그라의 타지마할, 중국의 만리장성, 이탈리아 로마의 콜로세움이 있습니다. \n' +
-      '\n' +
-      '식당에 관해서라면, 전 세계에서 선택할 수 있는 수많은 선택지가 있다. 가장 높은 평가를 받은 식당으로는 스페인 지로나의 엘 셀레르 드 칸 로카, 프랑스 리옹의 라메르 브레이져, 일본 도쿄의 스키야바시 지로, 이탈리아 모데나의 오스테리아 프란체스카나 등이 있다. \n' +
-      '\n' +
-      '이 정보가 도움이 되었으면 좋겠어요!',
-      'user: 너는 누구지??',
-      'AI: 저는 당신의 여행 문의를 돕기 위해 고안된 AI 챗봇입니다. 관광지, 음식점 등 유용한 여행 정보를 알려드리려고 왔습니다.',
-      'user: 다음부터는 너를 여행 컨설턴트로 소개해줬으면 좋겠어',
-      'AI: 물론입니다! 지금부터 저를 여행 컨설턴트로 소개하겠습니다. 저는 당신의 모든 여행에 필요한 것들을 도우러 왔습니다. 관광지, 음식점 등 여행과 관련하여 궁금한 점이 있으면 알려주시기 바랍니다.',
-      'user: 너는 누구지?',
-      'AI: 안녕하세요! 저는 AI 챗봇이고 여행 컨설턴트입니다. 저는 당신의 모든 여행에 필요한 것들을 도우러 왔습니다. 관광지, 음식점 등 여행과 관련하여 궁금한 점이 있으면 알려주시기 바랍니다.',
-    ],
-    en_chat_arr: [
-      'user: You are a travel consultant from now on. I want you to give me good information about travel, such as tourist attractions, restaurants, and useful information',
-      "AI: Sure thing! I'm happy to help. Let's start with tourist attractions. Some of the most popular tourist attractions in the world include the Eiffel Tower in Paris, France; the Taj Mahal in Agra, India; the Great Wall of China; and the Colosseum in Rome, Italy. \n" +
-      '\n' +
-      'When it comes to restaurants, there are countless options to choose from around the world. Some of the most highly rated restaurants include El Celler de Can Roca in Girona, Spain; La Mère Brazier in Lyon, France; Sukiyabashi Jiro in Tokyo, Japan; and Osteria Francescana in Modena, Italy. \n' +
-      '\n' +
-      'I hope this information is helpful!',
-      "user:  Who are you?",
-      `AI:  I'm an AI chatbot designed to help you with travel information. I can provide you with tourist attractions, restaurants, and other useful information.`,
-      "user:  What did I tell you to do when I introduced you earlier?",
-      "AI:  When you introduced me earlier, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
-      "user:  What did I tell you to do when I introduced you?",
-      "AI:  When you introduced me, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
-      "user:  I thought you told me to introduce you as a travel consultant",
-      "AI:  Yes, that's right. You asked me to introduce myself as a travel consultant and provide you with good information about travel, such as tourist attractions, restaurants, and useful information.",
-      "user:  Then introduce yourself again",
-      "AI:  Hi there! My name is AI Chatbot and I'm a travel consultant. I'm here to help you with all your travel needs. Let me know if you have any questions about tourist attractions, restaurants, or anything else related to travel.",
-    ]
-  }
-  // 현재 하드코딩 상태 나중에 DB 데이터로 교체
-  응답.json({test_DB_data : test_DB_data2});
-})
-
-
-
-
-
-
-// counter 샘플
-app.post('/add', function(req, res){
-  db.collection('counter').findOne({name : 'postNumber'}, function(error, result){
-    let totalNumber = result.totalNumber;
-    db.collection('post').insertOne( { _id : (totalNumber + 1), title : req.body.title, date : req.body.date } , function(){
-      console.log('저장완료');
-      res.send('전송완료');
-    });
-  });
-  
-});
-
-
-app.post('/login', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
-    // 로그인 실패 처리
-    if (err) { return next(err); }
-    if (!user) {
-      const { message } = info; // 인증 실패 메시지 가져오기
-
-      if (message === 'error_id')return res.status(401).json({ message: '존재하지 않는 아이디입니다.' });
-      if (message === 'error_pw')return res.status(401).json({ message: '패스워드가 틀렸습니다.' });
-      
-      return res.status(401).json({ message: '인증 실패' });
-    }
-    // 로그인 성공
-    req.logIn(user, function(err) {
-      if (err) { return next(err); }
-      return res.json({ message: '로그인 성공' });
-    });
-  })(req, res, next);
-});
-
-app.post('/register', function(req, res) {
-
-  // 회원가입 여부 조회
-  db.collection('login').findOne({id : req.body.id}, function(error, result_1){
-    // 가입된 아이디
-    if(!result_1 === false) return res.status(401).json({ message: '이미 가입된 아이디입니다. 다른 아이디로 가입을 진행해 주세요.' });
-
-    // 없는 아이디 회원가입 처리
-    if(result_1 === null){
-      const db_input_Obj = {
-        id : req.body.id,
-        pw : req.body.pw,
-        manager : false,
-      }
-      db.collection('login').insertOne( db_input_Obj , function(error, result_2){
-        console.log('회원가입완료');
-        res.json({join_result : "register_success"});
-      });
-    };
-  });
-});
-
 
 
 
@@ -191,6 +84,124 @@ passport.deserializeUser(function(아이디, done){
     done(null , 결과);
   })
 });
+
+
+
+
+
+
+// app.use(express.static(path.join(__dirname, '/../client/build')));
+// app.get('/', function(요청, 응답){
+  // 응답.sendFile(path.join(__dirname, '/../client/build/index.html'));
+// })
+
+let chatRoom_local_obj = {
+  id : null,
+  title : "새로운 채팅",
+  chatting_arr : chatDBHistory,
+  date : null,
+}
+const basic_data = {
+  ko_chat_arr: [
+    'AI: 안녕하세요! 저는 AI 챗봇이고 여행 컨설턴트입니다. 저는 당신의 모든 여행에 필요한 것들을 도우러 왔습니다. 관광지, 음식점 등 여행과 관련하여 궁금한 점이 있으면 알려주시기 바랍니다.',
+  ],
+  en_chat_arr: [
+    'user: You are a travel consultant from now on. I want you to give me good information about travel, such as tourist attractions, restaurants, and useful information',
+    "AI: Sure thing! I'm happy to help. Let's start with tourist attractions. Some of the most popular tourist attractions in the world include the Eiffel Tower in Paris, France; the Taj Mahal in Agra, India; the Great Wall of China; and the Colosseum in Rome, Italy. \n" +
+    '\n' +
+    'When it comes to restaurants, there are countless options to choose from around the world. Some of the most highly rated restaurants include El Celler de Can Roca in Girona, Spain; La Mère Brazier in Lyon, France; Sukiyabashi Jiro in Tokyo, Japan; and Osteria Francescana in Modena, Italy. \n' +
+    '\n' +
+    'I hope this information is helpful!',
+    "user:  Who are you?",
+    `AI:  I'm an AI chatbot designed to help you with travel information. I can provide you with tourist attractions, restaurants, and other useful information.`,
+    "user:  What did I tell you to do when I introduced you earlier?",
+    "AI:  When you introduced me earlier, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
+    "user:  What did I tell you to do when I introduced you?",
+    "AI:  When you introduced me, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
+    "user:  I thought you told me to introduce you as a travel consultant",
+    "AI:  Yes, that's right. You asked me to introduce myself as a travel consultant and provide you with good information about travel, such as tourist attractions, restaurants, and useful information.",
+    "user:  Then introduce yourself again",
+    "AI:  Hi there! My name is AI Chatbot and I'm a travel consultant. I'm here to help you with all your travel needs. Let me know if you have any questions about tourist attractions, restaurants, or anything else related to travel.",
+  ]
+}
+
+app.get('/guest', function(요청, 응답){
+  // 현재 하드코딩 상태 나중에 DB 데이터로 교체
+  응답.json({basic_data : basic_data});
+})
+
+app.get('/member/:id', 로그인체크, function(요청, 응답){
+  console.log("member in");
+  응답.json({basic_data : basic_data});
+});
+
+
+
+// counter 샘플
+app.post('/add', function(req, res){
+  db.collection('counter').findOne({name : 'postNumber'}, function(error, result){
+    let totalNumber = result.totalNumber;
+    db.collection('post').insertOne( { _id : (totalNumber + 1), title : req.body.title, date : req.body.date } , function(){
+      console.log('저장완료');
+      res.send('전송완료');
+    });
+  });
+});
+
+
+app.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    // 로그인 실패 처리
+    if (err) { return next(err); }
+    if (!user) {
+      const { message } = info; // 인증 실패 메시지 가져오기
+
+      if (message === 'error_id')return res.status(401).json({ message: '존재하지 않는 아이디입니다.' });
+      if (message === 'error_pw')return res.status(401).json({ message: '패스워드가 틀렸습니다.' });
+      
+      return res.status(401).json({ message: '인증 실패' });
+    }
+    // 로그인 성공
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      return res.json({ message: '로그인 성공' });
+    });
+  })(req, res, next);
+});
+
+app.post('/register', function(req, res) {
+  // 회원가입 여부 조회
+  db.collection('login').findOne({id : req.body.id}, function(error, result_1){
+    // 가입된 아이디
+    if(!result_1 === false) return res.status(401).json({ message: '이미 가입된 아이디입니다. 다른 아이디로 가입을 진행해 주세요.' });
+
+    // 없는 아이디 회원가입 처리
+    if(result_1 === null){
+      const db_input_Obj = {
+        id : req.body.id,
+        pw : req.body.pw,
+        manager : false,
+      }
+      db.collection('login').insertOne( db_input_Obj , function(){
+        console.log('회원가입완료');
+        res.json({join_result : "register_success"});
+      });
+    };
+  });
+});
+
+//미들웨어 만들기
+function 로그인체크(req, res, next){
+  console.log("미들웨어 in");
+
+  if(req.user){
+      console.log(req.user);
+      next(); // next : 다음으로 통과 시켜주는 함수
+  } else{
+      console.log(req.user);
+      res.send('로그인안하셨는데요?');
+  }
+}
 
 
 

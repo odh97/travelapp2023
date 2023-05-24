@@ -1,54 +1,73 @@
 import React, {useRef, useState, useEffect} from 'react';
-import '../styles/components/ChatRoom.scss'
+import '../../styles/components/ChatRoom.scss'
 
 // components import
-import Header from '../_layout/Header';
-import Alert from '../_layout/Alert';
+import Header from '../../_layout/Header';
+import Alert from '../../_layout/Alert';
 
 // icon 
-import { CiChat1,CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
-import { TbBrandTelegram, TbPlus } from "react-icons/tb";
+import { CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
+import { TbBrandTelegram } from "react-icons/tb";
+
 
 // router
-import { Link } from 'react-router-dom';
 // axios
 import axios from 'axios';
+import { ChatList } from './ChatList';
 
 // type 지정
 type chatObjDB = {
   [key:string] : string[],
 };
 
-// window type 추적
-declare global {
-  interface Window {
-    a: string | number,
-  }
-}
-window.a = "a";
 
+// chatting mongodb 구조
+// id : 유저 이름
+// title : 채팅방 이름 (기본 채팅방 이름 : 새로운 채팅)
+// chatting_arr : ko_chat_arr[...], en_chat_arr[...]
+// date : 날짜
 
+// chatRoom_local_obj localStorage 구조
+// title : 채팅방 이름 (기본 채팅방 이름 : 새로운 채팅)
+// chatting_arr : ko_chat_arr[...], en_chat_arr[...]
+// date : 날짜
 
-function ChatRoom(): JSX.Element{
+// 로컬 채팅 기록 조회 o
+// 로컬 채팅 만료일 등록
+// 로컬 데이터 저장 o
+// 로컬 이름 기본 값 설정 및 수정 기능 넣기
+
+function Guest(): JSX.Element{
   let [chatDBHistory, setChatDBHistory] = useState<chatObjDB>({});
+
 
   // 마운트
   // 대화 내용 데이터 조회
   useEffect(() => {
-    // ajax 요청
-    axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/1')
-    .then((result)=>{
-      let copy:chatObjDB = result.data.test_DB_data;
-      setChatDBHistory(copy);
-    })
-    .catch((error)=>{console.log(error)})
+    let getLocalStorage = localStorage.getItem('chatRoom_local_obj');
+
+    if(getLocalStorage !== null){
+      let chatRoom_local_obj = JSON.parse(getLocalStorage);
+      console.log(chatRoom_local_obj);
+      
+    }else{
+      // ajax 요청
+      axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/guest')
+      .then((result)=>{
+        let copy:chatObjDB = result.data.basic_data;
+        setChatDBHistory(copy);
+      })
+      .catch((error)=>{console.log(error)})
+    }
   }, []);
+
+
+
+
 
   // alert 컴포넌트
   let [alertClick, setAlertClick] = useState(false);
   function handleAlert(){setAlertClick(false);}
-
-
 
   // useRef HTML-Element
   const txtBoxDivRef = useRef<HTMLDivElement>(null);
@@ -112,7 +131,18 @@ function ChatRoom(): JSX.Element{
   }
   /* //채팅 기능 */
 
+  // 언마운트 (로컬 스토리지 업데이트) (상태 변수 업데이트로 언마운트 실행시 최신 변수 적용)
+  useEffect(()=>{
+    // 마지막으로 로컬에 새롭게 저장
+    return()=>{
 
+      // chatRoom_local_obj localStorage 구조
+      // id : 유저 이름
+      // title : 채팅방 이름 (기본 채팅방 이름 : 새로운 채팅)
+      // chatting_arr : ko_chat_arr[...], en_chat_arr[...]
+      // date : 날짜
+    }
+  },[chatDBHistory]);
 
   return (
   <div className='chat'>
@@ -173,24 +203,4 @@ function ChatRoom(): JSX.Element{
 }
 
 
-
-
-
-function ChatList(): JSX.Element{
-  return (
-  <div className='chat-list'>
-    <ul>
-      <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
-      <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
-      <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
-      <li><Link to={"/"}><CiChat1/><span>새로운 채팅</span></Link></li>
-      <li><Link to={"/"}><CiChat1/><span></span></Link></li>
-    </ul>
-    <div className='chatroom-create-btn'><button><TbPlus/><span>New chat</span></button></div>
-  </div>
-  )
-}
-
-// export {DscrpTab, QandATab, ReviewTab}; //여러개 내보낼때
-
-export default ChatRoom;
+export default Guest;
