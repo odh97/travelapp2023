@@ -3,7 +3,7 @@ import { CiChat1 } from "react-icons/ci";
 import { TbPlus } from "react-icons/tb";
 import { Link } from 'react-router-dom';
 
-export function ChatList(): JSX.Element {
+function ChatList(): JSX.Element {
   return (
     <div className='chat-list'>
       <ul>
@@ -13,3 +13,5 @@ export function ChatList(): JSX.Element {
     </div>
   );
 }
+
+export default ChatList;

@@ -49,8 +49,7 @@ client.connect(function(error, client){
   });
 })
 
-
-
+// passport
 passport.use(new LocalStrategy({
   usernameField: 'id',
   passwordField: 'pw',
@@ -85,8 +84,14 @@ passport.deserializeUser(function(아이디, done){
   })
 });
 
-
-
+// date
+var date = new Date();
+var today_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date);
+var style_date2 = new Intl.RelativeTimeFormat().format(7, 'days');
+var next_week_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date.setDate(date.getDate() + 7));
+console.log(today_date);
+console.log(style_date2);
+console.log(next_week_date);
 
 
 
@@ -95,44 +100,43 @@ passport.deserializeUser(function(아이디, done){
   // 응답.sendFile(path.join(__dirname, '/../client/build/index.html'));
 // })
 
-let chatRoom_local_obj = {
+const basic_chat_data = {
   id : null,
   title : "새로운 채팅",
-  chatting_arr : chatDBHistory,
-  date : null,
-}
-const basic_data = {
-  ko_chat_arr: [
-    'AI: 안녕하세요! 저는 AI 챗봇이고 여행 컨설턴트입니다. 저는 당신의 모든 여행에 필요한 것들을 도우러 왔습니다. 관광지, 음식점 등 여행과 관련하여 궁금한 점이 있으면 알려주시기 바랍니다.',
-  ],
-  en_chat_arr: [
-    'user: You are a travel consultant from now on. I want you to give me good information about travel, such as tourist attractions, restaurants, and useful information',
-    "AI: Sure thing! I'm happy to help. Let's start with tourist attractions. Some of the most popular tourist attractions in the world include the Eiffel Tower in Paris, France; the Taj Mahal in Agra, India; the Great Wall of China; and the Colosseum in Rome, Italy. \n" +
-    '\n' +
-    'When it comes to restaurants, there are countless options to choose from around the world. Some of the most highly rated restaurants include El Celler de Can Roca in Girona, Spain; La Mère Brazier in Lyon, France; Sukiyabashi Jiro in Tokyo, Japan; and Osteria Francescana in Modena, Italy. \n' +
-    '\n' +
-    'I hope this information is helpful!',
-    "user:  Who are you?",
-    `AI:  I'm an AI chatbot designed to help you with travel information. I can provide you with tourist attractions, restaurants, and other useful information.`,
-    "user:  What did I tell you to do when I introduced you earlier?",
-    "AI:  When you introduced me earlier, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
-    "user:  What did I tell you to do when I introduced you?",
-    "AI:  When you introduced me, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
-    "user:  I thought you told me to introduce you as a travel consultant",
-    "AI:  Yes, that's right. You asked me to introduce myself as a travel consultant and provide you with good information about travel, such as tourist attractions, restaurants, and useful information.",
-    "user:  Then introduce yourself again",
-    "AI:  Hi there! My name is AI Chatbot and I'm a travel consultant. I'm here to help you with all your travel needs. Let me know if you have any questions about tourist attractions, restaurants, or anything else related to travel.",
-  ]
+  chatting_arr : {
+    ko_chat_arr: [
+      'AI: 안녕하세요! 저는 AI 챗봇이고 여행 컨설턴트입니다. 저는 당신의 모든 여행에 필요한 것들을 도우러 왔습니다. 관광지, 음식점 등 여행과 관련하여 궁금한 점이 있으면 알려주시기 바랍니다.',
+    ],
+    en_chat_arr: [
+      'user: You are a travel consultant from now on. I want you to give me good information about travel, such as tourist attractions, restaurants, and useful information',
+      "AI: Sure thing! I'm happy to help. Let's start with tourist attractions. Some of the most popular tourist attractions in the world include the Eiffel Tower in Paris, France; the Taj Mahal in Agra, India; the Great Wall of China; and the Colosseum in Rome, Italy. \n" +
+      '\n' +
+      'When it comes to restaurants, there are countless options to choose from around the world. Some of the most highly rated restaurants include El Celler de Can Roca in Girona, Spain; La Mère Brazier in Lyon, France; Sukiyabashi Jiro in Tokyo, Japan; and Osteria Francescana in Modena, Italy. \n' +
+      '\n' +
+      'I hope this information is helpful!',
+      "user:  Who are you?",
+      `AI:  I'm an AI chatbot designed to help you with travel information. I can provide you with tourist attractions, restaurants, and other useful information.`,
+      "user:  What did I tell you to do when I introduced you earlier?",
+      "AI:  When you introduced me earlier, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
+      "user:  What did I tell you to do when I introduced you?",
+      "AI:  When you introduced me, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
+      "user:  I thought you told me to introduce you as a travel consultant",
+      "AI:  Yes, that's right. You asked me to introduce myself as a travel consultant and provide you with good information about travel, such as tourist attractions, restaurants, and useful information.",
+      "user:  Then introduce yourself again",
+      "AI:  Hi there! My name is AI Chatbot and I'm a travel consultant. I'm here to help you with all your travel needs. Let me know if you have any questions about tourist attractions, restaurants, or anything else related to travel.",
+    ]
+  },
+  date : today_date,
 }
 
 app.get('/guest', function(요청, 응답){
   // 현재 하드코딩 상태 나중에 DB 데이터로 교체
-  응답.json({basic_data : basic_data});
+  응답.json({basic_chat_data : basic_chat_data});
 })
 
 app.get('/member/:id', 로그인체크, function(요청, 응답){
   console.log("member in");
-  응답.json({basic_data : basic_data});
+  응답.json({basic_chat_data : basic_chat_data});
 });
 
 
@@ -266,7 +270,9 @@ async function chatGptAPI(pram) {
 }
 // 채팅 기능 구현
 app.post('/chatEnter', async function (req, res) {
-  let DB_chat_Obj_Data = req.body.chatDBHistory
+  console.log("chatEnter start");
+  let chatDBHistory = req.body.chatDBHistory;
+  let chatArr = req.body.chatDBHistory.chatting_arr;
   // ko_chat_arr
   // en_chat_arr
 
@@ -274,37 +280,37 @@ app.post('/chatEnter', async function (req, res) {
     // API 통신
 /*
     const result1 = await papagoAPI("ko", "en", req.body.userValue);
-    DB_chat_Obj_Data.en_chat_arr.push(result1);
+    chatArr.en_chat_arr.push(result1);
     console.log("첫번째 번역 API 작업이 끝났습니다.");
     
     
-    const result2 = await chatGptAPI(DB_chat_Obj_Data.en_chat_arr);
-    DB_chat_Obj_Data.en_chat_arr.push(result2);
+    const result2 = await chatGptAPI(chatArr.en_chat_arr);
+    chatArr.en_chat_arr.push(result2);
     console.log(result2);
     console.log("Chat GPT API 작업이 끝났습니다.");
     
     const result3 = await papagoAPI("en", "ko", result2);
-    DB_chat_Obj_Data.ko_chat_arr.push(result3);
+    chatArr.ko_chat_arr.push(result3);
     console.log("마지막 번역 API 작업이 끝났습니다.");
-    console.log(DB_chat_Obj_Data);
+    console.log(chatArr);
 */
 
+    let number = chatArr.ko_chat_arr.length;
+    number++;
+    chatArr.en_chat_arr.push("user: test Data string"+number+number+number+number);
+    chatArr.en_chat_arr.push("AI: test Data string"+number+number+number+number);
+    chatArr.ko_chat_arr.push("AI: AI 테스트 데이터 문자"+number+number+number+number);
+    chatDBHistory.chatting_arr = chatArr;
+    
     // DB 저장
     // 미작성
 
-    let number = 1;
-    number++;
-    DB_chat_Obj_Data.en_chat_arr.push("user: test Data string"+number+number+number+number);
-    DB_chat_Obj_Data.en_chat_arr.push("AI: test Data string"+number+number+number+number);
-    DB_chat_Obj_Data.ko_chat_arr.push("AI: AI 테스트 데이터 문자"+number+number+number+number);
-    console.log(DB_chat_Obj_Data);
-    res.json({DB_chat_data : DB_chat_Obj_Data})
-
+    res.json({DB_chat_data : chatDBHistory});
+    console.log("chatEnter end");
   }
   catch(error){
     console.log(error);
   }
-
 });
 
 

@@ -9,16 +9,18 @@ import Alert from '../../_layout/Alert';
 import { CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
 import { TbBrandTelegram } from "react-icons/tb";
 
-
-// router
 // axios
 import axios from 'axios';
-import { ChatList } from './ChatList';
 
-// type 지정
-type chatObjDB = {
-  [key:string] : string[],
-};
+// router
+import ChatList from './ChatList';
+
+// date
+var date = new Date();
+var today_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date);
+var style_date2 = new Intl.RelativeTimeFormat().format(7, 'days');
+var next_week_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date.setDate(date.getDate() + 7));
+
 
 
 // chatting mongodb 구조
@@ -35,33 +37,45 @@ type chatObjDB = {
 // 로컬 채팅 기록 조회 o
 // 로컬 채팅 만료일 등록
 // 로컬 데이터 저장 o
-// 로컬 이름 기본 값 설정 및 수정 기능 넣기
+// 로컬 title 기본 값 설정 및 수정 기능 넣기
+
+
+
+// type 지정
+type DBHistoryType = {
+  id: null | string;
+  title: string;
+  chatting_arr: {
+      ko_chat_arr: string[];
+      en_chat_arr: string[];
+  };
+  Date: Date;
+};
 
 function Guest(): JSX.Element{
-  let [chatDBHistory, setChatDBHistory] = useState<chatObjDB>({});
-
+  let [chatDBHistory, setChatDBHistory] = useState<DBHistoryType>();
 
   // 마운트
   // 대화 내용 데이터 조회
   useEffect(() => {
     let getLocalStorage = localStorage.getItem('chatRoom_local_obj');
 
+    // 로컬 데이터 조회
     if(getLocalStorage !== null){
       let chatRoom_local_obj = JSON.parse(getLocalStorage);
-      console.log(chatRoom_local_obj);
-      
-    }else{
+      setChatDBHistory(chatRoom_local_obj);
+    } else{
       // ajax 요청
       axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/guest')
       .then((result)=>{
-        let copy:chatObjDB = result.data.basic_data;
+        let copy:DBHistoryType = result.data.basic_chat_data;
         setChatDBHistory(copy);
+        console.log(copy);
       })
       .catch((error)=>{console.log(error)})
     }
+
   }, []);
-
-
 
 
 
@@ -96,8 +110,10 @@ function Guest(): JSX.Element{
 
   const updateChatHistory = (newMessage:string)=>{
     const copy = chatDBHistory;
-    copy.ko_chat_arr.push(newMessage);
-    setChatDBHistory(copy)
+    if(copy !== undefined){
+      copy.chatting_arr.ko_chat_arr.push(newMessage);
+    }
+    setChatDBHistory(copy);
   }
 
   /* 채팅 기능 */
@@ -120,7 +136,7 @@ function Guest(): JSX.Element{
     // ajax 요청 진행
     axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
     .then((result)=>{
-      console.log(result.data.DB_chat_data);
+      console.log(result.data.DB_chat_data.chatting_arr);
 
       setChatDBHistory(result.data.DB_chat_data);
     })
@@ -135,12 +151,9 @@ function Guest(): JSX.Element{
   useEffect(()=>{
     // 마지막으로 로컬에 새롭게 저장
     return()=>{
-
-      // chatRoom_local_obj localStorage 구조
-      // id : 유저 이름
-      // title : 채팅방 이름 (기본 채팅방 이름 : 새로운 채팅)
-      // chatting_arr : ko_chat_arr[...], en_chat_arr[...]
-      // date : 날짜
+      if(chatDBHistory){
+        localStorage.setItem("chatRoom_local_obj",JSON.stringify(chatDBHistory));
+      }
     }
   },[chatDBHistory]);
 
@@ -154,8 +167,8 @@ function Guest(): JSX.Element{
         <div className='txt-box' ref={txtBoxDivRef}>
           <ul>
           {
-          chatDBHistory.ko_chat_arr ?
-            chatDBHistory.ko_chat_arr.map((value, index)=>{
+          chatDBHistory !== undefined ?
+            chatDBHistory.chatting_arr.ko_chat_arr.map((value, index)=>{
               if(value.startsWith("user:") === true){
                 return(
                 <li className='user' key={index}>

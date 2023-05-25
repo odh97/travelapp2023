@@ -12,7 +12,7 @@ import { TbBrandTelegram } from "react-icons/tb";
 // router
 // axios
 import axios from 'axios';
-import { ChatList } from './ChatList';
+import ChatList from './ChatList';
 
 // type 지정
 type chatObjDB = {
