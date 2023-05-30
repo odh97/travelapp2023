@@ -4,7 +4,16 @@ import '../styles/components/login/Login.scss'
 // components import
 import Header from '../_layout/Header';
 
-function Login(): JSX.Element{
+// redux
+import { useDispatch, useSelector } from "react-redux"
+import { changeName } from "../store/store"
+
+
+function TestCP(): JSX.Element{
+
+  let storeState = useSelector((state) => state );
+  console.log(storeState);
+
   return (
     <div className='login'>
       <Header />
@@ -22,4 +31,4 @@ function Login(): JSX.Element{
   )
 }
 
-export default Login;
+export default TestCP;

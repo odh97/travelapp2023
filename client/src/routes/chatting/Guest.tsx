@@ -15,6 +15,11 @@ import axios from 'axios';
 // router
 import ChatList from './ChatList';
 
+// redux
+import { useDispatch, useSelector } from "react-redux"
+import { changeName } from "../../store/store"
+
+
 // date
 var date = new Date();
 var today_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date);

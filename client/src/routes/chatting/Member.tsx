@@ -9,7 +9,6 @@ import Alert from '../../_layout/Alert';
 import { CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
 import { TbBrandTelegram } from "react-icons/tb";
 
-// router
 // axios
 import axios from 'axios';
 import ChatList from './ChatList';

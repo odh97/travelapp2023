@@ -10,8 +10,8 @@
     height: calc(100vh - 50px);
     margin-top: 50px;
     background-color: #EFF0FF;
-    ul > li > a,
-    .chatroom-create-btn > button{
+    ul > li, .chatroom-create-btn > button{
+      position: relative;
       display: inline-block;
       margin-top: 10px;
       padding: 10px 0;
@@ -27,16 +27,73 @@
       span{
         display: inline-block;
         text-indent: 15px;
-        }
+      }
       svg{
         position: relative;
         left: 10px;
         top: 2px;
       }
-      
     }
-    ul > li > a{
-      &:hover{background-color: #dfe0ff;}
+
+    ul > li{
+      .title-edit-btn{
+        display: none;
+        position: absolute;
+        right: 10px;
+        bottom: 8px;
+        width: 24px;
+        height: 24px;
+        border-radius: 3px;
+        background-color:transparent;
+        svg{
+          position: absolute;
+          left: 4px;
+          top: 4px;
+          width: 16px;
+          height: 16px;
+          color: #5c5c5c;
+        }
+      }
+      .title-edit-box{
+        display: flex;
+        align-items: center;
+        margin: 0 auto;
+        background-color: transparent;
+        input{
+          margin-left: 7px;
+          height: 24px;
+          text-indent: 5px;
+          border-radius: 3px;
+        }
+        button{
+          position: relative;
+          display: inline-block;
+          margin-left: 7px;
+          width: 24px;
+          height: 24px;
+          border-radius: 3px;
+          background-color: transparent;
+          svg{
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            color: #5c5c5c;
+          }
+        }
+      }
+      &:hover{
+        background-color: #dfe0ff;
+        .title-edit-btn{
+          display: inline-block;
+          &:hover{background-color: #caccff;}
+        }
+        .title-edit-box{
+          background-color: #dfe0ff;
+          button{&:hover{background-color: #caccff;}}
+        }
+      }
     }
     .chatroom-create-btn > button{
       border: 2px solid #fff;
