@@ -17,7 +17,7 @@ import ChatList from './ChatList';
 
 // redux
 import { useDispatch, useSelector } from "react-redux"
-import { changeName } from "../../store/store"
+import { setState, changeTitle } from "../../store/store"
 
 
 // date
@@ -57,8 +57,18 @@ type DBHistoryType = {
   Date: Date;
 };
 
+// Redux 상태의 루트 타입 정의
+interface storeStateType {
+  userChatArr: DBHistoryType[];
+
+}
+
 function Guest(): JSX.Element{
   let [chatDBHistory, setChatDBHistory] = useState<DBHistoryType>();
+  // redux setting
+  let dispatch = useDispatch();
+  let storeState = useSelector((state:storeStateType) => state );
+  let storeDataSetting = false;
 
   // 마운트
   // 대화 내용 데이터 조회
@@ -68,21 +78,27 @@ function Guest(): JSX.Element{
     // 로컬 데이터 조회
     if(getLocalStorage !== null){
       let chatRoom_local_obj = JSON.parse(getLocalStorage);
-      setChatDBHistory(chatRoom_local_obj);
+      
+      if(storeDataSetting === false){
+        dispatch(setState(chatRoom_local_obj));
+        storeDataSetting = true;
+      }
     } else{
       // ajax 요청
       axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/guest')
       .then((result)=>{
         let copy:DBHistoryType = result.data.basic_chat_data;
-        setChatDBHistory(copy);
-        console.log(copy);
-      })
-      .catch((error)=>{console.log(error)})
-    }
 
+        if(storeDataSetting === false){
+          dispatch(setState(copy));
+          storeDataSetting = true;
+        }
+      })
+      .catch((error)=>{console.log(error)});
+    }
   }, []);
 
-
+  console.log(storeState.userChatArr);
 
   // alert 컴포넌트
   let [alertClick, setAlertClick] = useState(false);
@@ -113,7 +129,8 @@ function Guest(): JSX.Element{
     
   }, [chatDBHistory]);
 
-  const updateChatHistory = (newMessage:string)=>{
+
+  function updateChatHistory (newMessage:string){
     const copy = chatDBHistory;
     if(copy !== undefined){
       copy.chatting_arr.ko_chat_arr.push(newMessage);
@@ -161,6 +178,7 @@ function Guest(): JSX.Element{
       }
     }
   },[chatDBHistory]);
+
 
   return (
   <div className='chat'>

@@ -102,6 +102,7 @@ console.log(next_week_date);
 
 const basic_chat_data = {
   id : null,
+  name : null,
   title : "새로운 채팅",
   chatting_arr : {
     ko_chat_arr: [

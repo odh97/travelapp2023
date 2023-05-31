@@ -36,11 +36,9 @@
     }
 
     ul > li{
-      .title-edit-btn{
+      .chat-room-delete, .title-edit-btn{
         display: none;
         position: absolute;
-        right: 10px;
-        bottom: 8px;
         width: 24px;
         height: 24px;
         border-radius: 3px;
@@ -53,6 +51,14 @@
           height: 16px;
           color: #5c5c5c;
         }
+      }
+      .title-edit-btn{
+        right: 40px;
+        bottom: 8px;
+      }
+      .chat-room-delete{
+        right: 10px;
+        bottom: 8px;
       }
       .title-edit-box{
         display: flex;
@@ -85,7 +91,7 @@
       }
       &:hover{
         background-color: #dfe0ff;
-        .title-edit-btn{
+        .chat-room-delete, .title-edit-btn{
           display: inline-block;
           &:hover{background-color: #caccff;}
         }

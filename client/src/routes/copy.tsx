@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import '../styles/components/login/Login.scss'
 
 // components import
@@ -6,13 +6,68 @@ import Header from '../_layout/Header';
 
 // redux
 import { useDispatch, useSelector } from "react-redux"
-import { changeName } from "../store/store"
+import { setState, changeTitle } from "../store/store"
+import axios from 'axios';
+
+
+
+
+// type 지정
+type DBHistoryType = {
+  id: null | string;
+  title: string;
+  chatting_arr: {
+      ko_chat_arr: string[];
+      en_chat_arr: string[];
+  };
+  Date: Date;
+};
+
+// Redux 상태의 루트 타입 정의
+interface storeStateType {
+  userChatArr: DBHistoryType[];
+}
+
 
 
 function TestCP(): JSX.Element{
 
-  let storeState = useSelector((state) => state );
-  console.log(storeState);
+
+  // redux setting
+  let dispatch = useDispatch();
+  let storeState = useSelector((state:storeStateType) => state );
+  let dataSetting = false;
+
+
+  // 마운트
+  // 대화 내용 데이터 조회
+  useEffect(() => {
+    let getLocalStorage = localStorage.getItem('chatRoom_local_obj');
+
+    // 로컬 데이터 조회
+    if(getLocalStorage !== null){
+      let chatRoom_local_obj = JSON.parse(getLocalStorage);
+      
+      if(dataSetting === false){
+        dispatch(setState(chatRoom_local_obj));
+        dataSetting = true;
+      }
+    } else{
+      // ajax 요청
+      axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/guest')
+      .then((result)=>{
+        let copy:DBHistoryType = result.data.basic_chat_data;
+
+        if(dataSetting === false){
+          dispatch(setState(copy));
+          dataSetting = true;
+        }
+      })
+      .catch((error)=>{console.log(error)});
+    }
+  }, []);
+
+console.log(storeState);
 
   return (
     <div className='login'>
@@ -30,5 +85,9 @@ function TestCP(): JSX.Element{
     </div>
   )
 }
+
+
+
+
 
 export default TestCP;
