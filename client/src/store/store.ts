@@ -1,5 +1,4 @@
 import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
 
 
 // type 지정
@@ -13,18 +12,24 @@ type DBHistoryType = {
   Date: Date;
 };
 
+// Redux 상태의 루트 타입 정의
+interface storeStateType {
+  userChatArr: DBHistoryType[];
+}
+
 const userChatArr = createSlice({
   name : 'userChatArr',
-  initialState : [] as Array<object>,
+  initialState : [] as Array<DBHistoryType>,
   reducers : {
-    setState(state, action:PayloadAction<object>){
+    setState(state, action:PayloadAction<DBHistoryType>){
       // action.type : state 변경 함수 이름
       // action.payload : 파라미터 값 가져오기
-      console.log(state)
-      if (typeof action.payload === "object") {
-        state.push(action.payload);
-        console.log(state)
-      }
+      state.push(action.payload);
+    },
+    chatUpdate(state, action:PayloadAction<string>){
+      console.log(state);
+      console.log(action.payload);
+      // state[0].chatting_arr.ko_chat_arr.push(action.payload);
     },
 
     changeTitle(state, action){
@@ -33,7 +38,7 @@ const userChatArr = createSlice({
 
   }
 })
-export let { setState, changeTitle } = userChatArr.actions;
+export let { setState, chatUpdate, changeTitle } = userChatArr.actions;
 
 export default configureStore({
   reducer: {

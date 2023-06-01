@@ -28,7 +28,7 @@ interface storeStateType {
 function ChatList(): JSX.Element {
   // redux setting
   const data = useSelector((state:storeStateType) => state);
-  console.log(data);
+  // console.log(data);
 
   let [title, setTitle] = useState("새로운 채팅");
   let [editButton, setEditButton] = useState(false);

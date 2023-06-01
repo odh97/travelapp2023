@@ -17,7 +17,7 @@ import ChatList from './ChatList';
 
 // redux
 import { useDispatch, useSelector } from "react-redux"
-import { setState, changeTitle } from "../../store/store"
+import { setState, chatUpdate, changeTitle } from "../../store/store"
 
 
 // date
@@ -45,7 +45,6 @@ var next_week_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle:
 // 로컬 title 기본 값 설정 및 수정 기능 넣기
 
 
-
 // type 지정
 type DBHistoryType = {
   id: null | string;
@@ -60,15 +59,23 @@ type DBHistoryType = {
 // Redux 상태의 루트 타입 정의
 interface storeStateType {
   userChatArr: DBHistoryType[];
+}
 
+// window type 추적
+declare global {
+  interface Window {
+    trackingData: string | number | object,
+  }
 }
 
 function Guest(): JSX.Element{
-  let [chatDBHistory, setChatDBHistory] = useState<DBHistoryType>();
+  window.trackingData = "아직 데이터가 없습니다";
+
   // redux setting
   let dispatch = useDispatch();
   let storeState = useSelector((state:storeStateType) => state );
   let storeDataSetting = false;
+  window.trackingData = storeState;
 
   // 마운트
   // 대화 내용 데이터 조회
@@ -98,8 +105,6 @@ function Guest(): JSX.Element{
     }
   }, []);
 
-  console.log(storeState.userChatArr);
-
   // alert 컴포넌트
   let [alertClick, setAlertClick] = useState(false);
   function handleAlert(){setAlertClick(false);}
@@ -117,7 +122,7 @@ function Guest(): JSX.Element{
     inputDivRef.current!.style.height = (inputTextRef.current!.scrollHeight+30) + "px";
   }
 
-  // chatDBHistory 업데이트
+  // storeState 업데이트
   useEffect(() => {
     // input 값 초기화
     setChatInputValue(``);
@@ -127,15 +132,13 @@ function Guest(): JSX.Element{
     // chatRoom scroll 최신 콘텐츠 위치로 이동
     if(txtBoxDivRef.current) txtBoxDivRef.current.scrollTop = txtBoxDivRef.current.scrollHeight;
     
-  }, [chatDBHistory]);
+  }, [storeState]);
 
 
-  function updateChatHistory (newMessage:string){
-    const copy = chatDBHistory;
-    if(copy !== undefined){
-      copy.chatting_arr.ko_chat_arr.push(newMessage);
+  function updateChatHistory(newMessage: string) {
+    if (storeState !== undefined) {
+      dispatch(chatUpdate(newMessage));
     }
-    setChatDBHistory(copy);
   }
 
   /* 채팅 기능 */
@@ -146,25 +149,24 @@ function Guest(): JSX.Element{
     // 예외처리
     event.preventDefault();
     if(!chatInputValue.trim() === true) return setAlertClick(true); // 빈값과 스페이스 값만을 전송했을 경우
-
     //POST data
     updateChatHistory(`user: ${chatInputValue.trim()}`);
-    const chatDBHistory_copy = chatDBHistory;
+    const storeState_copy = storeState;
     const postData = {
       userValue: `user: ${chatInputValue.trim()}`,
-      chatDBHistory: chatDBHistory_copy,
+      chatDBHistory: storeState_copy.userChatArr[0],
     };
 
-    // ajax 요청 진행
-    axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
-    .then((result)=>{
-      console.log(result.data.DB_chat_data.chatting_arr);
+    // // ajax 요청 진행
+    // axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
+    // .then((result)=>{
+    //   console.log(result.data.DB_chat_data.chatting_arr);
 
-      setChatDBHistory(result.data.DB_chat_data);
-    })
-    .catch((error)=>{
-      console.log(error);
-    });
+    //   storeState.userChatArr[0] = result.data.DB_chat_data;
+    // })
+    // .catch((error)=>{
+    //   console.log(error);
+    // });
 
   }
   /* //채팅 기능 */
@@ -173,11 +175,11 @@ function Guest(): JSX.Element{
   useEffect(()=>{
     // 마지막으로 로컬에 새롭게 저장
     return()=>{
-      if(chatDBHistory){
-        localStorage.setItem("chatRoom_local_obj",JSON.stringify(chatDBHistory));
+      if(storeState.userChatArr[0]){
+        localStorage.setItem("chatRoom_local_obj",JSON.stringify(storeState.userChatArr[0]));
       }
     }
-  },[chatDBHistory]);
+  },[storeState]);
 
 
   return (
@@ -190,8 +192,8 @@ function Guest(): JSX.Element{
         <div className='txt-box' ref={txtBoxDivRef}>
           <ul>
           {
-          chatDBHistory !== undefined ?
-            chatDBHistory.chatting_arr.ko_chat_arr.map((value, index)=>{
+          storeState.userChatArr[0] !== undefined ?
+            storeState.userChatArr[0].chatting_arr.ko_chat_arr.map((value, index)=>{
               if(value.startsWith("user:") === true){
                 return(
                 <li className='user' key={index}>
