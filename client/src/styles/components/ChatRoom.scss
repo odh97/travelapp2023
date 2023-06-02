@@ -26,12 +26,16 @@
       
       span{
         display: inline-block;
+        width: 160px;
         text-indent: 15px;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
       }
       svg{
         position: relative;
         left: 10px;
-        top: 2px;
+        top: -2px;
       }
     }
 
@@ -54,11 +58,11 @@
       }
       .title-edit-btn{
         right: 40px;
-        bottom: 8px;
+        bottom: 12px;
       }
       .chat-room-delete{
         right: 10px;
-        bottom: 8px;
+        bottom: 12px;
       }
       .title-edit-box{
         display: flex;
@@ -161,8 +165,6 @@
           font-family: $font-NoSansKR;
 
         }
-      }
-      .user{
       }
       .chat-bot{
         background-color: rgb(247,247,248);

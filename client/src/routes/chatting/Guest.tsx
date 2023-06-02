@@ -28,26 +28,10 @@ var next_week_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle:
 
 
 
-// chatting mongodb 구조
-// id : 유저 이름
-// title : 채팅방 이름 (기본 채팅방 이름 : 새로운 채팅)
-// chatting_arr : ko_chat_arr[...], en_chat_arr[...]
-// date : 날짜
-
-// chatRoom_local_obj localStorage 구조
-// title : 채팅방 이름 (기본 채팅방 이름 : 새로운 채팅)
-// chatting_arr : ko_chat_arr[...], en_chat_arr[...]
-// date : 날짜
-
-// 로컬 채팅 기록 조회 o
-// 로컬 채팅 만료일 등록
-// 로컬 데이터 저장 o
-// 로컬 title 기본 값 설정 및 수정 기능 넣기
-
-
 // type 지정
 type DBHistoryType = {
   id: null | string;
+  name : null | string;
   title: string;
   chatting_arr: {
       ko_chat_arr: string[];
@@ -134,13 +118,6 @@ function Guest(): JSX.Element{
     
   }, [storeState]);
 
-
-  function updateChatHistory(newMessage: string) {
-    if (storeState !== undefined) {
-      dispatch(chatUpdate(newMessage));
-    }
-  }
-
   /* 채팅 기능 */
   let [chatInputValue, setChatInputValue]= useState(``);
 
@@ -149,24 +126,28 @@ function Guest(): JSX.Element{
     // 예외처리
     event.preventDefault();
     if(!chatInputValue.trim() === true) return setAlertClick(true); // 빈값과 스페이스 값만을 전송했을 경우
-    //POST data
-    updateChatHistory(`user: ${chatInputValue.trim()}`);
-    const storeState_copy = storeState;
+    //POST data Data
+    let storeState_copy = storeState.userChatArr[0];
+    let newChatting_arr = {
+      ...storeState_copy.chatting_arr,
+      ko_chat_arr : [...storeState_copy.chatting_arr.ko_chat_arr,`user: ${chatInputValue.trim()}`]
+    }
+
+    dispatch(chatUpdate({newChatting_arr, storeState_copy}));
     const postData = {
       userValue: `user: ${chatInputValue.trim()}`,
-      chatDBHistory: storeState_copy.userChatArr[0],
+      chatDBHistory: storeState_copy,
     };
 
-    // // ajax 요청 진행
-    // axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
-    // .then((result)=>{
-    //   console.log(result.data.DB_chat_data.chatting_arr);
-
-    //   storeState.userChatArr[0] = result.data.DB_chat_data;
-    // })
-    // .catch((error)=>{
-    //   console.log(error);
-    // });
+    // ajax 요청 진행
+    axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
+    .then((result)=>{
+      let resultData = result.data.DB_chat_data.chatting_arr;
+      dispatch(chatUpdate({newChatting_arr : resultData, storeState_copy}));
+    })
+    .catch((error)=>{
+      console.log(error);
+    });
 
   }
   /* //채팅 기능 */

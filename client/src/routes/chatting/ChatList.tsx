@@ -5,12 +5,14 @@ import { TbPlus } from "react-icons/tb";
 // router
 import { Link } from 'react-router-dom';
 // redux
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeTitle } from "../../store/store"
 
 
 // type 지정
 type DBHistoryType = {
   id: null | string;
+  name: null | string;
   title: string;
   chatting_arr: {
       ko_chat_arr: string[];
@@ -26,15 +28,18 @@ interface storeStateType {
 }
 
 function ChatList(): JSX.Element {
-  // redux setting
-  const data = useSelector((state:storeStateType) => state);
-  // console.log(data);
 
-  let [title, setTitle] = useState("새로운 채팅");
+  // redux setting
+  let dispatch = useDispatch();
+  const data = useSelector((state:storeStateType) => state);
+
+
+  let [title, setTitle] = useState("");
   let [editButton, setEditButton] = useState(false);
 
-  function titleEdit(){
-
+  function titleEdit(id: null | number){
+    dispatch(changeTitle({title, data:data.userChatArr, id}));
+    setEditButton(false);
   }
 
   function newChat(){
@@ -49,14 +54,22 @@ function ChatList(): JSX.Element {
         <li>
           {editButton === false ?
           <div className='title-link'>
-            <Link to={"/"}><CiChat1 /><span>새로운 채팅</span></Link>
-            <button className='title-edit-btn' onClick={()=>{setEditButton(true)}}><CiEdit /></button>
-            <button className='chat-room-delete' onClick={()=>{setEditButton(true)}}><CiSquareRemove /></button>{/* 회전 전용 채팅 삭제 기능 (미적용) */}
+            <Link to={"/"}><CiChat1 /><span>{data.userChatArr.length === 0 ? null : data.userChatArr[0].title}</span></Link>
+            {
+              data.userChatArr.length === 0 ? null : (data.userChatArr[0].id === null
+                ? <button className='title-edit-btn' onClick={()=>{setTitle(data.userChatArr[0].title); setEditButton(true);}}  style={{right : 10}}><CiEdit /></button>
+                :
+                <>
+                  <button className='title-edit-btn' onClick={()=>{setTitle(data.userChatArr[0].title); setEditButton(true);}}><CiEdit /></button>
+                  <button className='chat-room-delete' onClick={()=>{setEditButton(true)}}><CiSquareRemove /></button> {/* member 삭제 기능 */}
+                </>
+              )
+            }
           </div>
           :
           <div className='title-edit-box'>
             <input value={title} onChange={(e)=>{setTitle(e.target.value)}} />
-            <button onClick={()=>{titleEdit()}}><CiSquareCheck /></button> {/* redux 데이터 수정 버튼 (미적용) */}
+            <button onClick={()=>{titleEdit(null)}}><CiSquareCheck /></button>
             <button onClick={()=>{setEditButton(false)}}><CiSquareRemove /></button>
           </div>
           }

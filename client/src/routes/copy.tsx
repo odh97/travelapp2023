@@ -15,6 +15,7 @@ import axios from 'axios';
 // type 지정
 type DBHistoryType = {
   id: null | string;
+  name : null | string;
   title: string;
   chatting_arr: {
       ko_chat_arr: string[];
