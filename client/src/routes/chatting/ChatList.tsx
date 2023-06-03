@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
 // icons
-import { CiChat1,CiEdit,CiSquareCheck,CiSquareRemove } from "react-icons/ci";
-import { TbPlus } from "react-icons/tb";
+import { CiChat1,CiEdit,CiSquareCheck,CiSquareRemove,CiSquarePlus } from "react-icons/ci";
+import { HiArrowPath } from "react-icons/hi2";
+
 // router
 import { Link } from 'react-router-dom';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { changeTitle } from "../../store/store"
+import { newState, changeTitle } from "../../store/store"
+import axios from 'axios';
 
 
 // type 지정
 type DBHistoryType = {
-  id: null | string;
+  id: null | number;
   name: null | string;
   title: string;
   chatting_arr: {
       ko_chat_arr: string[];
       en_chat_arr: string[];
   };
-  Date: Date;
+  date: Date;
 };
 
 // Redux 상태의 루트 타입 정의
@@ -43,7 +45,13 @@ function ChatList(): JSX.Element {
   }
 
   function newChat(){
-
+    // ajax 요청
+    axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/guest')
+    .then((result)=>{
+      let basic_chat_data:DBHistoryType[] = result.data.basic_chat_data;
+      dispatch(newState({id : data.userChatArr[0].id, data : basic_chat_data}));
+    })
+    .catch((error)=>{console.log(error)});
   }
 
   // Redux 스토어의 데이터 선택
@@ -61,7 +69,8 @@ function ChatList(): JSX.Element {
                 :
                 <>
                   <button className='title-edit-btn' onClick={()=>{setTitle(data.userChatArr[0].title); setEditButton(true);}}><CiEdit /></button>
-                  <button className='chat-room-delete' onClick={()=>{setEditButton(true)}}><CiSquareRemove /></button> {/* member 삭제 기능 */}
+                  {/* member 삭제 기능 */}
+                  <button className='chat-room-delete' onClick={()=>{setEditButton(true)}}><CiSquareRemove /></button>
                 </>
               )
             }
@@ -75,7 +84,14 @@ function ChatList(): JSX.Element {
           }
         </li>
       </ul>
-      <div className='chatroom-create-btn'><button onClick={newChat}><TbPlus /><span>New chat</span></button></div>
+      {/* member 새로운 채팅방 추가 기능 */}
+      {
+        data.userChatArr.length === 0 ? null : (data.userChatArr[0].id === null
+          ? <div className='chatroom-create-btn'><button onClick={newChat}><HiArrowPath /><span>새로운 채팅방</span></button></div>
+          : <div className='chatroom-create-btn'><button onClick={newChat}><CiSquarePlus /><span>채팅방 추가</span></button></div>
+        )
+      }
+      
     </div>
   );
 };

@@ -132,14 +132,13 @@ const basic_chat_data = {
 
 app.get('/guest', function(요청, 응답){
   // 현재 하드코딩 상태 나중에 DB 데이터로 교체
-  응답.json({basic_chat_data : basic_chat_data});
+  응답.json({basic_chat_data : [basic_chat_data]});
 })
 
 app.get('/member/:id', 로그인체크, function(요청, 응답){
   console.log("member in");
-  응답.json({basic_chat_data : basic_chat_data});
+  응답.json({basic_chat_data : [basic_chat_data]});
 });
-
 
 
 // counter 샘플

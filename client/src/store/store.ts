@@ -2,17 +2,21 @@ import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit';
 
 // type 지정
 type DBHistoryType = {
-  id: null | string;
+  id: null | number;
   name : null | string;
   title: string;
   chatting_arr: {
     ko_chat_arr: string[];
     en_chat_arr: string[];
   };
-  Date: Date;
+  date: Date;
 };
 
-// Redux 상태의 루트 타입 정의
+interface newState {
+  id : null | number;
+  data : DBHistoryType[];
+}
+
 interface chatUpdate {
   newChatting_arr : {
     ko_chat_arr: string[];
@@ -31,10 +35,24 @@ const userChatArr = createSlice({
   name : 'userChatArr',
   initialState : [] as Array<DBHistoryType>,
   reducers : {
-    setState(state, action:PayloadAction<DBHistoryType>){
+    setState(state, action:PayloadAction<DBHistoryType[]>){
       // action.type : state 변경 함수 이름
       // action.payload : 파라미터 값 가져오기
-      state.push(action.payload);
+      let dataArr = action.payload;
+      for(let item of dataArr){
+        state.push(item);
+      }
+    },
+    newState(state, action:PayloadAction<newState>){
+      // action.type : state 변경 함수 이름
+      // action.payload : 파라미터 값 가져오기update
+      const { id, data } = action.payload;
+      if(id === null){
+        state.length = 0;
+        for(let item of data){
+          state.push(item);
+        }
+      }
     },
     chatUpdate(state, action:PayloadAction<chatUpdate>){
       const { newChatting_arr, storeState_copy } = action.payload;
@@ -79,7 +97,7 @@ const userChatArr = createSlice({
 
   }
 })
-export let { setState, chatUpdate, changeTitle } = userChatArr.actions;
+export let { setState, newState, chatUpdate, changeTitle } = userChatArr.actions;
 
 export default configureStore({
   reducer: {

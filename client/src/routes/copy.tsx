@@ -14,14 +14,14 @@ import axios from 'axios';
 
 // type 지정
 type DBHistoryType = {
-  id: null | string;
+  id: null | number;
   name : null | string;
   title: string;
   chatting_arr: {
-      ko_chat_arr: string[];
-      en_chat_arr: string[];
+    ko_chat_arr: string[];
+    en_chat_arr: string[];
   };
-  Date: Date;
+  date: Date;
 };
 
 // Redux 상태의 루트 타입 정의
@@ -60,7 +60,7 @@ function TestCP(): JSX.Element{
         let copy:DBHistoryType = result.data.basic_chat_data;
 
         if(dataSetting === false){
-          dispatch(setState(copy));
+          dispatch(setState([copy]));
           dataSetting = true;
         }
       })

@@ -30,14 +30,14 @@ var next_week_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle:
 
 // type 지정
 type DBHistoryType = {
-  id: null | string;
+  id: null | number;
   name : null | string;
   title: string;
   chatting_arr: {
       ko_chat_arr: string[];
       en_chat_arr: string[];
   };
-  Date: Date;
+  date: Date;
 };
 
 // Redux 상태의 루트 타입 정의
@@ -71,14 +71,14 @@ function Guest(): JSX.Element{
       let chatRoom_local_obj = JSON.parse(getLocalStorage);
       
       if(storeDataSetting === false){
-        dispatch(setState(chatRoom_local_obj));
+        dispatch(setState([chatRoom_local_obj]));
         storeDataSetting = true;
       }
     } else{
       // ajax 요청
       axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/guest')
       .then((result)=>{
-        let copy:DBHistoryType = result.data.basic_chat_data;
+        let copy:DBHistoryType[] = result.data.basic_chat_data;
 
         if(storeDataSetting === false){
           dispatch(setState(copy));
