@@ -44,7 +44,6 @@ function Login(): JSX.Element{
       if(autoLoginBtn === false){
         localStorage.removeItem("auto_login_local_obj");
       }
-      console.log(autoLoginBtn);
     }
   },[autoLoginBtn]);
 
@@ -63,14 +62,13 @@ function Login(): JSX.Element{
     }  
     axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/login', formData,{ withCredentials: true })
     .then((result)=>{
-      console.log("성공");
-      console.log(result);
+      let pram = result.data.message;
 
       if(autoLoginBtn === true){
         localStorage.setItem("auto_login_local_obj",JSON.stringify({idValue : idInput, pwValue : pwInput,}));
       }
 
-      navigate('/member/1');
+      navigate('/member/'+pram);
 
     })
     .catch((error)=>{
@@ -113,7 +111,7 @@ return (
             <ul>
               <li onClick={()=>{fastLogin("kim","5327")}}>kim 계정</li>
               <li onClick={()=>{fastLogin("park","5327")}}>park 계정</li>
-              <li onClick={()=>{fastLogin("test","5327")}}>test 계정</li>
+              <li onClick={()=>{fastLogin("hong","5327")}}>hong 계정</li>
             </ul>
           </div>
         </div>

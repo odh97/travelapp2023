@@ -11,39 +11,63 @@ import { TbBrandTelegram } from "react-icons/tb";
 
 // axios
 import axios from 'axios';
+
+// router
 import ChatList from './ChatList';
 
+// redux
+import { useDispatch, useSelector } from "react-redux"
+import { setState, chatUpdate, changeTitle } from "../../store/store"
+
 // type 지정
-type chatObjDB = {
-  [key:string] : string[],
+type DBHistoryType = {
+  id: null | number;
+  name : null | string;
+  title: string;
+  chatting_arr: {
+      ko_chat_arr: string[];
+      en_chat_arr: string[];
+  };
+  date: Date;
 };
+
+// Redux 상태의 루트 타입 정의
+interface storeStateType {
+  userChatArr: DBHistoryType[];
+}
 
 // window type 추적
 declare global {
   interface Window {
-    a: string | number,
+    trackingData: string | number | object,
   }
 }
-window.a = "a";
-
-
 
 function Member(): JSX.Element{
-  let [chatDBHistory, setChatDBHistory] = useState<chatObjDB>({});
+  window.trackingData = "아직 데이터가 없습니다";
+
+  // redux setting
+  let dispatch = useDispatch();
+  let storeState = useSelector((state:storeStateType) => state );
+  let storeDataSetting = false;
+  window.trackingData = storeState;
 
   // 마운트
   // 대화 내용 데이터 조회
   useEffect(() => {
-    // ajax 요청
-    axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/member/:id',{ withCredentials: true })
-    .then((result)=>{
-      console.log("성공 데이터");
-      let copy:chatObjDB = result.data.basic_data;
-      setChatDBHistory(copy);
-    })
-    .catch((error)=>{console.log(error)})
-  }, []);
+      // ajax 요청
+      axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/member',{ withCredentials: true })
+      .then((result)=>{
+        // let copy:DBHistoryType[] = result.data.basic_chat_data;
 
+        // if(storeDataSetting === false){
+        //   dispatch(setState(copy));
+        //   storeDataSetting = true;
+        // }
+        console.log(result);
+      })
+      .catch((error)=>{console.log(error)});
+  }, []);
 
   // alert 컴포넌트
   let [alertClick, setAlertClick] = useState(false);
@@ -62,7 +86,7 @@ function Member(): JSX.Element{
     inputDivRef.current!.style.height = (inputTextRef.current!.scrollHeight+30) + "px";
   }
 
-  // chatDBHistory 업데이트
+  // storeState 업데이트
   useEffect(() => {
     // input 값 초기화
     setChatInputValue(``);
@@ -72,13 +96,7 @@ function Member(): JSX.Element{
     // chatRoom scroll 최신 콘텐츠 위치로 이동
     if(txtBoxDivRef.current) txtBoxDivRef.current.scrollTop = txtBoxDivRef.current.scrollHeight;
     
-  }, [chatDBHistory]);
-
-  const updateChatHistory = (newMessage:string)=>{
-    const copy = chatDBHistory;
-    copy.ko_chat_arr.push(newMessage);
-    setChatDBHistory(copy)
-  }
+  }, [storeState]);
 
   /* 채팅 기능 */
   let [chatInputValue, setChatInputValue]= useState(``);
@@ -88,21 +106,24 @@ function Member(): JSX.Element{
     // 예외처리
     event.preventDefault();
     if(!chatInputValue.trim() === true) return setAlertClick(true); // 빈값과 스페이스 값만을 전송했을 경우
+    //POST data Data
+    let storeState_copy = storeState.userChatArr[0];
+    let newChatting_arr = {
+      ...storeState_copy.chatting_arr,
+      ko_chat_arr : [...storeState_copy.chatting_arr.ko_chat_arr,`user: ${chatInputValue.trim()}`]
+    }
 
-    //POST data
-    updateChatHistory(`user: ${chatInputValue.trim()}`);
-    const chatDBHistory_copy = chatDBHistory;
+    dispatch(chatUpdate({newChatting_arr, storeState_copy}));
     const postData = {
       userValue: `user: ${chatInputValue.trim()}`,
-      chatDBHistory: chatDBHistory_copy,
+      chatDBHistory: storeState_copy,
     };
 
     // ajax 요청 진행
     axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
     .then((result)=>{
-      console.log(result.data.DB_chat_data);
-
-      setChatDBHistory(result.data.DB_chat_data);
+      let resultData = result.data.DB_chat_data.chatting_arr;
+      dispatch(chatUpdate({newChatting_arr : resultData, storeState_copy}));
     })
     .catch((error)=>{
       console.log(error);
@@ -110,6 +131,16 @@ function Member(): JSX.Element{
 
   }
   /* //채팅 기능 */
+
+  // 언마운트 (로컬 스토리지 업데이트) (상태 변수 업데이트로 언마운트 실행시 최신 변수 적용)
+  useEffect(()=>{
+    // 마지막으로 로컬에 새롭게 저장
+    return()=>{
+      if(storeState.userChatArr[0]){
+        localStorage.setItem("chatRoom_local_obj",JSON.stringify(storeState.userChatArr[0]));
+      }
+    }
+  },[storeState]);
 
   return (
   <div className='chat'>
@@ -121,8 +152,8 @@ function Member(): JSX.Element{
         <div className='txt-box' ref={txtBoxDivRef}>
           <ul>
           {
-          chatDBHistory.ko_chat_arr ?
-            chatDBHistory.ko_chat_arr.map((value, index)=>{
+          storeState.userChatArr[0] !== undefined ?
+          storeState.userChatArr[0].chatting_arr.ko_chat_arr.map((value, index)=>{
               if(value.startsWith("user:") === true){
                 return(
                 <li className='user' key={index}>

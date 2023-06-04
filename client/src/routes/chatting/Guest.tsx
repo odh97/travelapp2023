@@ -19,15 +19,6 @@ import ChatList from './ChatList';
 import { useDispatch, useSelector } from "react-redux"
 import { setState, chatUpdate, changeTitle } from "../../store/store"
 
-
-// date
-var date = new Date();
-var today_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date);
-var style_date2 = new Intl.RelativeTimeFormat().format(7, 'days');
-var next_week_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date.setDate(date.getDate() + 7));
-
-
-
 // type 지정
 type DBHistoryType = {
   id: null | number;
