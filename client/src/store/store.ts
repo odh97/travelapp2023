@@ -39,6 +39,7 @@ const userChatArr = createSlice({
       // action.type : state 변경 함수 이름
       // action.payload : 파라미터 값 가져오기
       let dataArr = action.payload;
+      state.length = 0;
       for(let item of dataArr){
         state.push(item);
       }

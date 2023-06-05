@@ -23,7 +23,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 
-app.use(session({secret : '비밀코드', resave : true, saveUninitialized: false}));
+app.use(session({secret : '비밀코드', resave : false, saveUninitialized: true}));
 app.use(passport.initialize());
 app.use(passport.session()); 
 
@@ -103,7 +103,16 @@ var today_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'me
 var style_date2 = new Intl.RelativeTimeFormat().format(7, 'days');
 var next_week_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date.setDate(date.getDate() + 7));
 
-
+// counter 샘플
+app.post('/add', function(req, res){
+  db.collection('counter').findOne({name : 'postNumber'}, function(error, result){
+    let totalNumber = result.totalNumber;
+    db.collection('post').insertOne( { _id : (totalNumber + 1), title : req.body.title, date : req.body.date } , function(){
+      console.log('저장완료');
+      res.send('전송완료');
+    });
+  });
+});
 
 
 // app.use(express.static(path.join(__dirname, '/../client/build')));
@@ -145,113 +154,14 @@ app.get('/guest', function(요청, 응답){
   응답.json({basic_chat_data : [basic_chat_data]});
 });
 
+app.get('/member', loginChack, function(req, res){
+  console.log("member in");
 
-
-
-// counter 샘플
-app.post('/add', function(req, res){
-  db.collection('counter').findOne({name : 'postNumber'}, function(error, result){
-    let totalNumber = result.totalNumber;
-    db.collection('post').insertOne( { _id : (totalNumber + 1), title : req.body.title, date : req.body.date } , function(){
-      console.log('저장완료');
-      res.send('전송완료');
-    });
+  db.collection("chat-post").find({ name: req.user.id }).sort({ date: -1 }).toArray(function(error, result){
+    res.json({chat_Data_Arr : result});
+    console.log("member end");
   });
 });
-
-
-app.post('/login', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
-    // 로그인 실패 처리
-    if (err) { return next(err); }
-    if (!user) {
-      const { message } = info; // 인증 실패 메시지 가져오기
-
-      if (message === 'error_id')return res.status(401).json({ message: '존재하지 않는 아이디입니다.' });
-      if (message === 'error_pw')return res.status(401).json({ message: '패스워드가 틀렸습니다.' });
-      
-      return res.status(401).json({ message: '인증 실패' });
-    }
-    // 로그인 성공
-    req.logIn(user, function(err) {
-      if (err) { return next(err); }
-
-      db.collection("chat-post").find({ name: user.id }).sort({ date: -1 }).limit(1).toArray(function(error, result){
-        return res.json({ message: result[0].id });
-      });
-
-    });
-  })(req, res, next);
-});
-
-app.post('/register', function(req, res) {
-  // 회원가입 여부 조회
-  db.collection('login').findOne({id : req.body.id}, function(error, result_1){
-    // 가입된 아이디
-    if(!result_1 === false) return res.status(401).json({ message: '이미 가입된 아이디입니다. 다른 아이디로 가입을 진행해 주세요.' });
-
-    // 없는 아이디 회원가입 처리
-    if(result_1 === null){
-      const db_input_Obj = {
-        id : req.body.id,
-        pw : req.body.pw,
-        manager : false,
-      }
-
-      db.collection('login').insertOne( db_input_Obj , function(){
-        console.log('회원가입완료');
-
-        db.collection('counter').findOne({name : 'postNumber'}, function(error, result){
-          let totalNumber = result.totalNumber;
-          const basic_chat_data = {
-            id : totalNumber+1,
-            name : req.body.id,
-            title : "새로운 채팅",
-            chatting_arr : {
-              ko_chat_arr: [
-                'AI: 안녕하세요! 저는 AI 챗봇이고 여행 컨설턴트입니다. 저는 당신의 모든 여행에 필요한 것들을 도우러 왔습니다. 관광지, 음식점 등 여행과 관련하여 궁금한 점이 있으면 알려주시기 바랍니다.',
-              ],
-              en_chat_arr: [
-                'user: You are a travel consultant from now on. I want you to give me good information about travel, such as tourist attractions, restaurants, and useful information',
-                "AI: Sure thing! I'm happy to help. Let's start with tourist attractions. Some of the most popular tourist attractions in the world include the Eiffel Tower in Paris, France; the Taj Mahal in Agra, India; the Great Wall of China; and the Colosseum in Rome, Italy. \n" +
-                '\n' +
-                'When it comes to restaurants, there are countless options to choose from around the world. Some of the most highly rated restaurants include El Celler de Can Roca in Girona, Spain; La Mère Brazier in Lyon, France; Sukiyabashi Jiro in Tokyo, Japan; and Osteria Francescana in Modena, Italy. \n' +
-                '\n' +
-                'I hope this information is helpful!',
-                "user:  Who are you?",
-                `AI:  I'm an AI chatbot designed to help you with travel information. I can provide you with tourist attractions, restaurants, and other useful information.`,
-                "user:  What did I tell you to do when I introduced you earlier?",
-                "AI:  When you introduced me earlier, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
-                "user:  What did I tell you to do when I introduced you?",
-                "AI:  When you introduced me, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
-                "user:  I thought you told me to introduce you as a travel consultant",
-                "AI:  Yes, that's right. You asked me to introduce myself as a travel consultant and provide you with good information about travel, such as tourist attractions, restaurants, and useful information.",
-                "user:  Then introduce yourself again",
-                "AI:  Hi there! My name is AI Chatbot and I'm a travel consultant. I'm here to help you with all your travel needs. Let me know if you have any questions about tourist attractions, restaurants, or anything else related to travel.",
-              ]
-            },
-            date : today_date,
-          }
-
-          db.collection('chat-post').insertOne( basic_chat_data , function(){
-            console.log('chat-post DB 저장완료');
-          });
-          db.collection('counter').updateOne({name : 'postNumber'},{ $inc : {totalNumber:1} },function(){})
-        });
-        res.json({join_result : "register_success"});
-      });
-    };
-  });
-});
-
-
-
-
-
-
-
-
-
 
 // 채팅 API 함수
 async function papagoAPI(sourcePram, targetPram, message){
@@ -355,19 +265,126 @@ app.post('/chatEnter', async function (req, res) {
   }
 });
 
+app.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    // 로그인 실패 처리
+    if (err) { return next(err); }
+    if (!user) {
+      const { message } = info; // 인증 실패 메시지 가져오기
 
-app.get('/member', loginChack, function(req, res){
-  console.log("member in");
-  console.log(req.user);
-  console.log(req.body);
-  res.send("member 성공");
-  // res.json({basic_chat_data : [basic_chat_data]});
+      if (message === 'error_id')return res.status(401).json({ message: '존재하지 않는 아이디입니다.' });
+      if (message === 'error_pw')return res.status(401).json({ message: '패스워드가 틀렸습니다.' });
+      
+      return res.status(401).json({ message: '인증 실패' });
+    }
+    // 로그인 성공
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+
+      db.collection("chat-post").find({ name: user.id }).sort({ date: -1 }).limit(1).toArray(function(error, result){
+        return res.json({ message: result[0].id });
+      });
+
+    });
+  })(req, res, next);
+});
+
+app.post('/register', function(req, res) {
+  // 회원가입 여부 조회
+  db.collection('login').findOne({id : req.body.id}, function(error, result_1){
+    // 가입된 아이디
+    if(!result_1 === false) return res.status(401).json({ message: '이미 가입된 아이디입니다. 다른 아이디로 가입을 진행해 주세요.' });
+
+    // 없는 아이디 회원가입 처리
+    if(result_1 === null){
+      const db_input_Obj = {
+        id : req.body.id,
+        pw : req.body.pw,
+        manager : false,
+      }
+
+      db.collection('login').insertOne( db_input_Obj , function(){
+        console.log('회원가입완료');
+
+        db.collection('counter').findOne({name : 'postNumber'}, function(error, result){
+          let totalNumber = result.totalNumber;
+          const basic_chat_data = {
+            id : totalNumber+1,
+            name : req.body.id,
+            title : "새로운 채팅",
+            chatting_arr : {
+              ko_chat_arr: [
+                'AI: 안녕하세요! 저는 AI 챗봇이고 여행 컨설턴트입니다. 저는 당신의 모든 여행에 필요한 것들을 도우러 왔습니다. 관광지, 음식점 등 여행과 관련하여 궁금한 점이 있으면 알려주시기 바랍니다.',
+              ],
+              en_chat_arr: [
+                'user: You are a travel consultant from now on. I want you to give me good information about travel, such as tourist attractions, restaurants, and useful information',
+                "AI: Sure thing! I'm happy to help. Let's start with tourist attractions. Some of the most popular tourist attractions in the world include the Eiffel Tower in Paris, France; the Taj Mahal in Agra, India; the Great Wall of China; and the Colosseum in Rome, Italy. \n" +
+                '\n' +
+                'When it comes to restaurants, there are countless options to choose from around the world. Some of the most highly rated restaurants include El Celler de Can Roca in Girona, Spain; La Mère Brazier in Lyon, France; Sukiyabashi Jiro in Tokyo, Japan; and Osteria Francescana in Modena, Italy. \n' +
+                '\n' +
+                'I hope this information is helpful!',
+                "user:  Who are you?",
+                `AI:  I'm an AI chatbot designed to help you with travel information. I can provide you with tourist attractions, restaurants, and other useful information.`,
+                "user:  What did I tell you to do when I introduced you earlier?",
+                "AI:  When you introduced me earlier, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
+                "user:  What did I tell you to do when I introduced you?",
+                "AI:  When you introduced me, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
+                "user:  I thought you told me to introduce you as a travel consultant",
+                "AI:  Yes, that's right. You asked me to introduce myself as a travel consultant and provide you with good information about travel, such as tourist attractions, restaurants, and useful information.",
+                "user:  Then introduce yourself again",
+                "AI:  Hi there! My name is AI Chatbot and I'm a travel consultant. I'm here to help you with all your travel needs. Let me know if you have any questions about tourist attractions, restaurants, or anything else related to travel.",
+              ]
+            },
+            date : today_date,
+          }
+
+          db.collection('chat-post').insertOne( basic_chat_data , function(){
+            console.log('chat-post DB 저장완료');
+          });
+          db.collection('counter').updateOne({name : 'postNumber'},{ $inc : {totalNumber:1} },function(){})
+        });
+        res.json({join_result : "register_success"});
+      });
+    };
+  });
+});
+
+app.post('/logout', function(req, res, next){
+  req.logOut(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
 });
 
 
+// app.post('/logout', function (req, res) {
+//   console.log(req.session.cookie);
+//   req.logout(function (err) {
+//     if (err) {return next(err)}
+//   });
+//   req.session.save(function (err) {
+//     req.session.cookie.expires = new Date(0); // 세션 쿠키의 만료 날짜를 과거로 설정하여 만료시킵니다.
+//     res.clearCookie('connect.sid'); // connect.sid 쿠키를 삭제합니다.
+//     res.json({ url: 'guest' });
+//   });
+// });
+
+
+
+app.get('/community', loginChack, function(req, res){
+  console.log("member in");
+
+  res.send("community 접속이 되는가?");
+});
+
+
+app.get('/mypage', loginChack, function(req, res){
+  console.log("member in");
+
+  res.send("mypage 접속이 되는가?");
+});
 
 // React Router (항상 최하단으로)
 app.get('*', function(요청, 응답){
   응답.sendFile(path.join(__dirname, '/../client/build/index.html'));
 })
-

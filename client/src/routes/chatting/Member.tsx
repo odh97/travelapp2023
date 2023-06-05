@@ -58,13 +58,13 @@ function Member(): JSX.Element{
       // ajax 요청
       axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/member',{ withCredentials: true })
       .then((result)=>{
-        // let copy:DBHistoryType[] = result.data.basic_chat_data;
-
-        // if(storeDataSetting === false){
-        //   dispatch(setState(copy));
-        //   storeDataSetting = true;
-        // }
-        console.log(result);
+        let copy:DBHistoryType[] = result.data.chat_Data_Arr;
+        
+        if(storeDataSetting === false){
+          dispatch(setState(copy));
+          storeDataSetting = true;
+        }
+        console.log(result.data.chat_Data_Arr);
       })
       .catch((error)=>{console.log(error)});
   }, []);
@@ -131,16 +131,6 @@ function Member(): JSX.Element{
 
   }
   /* //채팅 기능 */
-
-  // 언마운트 (로컬 스토리지 업데이트) (상태 변수 업데이트로 언마운트 실행시 최신 변수 적용)
-  useEffect(()=>{
-    // 마지막으로 로컬에 새롭게 저장
-    return()=>{
-      if(storeState.userChatArr[0]){
-        localStorage.setItem("chatRoom_local_obj",JSON.stringify(storeState.userChatArr[0]));
-      }
-    }
-  },[storeState]);
 
   return (
   <div className='chat'>

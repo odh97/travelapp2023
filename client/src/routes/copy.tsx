@@ -32,43 +32,23 @@ interface storeStateType {
 
 
 function TestCP(): JSX.Element{
+// redux setting
+let dispatch = useDispatch();
+let storeState = useSelector((state:storeStateType) => state );
+let dataSetting = false;
 
+// 마운트
+// 대화 내용 데이터 조회
+useEffect(() => {
+  // ajax 요청
+  axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/mypage', { withCredentials: true })
+  .then((result)=>{
+    console.log(result);
+  })
+  .catch((error)=>{console.log(error)});
+}, []);
 
-  // redux setting
-  let dispatch = useDispatch();
-  let storeState = useSelector((state:storeStateType) => state );
-  let dataSetting = false;
-
-
-  // 마운트
-  // 대화 내용 데이터 조회
-  useEffect(() => {
-    let getLocalStorage = localStorage.getItem('chatRoom_local_obj');
-
-    // 로컬 데이터 조회
-    if(getLocalStorage !== null){
-      let chatRoom_local_obj = JSON.parse(getLocalStorage);
-      
-      if(dataSetting === false){
-        dispatch(setState(chatRoom_local_obj));
-        dataSetting = true;
-      }
-    } else{
-      // ajax 요청
-      axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/guest')
-      .then((result)=>{
-        let copy:DBHistoryType = result.data.basic_chat_data;
-
-        if(dataSetting === false){
-          dispatch(setState([copy]));
-          dataSetting = true;
-        }
-      })
-      .catch((error)=>{console.log(error)});
-    }
-  }, []);
-
-console.log(storeState);
+console.log(document.cookie);
 
   return (
     <div className='login'>

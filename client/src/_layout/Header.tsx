@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../styles/layout/Header.scss'
 
 // icon
 import { CiUser } from "react-icons/ci";
 
 // router
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+// axios
+import axios from 'axios';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -28,13 +30,26 @@ interface storeStateType {
 
 
 function Header(): JSX.Element{
+// css-handle
+let [hoverHidden, serHoverHidden] = useState(true);
+
+// navigate
+const navigate = useNavigate();
 
 // redux setting
-let dispatch = useDispatch();
 const storeData = useSelector((state:storeStateType) => state);
-console.log(storeData.userChatArr[0]);
 
-
+function logoutHandle(){
+  axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/logout', { withCredentials: true })
+  .then((result)=>{
+    let url = result.data.url;
+    // navigate('/'+url);
+    navigate('/guest');
+  })
+  .catch((error)=>{
+    console.log(error);
+    });
+}
 
 return (
   <header>
@@ -56,11 +71,28 @@ return (
         </div>
       </nav>
       <div className='user'>
-        <div className='user-icon'><CiUser/></div>
         {
         storeData.userChatArr[0].id === null
-        ? <Link className='user-name' to={"/login"}>로그인</Link>
-        : <span className='user-name'>{storeData.userChatArr[0].name}</span>
+        ?
+        <>
+          <div className='user-icon'><CiUser/></div>
+          <Link className='user-name' to={"/login"}>로그인</Link>
+        </>        
+        :
+        <>
+          <div className='user-icon'><CiUser/></div>
+          <div className={hoverHidden ? 'user-name hidden' : 'user-name'}
+                onMouseEnter={()=>{serHoverHidden(!hoverHidden)}}
+                onMouseLeave={()=>{serHoverHidden(!hoverHidden)}}>
+            <span>{storeData.userChatArr[0].name}</span>
+            <div className='member-list'>
+              <ul>
+                <li><Link className='member-mypage' to={"/mypage"}>마이 페이지</Link></li>
+                <li><button className='member-logout' onClick={logoutHandle}>로그아웃</button></li>
+              </ul>
+            </div>
+          </div>
+        </>
         }
       </div>
     </div>

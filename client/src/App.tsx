@@ -15,7 +15,7 @@ function App(): JSX.Element{
   return (
   <div className="App">
     <Routes>
-      <Route path='/test' element={<Test />} />
+      <Route path='/community' element={<Test />} />
       <Route path='/guest' element={<Guest />} />
       <Route path='/member/:id' element={<Member />} />
       <Route path='/login' element={<Login />} />
