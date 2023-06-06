@@ -4,13 +4,11 @@ import '../../styles/components/login/Login.scss'
 // components import
 import Header from '../../_layout/Header';
 import Alert from '../../_layout/Alert';
-
 // icon
 import { CiPlay1 } from "react-icons/ci";
 
 // router
 import { Link, useNavigate } from 'react-router-dom';
-
 // axios
 import axios from 'axios';
 

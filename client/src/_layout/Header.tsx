@@ -42,18 +42,18 @@ const storeData = useSelector((state:storeStateType) => state);
 function logoutHandle(){
   axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/logout', { withCredentials: true })
   .then((result)=>{
-    let url = result.data.url;
-    // navigate('/'+url);
-    navigate('/guest');
+    if(result.data.message === 'success'){
+      navigate('/guest');
+    }
   })
   .catch((error)=>{
     console.log(error);
-    });
+  });
 }
 
 return (
   <header>
-    {storeData.userChatArr.length === 0 ? null :
+    {storeData.userChatArr.length === 0 ? <DefaultHeader /> :
     <div className='header-inner'>
       <div className='brand-Name'><h1><Link to={"/member/1"}>travel</Link></h1></div>
       <nav>
@@ -98,6 +98,30 @@ return (
     </div>
     }
   </header>
+)
+}
+
+function DefaultHeader(){
+return(
+  <header>
+  <div className='header-inner'>
+    <div className='brand-Name'><h1><Link to={"/member/1"}>travel</Link></h1></div>
+    <nav>
+      <div className='nav-inner'>
+        <Link to={"/guest"}>채팅<span></span></Link>
+        <Link to={"/community"}>커뮤니티<span></span></Link>
+        <Link to={"/updateHistory"}>업데이트 내역<span></span></Link>
+        <Link to={"/developer"}>개발자<span></span></Link>
+        <Link to={"/"}>item<span></span></Link>
+        <Link to={"/"}>item<span></span></Link>
+      </div>
+    </nav>
+    <div className='user'>
+      <div className='user-icon'><CiUser/></div>
+      <Link className='user-name' to={"/login"}>로그인</Link>
+    </div>
+  </div>
+</header>
 )
 }
 

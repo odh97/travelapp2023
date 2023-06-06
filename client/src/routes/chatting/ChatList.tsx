@@ -46,7 +46,7 @@ function ChatList(): JSX.Element {
 
   function newChat(){
     // ajax 요청
-    axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/guest')
+    axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/basicChatData')
     .then((result)=>{
       let basic_chat_data:DBHistoryType[] = result.data.basic_chat_data;
       dispatch(newState({id : storeData.userChatArr[0].id, data : basic_chat_data}));

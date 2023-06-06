@@ -67,7 +67,7 @@ function Guest(): JSX.Element{
       }
     } else{
       // ajax 요청
-      axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/guest')
+      axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/basicChatData')
       .then((result)=>{
         let copy:DBHistoryType[] = result.data.basic_chat_data;
 

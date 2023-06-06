@@ -4,12 +4,14 @@ import '../styles/components/login/Login.scss'
 // components import
 import Header from '../_layout/Header';
 
+// store
+import { setState, changeTitle } from "../store/store"
 // redux
 import { useDispatch, useSelector } from "react-redux"
-import { setState, changeTitle } from "../store/store"
+// axios
 import axios from 'axios';
-
-
+// router
+import { redirect, useNavigate } from 'react-router-dom';
 
 
 // type 지정
@@ -30,12 +32,14 @@ interface storeStateType {
 }
 
 
-
 function TestCP(): JSX.Element{
+  // navigate
+  const navigate = useNavigate();
+
 // redux setting
 let dispatch = useDispatch();
 let storeState = useSelector((state:storeStateType) => state );
-let dataSetting = false;
+
 
 // 마운트
 // 대화 내용 데이터 조회
@@ -43,30 +47,30 @@ useEffect(() => {
   // ajax 요청
   axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/mypage', { withCredentials: true })
   .then((result)=>{
-    console.log(result);
+    // 로그인 정보가 없을 경우 로그인 페이지로 이동
+    if(result.data.authentication){
+      navigate('/login');
+    }
   })
   .catch((error)=>{console.log(error)});
 }, []);
 
-console.log(document.cookie);
-
-  return (
-    <div className='login'>
-      <Header />
-      <main className='login-inner'>
-        <h2>LOGIN</h2>
-          <form>
-            <input placeholder='아이디'></input>
-            <input placeholder='비밀번호'></input>
-            <button>로그인</button>
-          </form>
-          <input type='checkbox'></input>
-          <span>자동 로그인</span>
-      </main>
-    </div>
-  )
+return(
+  <div className='login'>
+  <Header />
+  <main className='login-inner'>
+    <h2>LOGIN</h2>
+      <form>
+        <input placeholder='아이디'></input>
+        <input placeholder='비밀번호'></input>
+        <button>로그인</button>
+      </form>
+      <input type='checkbox'></input>
+      <span>자동 로그인</span>
+  </main>
+</div>
+)
 }
-
 
 
 

@@ -19,11 +19,11 @@ app.use(cors({
 }));
 
 // login, session
+const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const session = require('express-session');
 
-app.use(session({secret : '비밀코드', resave : false, saveUninitialized: true}));
+app.use(session({secret : '비밀코드', resave : false, saveUninitialized: false}));
 app.use(passport.initialize());
 app.use(passport.session()); 
 
@@ -92,10 +92,9 @@ function loginChack(req, res, next){
     next(); // next : 다음으로 통과 시켜주는 함수
   } else{
     console.log(req.user);
-    res.send('로그인안하셨는데요?');
+    res.json({authentication:"failed"});
   }
 }
-
 
 // date
 var date = new Date();
@@ -103,24 +102,13 @@ var today_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'me
 var style_date2 = new Intl.RelativeTimeFormat().format(7, 'days');
 var next_week_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date.setDate(date.getDate() + 7));
 
-// counter 샘플
-app.post('/add', function(req, res){
-  db.collection('counter').findOne({name : 'postNumber'}, function(error, result){
-    let totalNumber = result.totalNumber;
-    db.collection('post').insertOne( { _id : (totalNumber + 1), title : req.body.title, date : req.body.date } , function(){
-      console.log('저장완료');
-      res.send('전송완료');
-    });
-  });
-});
 
+app.use(express.static(path.join(__dirname, '/../client/build')));
+app.get('/', function(요청, 응답){
+  응답.sendFile(path.join(__dirname, '/../client/build/index.html'));
+})
 
-// app.use(express.static(path.join(__dirname, '/../client/build')));
-// app.get('/', function(요청, 응답){
-  // 응답.sendFile(path.join(__dirname, '/../client/build/index.html'));
-// })
-
-app.get('/guest', function(요청, 응답){
+app.get('/basicChatData', function(요청, 응답){
   // 현재 하드코딩 상태 나중에 DB 데이터로 교체
   const basic_chat_data = {
     id : null,
@@ -349,32 +337,17 @@ app.post('/register', function(req, res) {
   });
 });
 
-app.post('/logout', function(req, res, next){
+app.post('/logout', function(req, res) {
+  console.log(req.session);
   req.logOut(function(err) {
-    if (err) { return next(err); }
-    res.redirect('/');
+    if (err) { return console.log(err); }
+    
+    req.session.destroy(function(err) {
+      if (err) { return console.log(err); }
+      res.clearCookie('connect.sid');
+      res.json({ message: 'success' }); // Send a success response
+    });
   });
-});
-
-
-// app.post('/logout', function (req, res) {
-//   console.log(req.session.cookie);
-//   req.logout(function (err) {
-//     if (err) {return next(err)}
-//   });
-//   req.session.save(function (err) {
-//     req.session.cookie.expires = new Date(0); // 세션 쿠키의 만료 날짜를 과거로 설정하여 만료시킵니다.
-//     res.clearCookie('connect.sid'); // connect.sid 쿠키를 삭제합니다.
-//     res.json({ url: 'guest' });
-//   });
-// });
-
-
-
-app.get('/community', loginChack, function(req, res){
-  console.log("member in");
-
-  res.send("community 접속이 되는가?");
 });
 
 
@@ -383,6 +356,14 @@ app.get('/mypage', loginChack, function(req, res){
 
   res.send("mypage 접속이 되는가?");
 });
+
+app.get('/community', function(req, res){
+  console.log("member in");
+
+  res.send("community 접속이 되는가?");
+});
+
+
 
 // React Router (항상 최하단으로)
 app.get('*', function(요청, 응답){
