@@ -1,0 +1,75 @@
+@import "../common/common.scss";
+
+.notFound main{
+  width: 100%;
+  height: 100vh;
+  font-family: $font-NoSansKR;
+
+  h2{
+    position: relative;
+    padding-top: 30px;
+    color: $back-color1;
+    font-size: 200px;
+    font-weight: bold;
+    &:after {
+      content: "";
+      display: block;
+      z-index: -1;
+      position: absolute;
+      left: calc(50% - 180px);
+      bottom: 45px;
+      width: 360px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: darken($back-color3, 10%);
+      opacity: 0.4;
+    }
+    &:before{
+      content: "404";
+      position: absolute;
+      top: 27px;
+      left: 5px;
+      right: 0;
+      color: transparent;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 400%;
+      text-shadow: 1px 1px 3px transparentize(#fff, .75);
+    }
+  }
+  p{
+    color: $font-color;
+    font-size: $font-base;
+    font-weight: 300;
+  }
+  a{
+    margin: 20px auto 0;
+    display: block;
+    width: 200px;
+    height: 50px;
+    color: rgba($color: $back-color1, $alpha: 1);
+    font-size: $font-lg;
+    line-height: 50px;
+    border: 1px solid $back-color1;
+    border-radius: 5px;
+    transition: all 0.3s;
+    svg{transform: rotateZ(90deg) translate(2px, -5px);}
+    &:hover{
+      color: #fff;
+      background: $back-color1;
+      transform: translate(1px,3px);
+    }
+  }
+}
+
+// common scss variable
+$font-xs: 12px; 
+$font-sm: 14px;   // mobile-본문
+$font-base: 16px; // web-본문
+$font-lg: 18px;   // 소제목
+$font-xl: 20px;   // 대제목
+$font-NoSansKR: 'Noto Sans KR', sans-serif; //폰트
+$font-color: rgba(0,0,0,0.80);
+$back-color1: #79b1ff;
+$back-color2: #dfe0ff;
+$back-color3: #EFF0FF;

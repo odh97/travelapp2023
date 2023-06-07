@@ -9,6 +9,7 @@ import Member from './routes/chatting/Member';
 import Login from './routes/login/Login';
 import Register from './routes/login/Register';
 import Copy from './routes/copy';
+import NotFound from './_layout/NotFound';
 
 function App(): JSX.Element{
   return (
@@ -19,7 +20,7 @@ function App(): JSX.Element{
       <Route path='/login' element={<Login />} />
       <Route path='/mypage' element={<Copy />} />
       <Route path='/register' element={<Register />} />
-      <Route path='*' element={ <div>없는페이지임</div> } />
+      <Route path='*' element={<NotFound />} />
     </Routes>
   </div>
   );
