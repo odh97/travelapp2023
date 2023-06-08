@@ -139,7 +139,6 @@ function Guest(): JSX.Element{
     .catch((error)=>{
       console.log(error);
     });
-
   }
   /* //채팅 기능 */
 
@@ -148,7 +147,9 @@ function Guest(): JSX.Element{
     // 마지막으로 로컬에 새롭게 저장
     return()=>{
       if(storeState.userChatArr[0]){
-        localStorage.setItem("chatRoom_local_obj",JSON.stringify(storeState.userChatArr[0]));
+        if(storeState.userChatArr[0].id === null){
+          localStorage.setItem("chatRoom_local_obj",JSON.stringify(storeState.userChatArr[0]));
+        }
       }
     }
   },[storeState]);

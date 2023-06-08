@@ -85,14 +85,16 @@ passport.deserializeUser(function(userID, done){
 
 //미들웨어
 function loginChack(req, res, next){
-  console.log("미들웨어 in");
+  console.log("login middleware in");
 
   if(req.user){
     console.log(req.user);
     next(); // next : 다음으로 통과 시켜주는 함수
+    console.log("login middleware success end");
   } else{
     console.log(req.user);
     res.json({authentication:"failed"});
+    console.log("login middleware failure end");
   }
 }
 
@@ -104,11 +106,11 @@ var next_week_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle:
 
 
 app.use(express.static(path.join(__dirname, '/../client/build')));
-app.get('/', function(요청, 응답){
-  응답.sendFile(path.join(__dirname, '/../client/build/index.html'));
+app.get('/', function(req, res){
+  res.sendFile(path.join(__dirname, '/../client/build/index.html'));
 })
 
-app.get('/basicChatData', function(요청, 응답){
+app.get('/basicChatData', function(req, res){
   // 현재 하드코딩 상태 나중에 DB 데이터로 교체
   const basic_chat_data = {
     id : null,
@@ -139,7 +141,7 @@ app.get('/basicChatData', function(요청, 응답){
     },
     date : today_date,
   }
-  응답.json({basic_chat_data : [basic_chat_data]});
+  res.json({basic_chat_data : [basic_chat_data]});
 });
 
 app.get('/member', loginChack, function(req, res){
@@ -149,6 +151,53 @@ app.get('/member', loginChack, function(req, res){
     res.json({chat_Data_Arr : result});
     console.log("member end");
   });
+});
+app.post('/addNewChat', loginChack, async function(req, res){
+  console.log("addNewChat in");
+  console.log(req.user.id);
+
+  let totalNumber = await new Promise((resolve, reject) => {
+    db.collection('counter').findOne({ name: 'postNumber' }, function(error, result) {
+      if (error) reject(error);
+
+      resolve(result.totalNumber);
+    });
+  });
+  const basic_chat_data = {
+    id : totalNumber+1,
+    name : req.user.id,
+    title : "새로운 채팅",
+    chatting_arr : {
+      ko_chat_arr: [
+        'AI: 안녕하세요! 저는 AI 챗봇이고 여행 컨설턴트입니다. 저는 당신의 모든 여행에 필요한 것들을 도우러 왔습니다. 관광지, 음식점 등 여행과 관련하여 궁금한 점이 있으면 알려주시기 바랍니다.',
+      ],
+      en_chat_arr: [
+        'user: You are a travel consultant from now on. I want you to give me good information about travel, such as tourist attractions, restaurants, and useful information',
+        "AI: Sure thing! I'm happy to help. Let's start with tourist attractions. Some of the most popular tourist attractions in the world include the Eiffel Tower in Paris, France; the Taj Mahal in Agra, India; the Great Wall of China; and the Colosseum in Rome, Italy. \n" +
+        '\n' +
+        'When it comes to restaurants, there are countless options to choose from around the world. Some of the most highly rated restaurants include El Celler de Can Roca in Girona, Spain; La Mère Brazier in Lyon, France; Sukiyabashi Jiro in Tokyo, Japan; and Osteria Francescana in Modena, Italy. \n' +
+        '\n' +
+        'I hope this information is helpful!',
+        "user:  Who are you?",
+        `AI:  I'm an AI chatbot designed to help you with travel information. I can provide you with tourist attractions, restaurants, and other useful information.`,
+        "user:  What did I tell you to do when I introduced you earlier?",
+        "AI:  When you introduced me earlier, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
+        "user:  What did I tell you to do when I introduced you?",
+        "AI:  When you introduced me, you asked me to give you good information about travel, such as tourist attractions, restaurants, and useful information.",
+        "user:  I thought you told me to introduce you as a travel consultant",
+        "AI:  Yes, that's right. You asked me to introduce myself as a travel consultant and provide you with good information about travel, such as tourist attractions, restaurants, and useful information.",
+        "user:  Then introduce yourself again",
+        "AI:  Hi there! My name is AI Chatbot and I'm a travel consultant. I'm here to help you with all your travel needs. Let me know if you have any questions about tourist attractions, restaurants, or anything else related to travel.",
+      ]
+    },
+    date : today_date,
+  }
+
+  db.collection('chat-post').insertOne( basic_chat_data , function(){
+    console.log('chat-post DB 저장완료');
+    res.json({ basic_chat_data: [basic_chat_data] });
+  });
+  db.collection('counter').updateOne({name : 'postNumber'},{ $inc : {totalNumber:1} },function(){})
 });
 
 // 채팅 API 함수
@@ -357,7 +406,7 @@ app.get('/mypage', loginChack, function(req, res){
   res.send("mypage 접속이 되는가?");
 });
 
-app.get('/community', function(req, res){
+app.get('/community', loginChack, function(req, res){
   console.log("member in");
 
   res.send("community 접속이 되는가?");
@@ -366,6 +415,6 @@ app.get('/community', function(req, res){
 
 
 // React Router (항상 최하단으로)
-app.get('*', function(요청, 응답){
-  응답.sendFile(path.join(__dirname, '/../client/build/index.html'));
+app.get('*', function(req, res){
+  res.sendFile(path.join(__dirname, '/../client/build/index.html'));
 })

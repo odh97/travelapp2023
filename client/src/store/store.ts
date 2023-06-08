@@ -54,6 +54,11 @@ const userChatArr = createSlice({
           state.push(item);
         }
       }
+      if(id !== null){
+        for(let item of data){
+          state.push(item);
+        }
+      }
     },
     chatUpdate(state, action:PayloadAction<chatUpdate>){
       const { newChatting_arr, storeState_copy } = action.payload;
