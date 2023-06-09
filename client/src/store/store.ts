@@ -1,5 +1,8 @@
 import { PayloadAction, configureStore, createSlice } from '@reduxjs/toolkit';
 
+// axios
+import axios from 'axios';
+
 // type 지정
 type DBHistoryType = {
   id: null | number;
@@ -18,11 +21,8 @@ interface newState {
 }
 
 interface chatUpdate {
-  newChatting_arr : {
-    ko_chat_arr: string[];
-    en_chat_arr: string[];
-  };
-  storeState_copy : DBHistoryType;
+  resultData : DBHistoryType;
+  index : number;
 }
 
 interface changeTitle {
@@ -55,58 +55,76 @@ const userChatArr = createSlice({
         }
       }
       if(id !== null){
+        console.log(data);
         for(let item of data){
-          state.push(item);
+          state.unshift(item);
         }
       }
     },
     chatUpdate(state, action:PayloadAction<chatUpdate>){
-      const { newChatting_arr, storeState_copy } = action.payload;
+      const { resultData, index } = action.payload;
+      const updateData = {...resultData}
+      console.log(updateData);
 
-      // 게스트 계정
-      if(storeState_copy.id === null){
-        const updateData = {
-          ...storeState_copy,
-          chatting_arr: newChatting_arr,
-        };
-  
-        state[0] = updateData;
-      }
-
-      // 회원 계정
-      // {미작성}
-      if(storeState_copy.id !== null){
-
-      }
+      state[index] = updateData;
     },
-
     changeTitle(state, action:PayloadAction<changeTitle>){
-      let newTitle = action.payload.title;
-      let data = action.payload.data;
-      let id = action.payload.id;
+      let {title, data, id} = action.payload;
+      let updateData: DBHistoryType | undefined = undefined;
+      let index: number | undefined = undefined;
 
       for(let item in data){
         if(data[item].id === id){
-          // data[item].title = title;
-          const updateData={
+          index = Number(item);
+          updateData = {
             ...data[item],
-            title : newTitle,
+            title : title,
           }
-
-          state[item] = updateData;
         }
       }
+      
+      if(updateData !== undefined && index !== undefined){
+        // 비회원
+        if(updateData.id === null) state[0] = updateData;
 
-      // 회원 계정
-      // {미작성}
+        // 회원
+        if(updateData.id !== null){
+          let newData = [...data];
+          newData[index] = updateData;
+
+          state.length = 0;
+          for(let item of newData){
+            state.push(item);
+          }
+
+          // ajax 요청
+          axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatTitleUpdate',updateData, { withCredentials: true })
+          .then((result)=>{console.log(result.data);})
+          .catch((error)=>{console.log(error)});
+        }
+      }
     },
 
   }
 })
 export let { setState, newState, chatUpdate, changeTitle } = userChatArr.actions;
 
+const chatNumber = createSlice({
+  name : 'chatNumber',
+  initialState : {target:0},
+  reducers : {
+    updateChatNumber(state, action:PayloadAction<number>){
+      // action.type : state 변경 함수 이름
+      // action.payload : 파라미터 값 가져오기
+      state.target = action.payload;
+    },
+  }
+})
+export let { updateChatNumber } = chatNumber.actions;
+
 export default configureStore({
   reducer: {
     userChatArr: userChatArr.reducer,
+    chatNumber: chatNumber.reducer,
   },
 });

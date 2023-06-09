@@ -17,7 +17,7 @@ import ChatList from './ChatList';
 
 // redux
 import { useDispatch, useSelector } from "react-redux"
-import { setState, chatUpdate, changeTitle } from "../../store/store"
+import { setState, chatUpdate, updateChatNumber } from "../../store/store"
 
 // type 지정
 type DBHistoryType = {
@@ -34,6 +34,7 @@ type DBHistoryType = {
 // Redux 상태의 루트 타입 정의
 interface storeStateType {
   userChatArr: DBHistoryType[];
+  chatNumber: {target:number};
 }
 
 // window type 추적
@@ -62,9 +63,8 @@ useEffect(() => {
     
     if(storeDataSetting === false){
       dispatch(setState(copy));
-      storeDataSetting = true;
+      storeDataSetting = true;      
     }
-    console.log(result.data.chat_Data_Arr);
   })
   .catch((error)=>{console.log(error)});
 }, []);
@@ -107,13 +107,17 @@ function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEv
   event.preventDefault();
   if(!chatInputValue.trim() === true) return setAlertClick(true); // 빈값과 스페이스 값만을 전송했을 경우
   //POST data Data
-  let storeState_copy = storeState.userChatArr[0];
-  let newChatting_arr = {
-    ...storeState_copy.chatting_arr,
-    ko_chat_arr : [...storeState_copy.chatting_arr.ko_chat_arr,`user: ${chatInputValue.trim()}`]
+  let storeState_copy = storeState.userChatArr[storeState.chatNumber.target];
+  let newChatting = {
+    ...storeState_copy,
+    chatting_arr:
+      {
+        en_chat_arr : [...storeState_copy.chatting_arr.en_chat_arr],
+        ko_chat_arr : [...storeState_copy.chatting_arr.ko_chat_arr,`user: ${chatInputValue.trim()}`]
+      }
   }
 
-  dispatch(chatUpdate({newChatting_arr, storeState_copy}));
+  dispatch(chatUpdate({resultData : newChatting, index : storeState.chatNumber.target}));
   const postData = {
     userValue: `user: ${chatInputValue.trim()}`,
     chatDBHistory: storeState_copy,
@@ -122,8 +126,9 @@ function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEv
   // ajax 요청 진행
   axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
   .then((result)=>{
-    let resultData = result.data.DB_chat_data.chatting_arr;
-    dispatch(chatUpdate({newChatting_arr : resultData, storeState_copy}));
+    let resultData = result.data.DB_chat_data;
+    console.log(storeState.userChatArr[storeState.chatNumber.target]);
+    dispatch(chatUpdate({resultData : resultData, index : storeState.chatNumber.target}));
   })
   .catch((error)=>{
     console.log(error);
@@ -131,6 +136,7 @@ function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEv
 
 }
 /* //채팅 기능 */
+
 
 return (
 <div className='chat'>
@@ -142,8 +148,8 @@ return (
       <div className='txt-box' ref={txtBoxDivRef}>
         <ul>
         {
-        storeState.userChatArr[0] ?
-        storeState.userChatArr[0].chatting_arr.ko_chat_arr.map((value, index)=>{
+        storeState.userChatArr[storeState.chatNumber.target] ?
+        storeState.userChatArr[storeState.chatNumber.target].chatting_arr.ko_chat_arr.map((value, index)=>{
           if(value.startsWith("user:") === true){
             return(
             <li className='user' key={index}>

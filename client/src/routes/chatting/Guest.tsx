@@ -124,21 +124,21 @@ function Guest(): JSX.Element{
       ko_chat_arr : [...storeState_copy.chatting_arr.ko_chat_arr,`user: ${chatInputValue.trim()}`]
     }
 
-    dispatch(chatUpdate({newChatting_arr, storeState_copy}));
-    const postData = {
-      userValue: `user: ${chatInputValue.trim()}`,
-      chatDBHistory: storeState_copy,
-    };
+    // dispatch(chatUpdate({newChatting_arr, storeState_copy}));
+    // const postData = {
+    //   userValue: `user: ${chatInputValue.trim()}`,
+    //   chatDBHistory: storeState_copy,
+    // };
 
-    // ajax 요청 진행
-    axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
-    .then((result)=>{
-      let resultData = result.data.DB_chat_data.chatting_arr;
-      dispatch(chatUpdate({newChatting_arr : resultData, storeState_copy}));
-    })
-    .catch((error)=>{
-      console.log(error);
-    });
+    // // ajax 요청 진행
+    // axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
+    // .then((result)=>{
+    //   let resultData = result.data.DB_chat_data.chatting_arr;
+    //   dispatch(chatUpdate({newChatting_arr : resultData, storeState_copy}));
+    // })
+    // .catch((error)=>{
+    //   console.log(error);
+    // });
   }
   /* //채팅 기능 */
 

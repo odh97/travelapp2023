@@ -152,7 +152,7 @@ app.get('/member', loginChack, function(req, res){
     console.log("member end");
   });
 });
-app.post('/addNewChat', loginChack, async function(req, res){
+app.post('/newChatAdd', loginChack, async function(req, res){
   console.log("addNewChat in");
   console.log(req.user.id);
 
@@ -198,6 +198,12 @@ app.post('/addNewChat', loginChack, async function(req, res){
     res.json({ basic_chat_data: [basic_chat_data] });
   });
   db.collection('counter').updateOne({name : 'postNumber'},{ $inc : {totalNumber:1} },function(){})
+});
+app.post('/chatTitleUpdate', loginChack, async function(req, res){
+  console.log("chatTitleUpdate in");
+  db.collection('chat-post').updateOne({id : req.body.id}, {$set : {title:req.body.title} }, function(){
+    res.json({join_result : "titleUpdate_success"});
+  })
 });
 
 // 채팅 API 함수
@@ -290,11 +296,23 @@ app.post('/chatEnter', async function (req, res) {
     chatArr.en_chat_arr.push("AI: test Data string"+number+number+number+number);
     chatArr.ko_chat_arr.push("AI: AI 테스트 데이터 문자"+number+number+number+number);
     chatDBHistory.chatting_arr = chatArr;
-    
-    // DB 저장
-    // 미작성
 
-    res.json({DB_chat_data : chatDBHistory});
+
+    // 회원 데이터 DB 연동
+    if(chatDBHistory.id !== null){
+      // DB 저장
+      chatDBHistory.date = today_date;
+      let dataset = {
+        chatting_arr : {
+          ko_chat_arr : chatDBHistory.chatting_arr.ko_chat_arr,
+          en_chat_arr : chatDBHistory.chatting_arr.en_chat_arr
+        },
+        date : chatDBHistory.date
+      }
+      db.collection('chat-post').updateOne({id : chatDBHistory.id}, {$set : dataset }, function(){
+        res.json({DB_chat_data : chatDBHistory});
+      })
+    }
     console.log("chatEnter end");
   }
   catch(error){
