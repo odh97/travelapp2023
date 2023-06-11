@@ -104,10 +104,15 @@ const userChatArr = createSlice({
         }
       }
     },
+    deleteData(state, action:PayloadAction<number>){
+      const index = action.payload;
+
+      state.splice(index, 1);
+    },
 
   }
 })
-export let { setState, newState, chatUpdate, changeTitle } = userChatArr.actions;
+export let { setState, newState, chatUpdate, changeTitle, deleteData } = userChatArr.actions;
 
 const chatNumber = createSlice({
   name : 'chatNumber',

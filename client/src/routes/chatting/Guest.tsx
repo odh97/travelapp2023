@@ -1,20 +1,16 @@
 import React, {useRef, useState, useEffect} from 'react';
-import '../../styles/components/ChatRoom.scss'
+import '../../styles/components/chatting/ChatRoom.scss'
 
 // components import
 import Header from '../../_layout/Header';
 import Alert from '../../_layout/Alert';
-
+import ChatList from './ChatList';
 // icon 
 import { CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
 import { TbBrandTelegram } from "react-icons/tb";
 
 // axios
 import axios from 'axios';
-
-// router
-import ChatList from './ChatList';
-
 // redux
 import { useDispatch, useSelector } from "react-redux"
 import { setState, chatUpdate, changeTitle } from "../../store/store"
@@ -119,26 +115,31 @@ function Guest(): JSX.Element{
     if(!chatInputValue.trim() === true) return setAlertClick(true); // 빈값과 스페이스 값만을 전송했을 경우
     //POST data Data
     let storeState_copy = storeState.userChatArr[0];
-    let newChatting_arr = {
-      ...storeState_copy.chatting_arr,
-      ko_chat_arr : [...storeState_copy.chatting_arr.ko_chat_arr,`user: ${chatInputValue.trim()}`]
+    let newChatting = {
+      ...storeState_copy,
+      chatting_arr:
+        {
+          en_chat_arr : [...storeState_copy.chatting_arr.en_chat_arr],
+          ko_chat_arr : [...storeState_copy.chatting_arr.ko_chat_arr,`user: ${chatInputValue.trim()}`]
+        }
     }
-
-    // dispatch(chatUpdate({newChatting_arr, storeState_copy}));
-    // const postData = {
-    //   userValue: `user: ${chatInputValue.trim()}`,
-    //   chatDBHistory: storeState_copy,
-    // };
-
-    // // ajax 요청 진행
-    // axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
-    // .then((result)=>{
-    //   let resultData = result.data.DB_chat_data.chatting_arr;
-    //   dispatch(chatUpdate({newChatting_arr : resultData, storeState_copy}));
-    // })
-    // .catch((error)=>{
-    //   console.log(error);
-    // });
+  
+    dispatch(chatUpdate({resultData : newChatting, index : 0}));
+    const postData = {
+      userValue: `user: ${chatInputValue.trim()}`,
+      chatDBHistory: storeState_copy,
+    };
+  
+    // ajax 요청 진행
+    axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
+    .then((result)=>{
+      let resultData = result.data.DB_chat_data;
+      console.log(storeState.userChatArr[0]);
+      dispatch(chatUpdate({resultData : resultData, index : 0}));
+    })
+    .catch((error)=>{
+      console.log(error);
+    });
   }
   /* //채팅 기능 */
 

@@ -205,6 +205,24 @@ app.post('/chatTitleUpdate', loginChack, async function(req, res){
     res.json({join_result : "titleUpdate_success"});
   })
 });
+app.delete('/chatDelete', loginChack, async function(req, res){
+  console.log("chatDelete in");
+  console.log(req.body);
+
+  const filter = {
+    $and: [
+      { id : req.body.id },
+      { name : req.body.name }
+    ]
+  };
+
+  // DELETE
+  db.collection('chat-post').deleteOne(filter, function(error, result){
+    console.log('DB post 데이터 삭제 완료');
+    if(error) {console.log(error)}
+    res.status(200).send({ message: 'Deletion successful' });
+  });
+});
 
 // 채팅 API 함수
 async function papagoAPI(sourcePram, targetPram, message){
@@ -309,10 +327,9 @@ app.post('/chatEnter', async function (req, res) {
         },
         date : chatDBHistory.date
       }
-      db.collection('chat-post').updateOne({id : chatDBHistory.id}, {$set : dataset }, function(){
-        res.json({DB_chat_data : chatDBHistory});
-      })
+      db.collection('chat-post').updateOne({id : chatDBHistory.id}, {$set : dataset }, function(){})
     }
+    res.json({DB_chat_data : chatDBHistory});
     console.log("chatEnter end");
   }
   catch(error){

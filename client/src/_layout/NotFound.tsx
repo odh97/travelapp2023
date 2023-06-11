@@ -67,7 +67,7 @@ useEffect(() => {
 }, [storeState]);
 
 return(
-  <div className='notFound'>
+<div className='notFound'>
   <Header />
   <main className='notFound-inner'>
     <h2>404</h2>

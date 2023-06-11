@@ -1,0 +1,58 @@
+@import "../../common/common.scss";
+
+.community{
+  width: 100%;
+  height: 100vh;
+  display: flex;
+
+  .community-inner{
+    padding-top: 50px;
+    width: 100%;
+    li{
+      cursor: pointer;
+      position: relative;
+      margin: 30px auto 0;
+      width: 800px;
+      height: 150px;
+      text-align: left;
+      box-sizing: border-box;
+      border-radius: 10px;
+      box-shadow: 5px 5px 10px #bfbfbf;
+      background-color: #fff;
+      h2{
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        width: 500px;
+        font-size: $font-lg;
+      }
+      span{
+        position: absolute;
+        right: 10px;
+        top: 14px;
+      }
+      p{
+        position: absolute;
+        left: 10px;
+        top: 50px;
+        width: 780px;
+        height: 80px;
+        font-size: $font-base;
+      }
+      &:hover{
+        border: 2px solid $back-color1;
+      }
+    }
+  }
+}
+// common scss variable
+$font-xs: 12px; 
+$font-sm: 14px;   // mobile-본문
+$font-base: 16px; // web-본문
+$font-lg: 18px;   // 소제목
+$font-xl: 20px;   // 대제목
+$font-NoSansKR: 'Noto Sans KR', sans-serif; //폰트
+$font-color: rgba(0,0,0,0.80);
+$back-color1: #79b1ff;
+$back-color2: #dfe0ff;
+$back-color3: #EFF0FF;

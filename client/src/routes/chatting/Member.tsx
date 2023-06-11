@@ -1,20 +1,16 @@
 import React, {useRef, useState, useEffect} from 'react';
-import '../../styles/components/ChatRoom.scss'
+import '../../styles/components/chatting/ChatRoom.scss'
 
 // components import
 import Header from '../../_layout/Header';
 import Alert from '../../_layout/Alert';
-
+import ChatList from './ChatList';
 // icon 
 import { CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
 import { TbBrandTelegram } from "react-icons/tb";
 
 // axios
 import axios from 'axios';
-
-// router
-import ChatList from './ChatList';
-
 // redux
 import { useDispatch, useSelector } from "react-redux"
 import { setState, chatUpdate, updateChatNumber } from "../../store/store"
