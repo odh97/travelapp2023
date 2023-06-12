@@ -66,8 +66,6 @@ return (
           <Link to={"/community"}>커뮤니티<span></span></Link>
           <Link to={"/updateHistory"}>업데이트 내역<span></span></Link>
           <Link to={"/developer"}>개발자<span></span></Link>
-          <Link to={"/"}>item<span></span></Link>
-          <Link to={"/"}>item<span></span></Link>
         </div>
       </nav>
       <div className='user'>

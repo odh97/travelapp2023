@@ -1,12 +1,12 @@
 import React, { useState,useEffect } from 'react';
-import '../../styles/components/community/Community.scss'
+import '../../styles/components/mypage/Mypage.scss'
 
 // components import
 import Header from '../../_layout/Header';
 import Alert from '../../_layout/Alert';
 // icons
-import { CiChat1,CiEdit,CiSquareCheck,CiSquareRemove,CiSquarePlus } from "react-icons/ci";
-import { TbPencil } from "react-icons/tb";
+import { CiUser } from "react-icons/ci";
+import { TbCamera } from "react-icons/tb";
 
 // router
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +22,7 @@ import axios from 'axios';
 // title : 대제목
 // mainText : 본문
 
-function Community(): JSX.Element {
+function Mypage(): JSX.Element {
 // navigate
 const navigate = useNavigate();
 // redux setting
@@ -45,32 +45,21 @@ useEffect(()=>{
 },[]);
 
 return (
-<div className='community'>
+<div className='mypage'>
   <Header />
-  <main className='community-inner'>
-    <div className='community-post-box'>
-    <h2>자유 게시판</h2>
-      <ul>
-        {/* 클릭하면 해당 페이지로 이동 */}
-        <li> 
-          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
-          <span>작성자 : kim</span>
-          {/* <span>작성 번호 : id</span> */}
-          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
-        </li>
-        {
-          /* {storeData.userChatArr.map((value, index)=>{
-          return(
-          <li key={index} className={deleteNumber === index ? 'fade-out' : (chatAddClass ? 'addItem' : '')}>
-          </li>
-          )
-          })} */
-        }
-      </ul>
-      <button className='community-add-icon'>
-        <TbPencil />
-      </button>
+  <main className='mypage-inner'>
+    <h2>마이 페이지</h2>
+    <div className='user-profile'>
+      <button className='user-img'>{false ? '' : <CiUser />}</button>
+      <button className='user-img-icon'><TbCamera /></button>
+      <span className='user-name'>이름 하드코딩</span>
     </div>
+    <table>
+      <tr>
+        <th>커뮤니티</th>
+        <td>게시글 관리(클릭 이벤트 미적용 상태)</td>
+      </tr>
+    </table>
   </main>
 </div>
 );
@@ -78,4 +67,4 @@ return (
 
 
 
-export default Community;
+export default Mypage;

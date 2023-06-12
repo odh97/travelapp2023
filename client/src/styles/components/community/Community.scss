@@ -3,56 +3,94 @@
 .community{
   width: 100%;
   height: 100vh;
-  display: flex;
-
+  overflow: hidden;
   .community-inner{
     padding-top: 50px;
-    width: 100%;
-    li{
-      cursor: pointer;
-      position: relative;
-      margin: 30px auto 0;
-      width: 800px;
-      height: 150px;
+    height: 100%;
+    background-color: #f9fbff;
+    h2{
+      margin: 30px 0 15px 55px;
       text-align: left;
-      box-sizing: border-box;
-      border-radius: 10px;
-      box-shadow: 5px 5px 10px #bfbfbf;
-      background-color: #fff;
-      h2{
-        position: absolute;
-        left: 10px;
-        top: 10px;
-        width: 500px;
-        font-size: $font-lg;
+      font-size: 30px;
+    }
+    .community-post-box{
+      position: relative;
+      margin: 0 auto;
+      height: 100%;
+      max-width: 1100px;
+      ul{
+        overflow: auto;
+        margin: 0 auto;
+        width: 100%;
+        height: 70%;
+        li{
+          cursor: pointer;
+          position: relative;
+          margin: 25px auto 0;
+          width: 90%;
+          height: 120px;
+          text-align: left;
+          border: 1px solid #fff;
+          border-radius: 5px;
+          box-sizing: border-box;
+          box-shadow: 5px 5px 10px rgba(135, 126, 126, 0.376);
+          background: #fff;
+          transform: scale(1);
+          transition: all 0.6s;
+          h3{
+            position: absolute;
+            left: 10px;
+            top: 20px;
+            width: 500px;
+            font-size: $font-xl;
+          }
+          span{
+            position: absolute;
+            right: 10px;
+            top: 24px;
+            font-size: $font-sm;
+          }
+          p{
+            position: absolute;
+            left: 10px;
+            top: 70px;
+            width: 780px;
+            height: 80px;
+            font-size: $font-base;
+          }
+          &:hover{
+            transform: scale(1.1);
+            border-color: $back-color1;
+          }
+        }
       }
-      span{
+      .community-add-icon{
         position: absolute;
-        right: 10px;
-        top: 14px;
-      }
-      p{
-        position: absolute;
-        left: 10px;
-        top: 50px;
-        width: 780px;
-        height: 80px;
-        font-size: $font-base;
-      }
-      &:hover{
-        border: 2px solid $back-color1;
+        right: 3%;
+        bottom: 27%;
+        width: 60px;
+        height: 60px;
+        border: 1px solid $back-color1;
+        border-radius: 50%;
+        background-color: rgb(255, 255, 255);
+        box-shadow: 5px 5px 10px #e3e3e3;
+        transform: scale(1);
+        transition: all 0.6s;
+        svg{
+          width: 60%;
+          height: 100%;
+          color: $back-color1;
+          text-align: center;
+        }
+        &:hover{
+          transform: scale(1.1);
+          border-color: $back-color1;
+          background-color: $back-color1;
+          svg{
+            color: #fff;
+          }
+        }
       }
     }
   }
 }
-// common scss variable
-$font-xs: 12px; 
-$font-sm: 14px;   // mobile-본문
-$font-base: 16px; // web-본문
-$font-lg: 18px;   // 소제목
-$font-xl: 20px;   // 대제목
-$font-NoSansKR: 'Noto Sans KR', sans-serif; //폰트
-$font-color: rgba(0,0,0,0.80);
-$back-color1: #79b1ff;
-$back-color2: #dfe0ff;
-$back-color3: #EFF0FF;
