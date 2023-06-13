@@ -21,6 +21,7 @@ import axios from 'axios';
 // name : user.id
 // title : 대제목
 // mainText : 본문
+// date : 날짜
 
 function Community(): JSX.Element {
 // navigate
@@ -54,6 +55,48 @@ return (
         {/* 클릭하면 해당 페이지로 이동 */}
         <li> 
           <h3>제목 : 시퀀스 다이어 그램 작성</h3>
+          <div className='post-info'>
+            <span>작성자 : kim</span>
+            <span>2023년 6월 12일</span>
+          </div>
+          {/* <span>작성 번호 : id</span> */}
+          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
+        </li>
+        <li> 
+          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
+          <div className='post-info'>
+          <span>작성자 : kim</span>
+            <span>2023년 6월 12일</span>
+          </div>
+          {/* <span>작성 번호 : id</span> */}
+          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
+        </li>
+        <li> 
+          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
+          <div className='post-info'>
+          <span>작성자 : kim</span>
+            <span>2023년 6월 12일</span>
+          </div>
+          {/* <span>작성 번호 : id</span> */}
+          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
+        </li>
+        <li> 
+          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
+          <div className='post-info'>
+          <span>작성자 : kim</span>
+            <span>2023년 6월 12일</span>
+          </div>
+          {/* <span>작성 번호 : id</span> */}
+          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
+        </li>
+        <li> 
+          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
+          <span>작성자 : kim</span>
+          {/* <span>작성 번호 : id</span> */}
+          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
+        </li>
+        <li> 
+          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
           <span>작성자 : kim</span>
           {/* <span>작성 번호 : id</span> */}
           <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
@@ -67,7 +110,8 @@ return (
           })} */
         }
       </ul>
-      <button className='community-add-icon'>
+      {/* 비회원은 로그인 페이지로 */}
+      <button className='community-add-icon' onClick={()=>{navigate('/community/write')}}>
         <TbPencil />
       </button>
     </div>

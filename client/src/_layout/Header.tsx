@@ -55,7 +55,7 @@ return (
   <header>
     {storeData.userChatArr.length === 0 ? <DefaultHeader /> :
     <div className='header-inner'>
-      <div className='brand-Name'><h1><Link to={"/member/1"}>travel</Link></h1></div>
+      <div className='brand-Name'><h1><Link to={""}>travel</Link></h1></div>
       <nav>
         <div className='nav-inner'>
           {
@@ -110,8 +110,6 @@ return(
         <Link to={"/community"}>커뮤니티<span></span></Link>
         <Link to={"/updateHistory"}>업데이트 내역<span></span></Link>
         <Link to={"/developer"}>개발자<span></span></Link>
-        <Link to={"/"}>item<span></span></Link>
-        <Link to={"/"}>item<span></span></Link>
       </div>
     </nav>
     <div className='user'>
