@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import '../../styles/components/community/Community.scss'
+import '../../styles/components/community/CommunityMy.scss'
 
 // components import
 import Header from '../../_layout/Header';
@@ -15,7 +15,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { newState, changeTitle, deleteData, updateChatNumber } from "../../store/store";
 // axios
 import axios from 'axios';
-import Spinner from '../../_layout/Spinner';
 
 // DB 구조
 // id : post id값
@@ -48,58 +47,17 @@ useEffect(()=>{
 
 return (
 <div className='community'>
-  <Spinner />
   <Header />
   <main className='community-inner'>
     <div className='community-post-box'>
-    <h2>자유 게시판</h2>
+    <h2>나의 게시글</h2>
       <ul>
-        {/* 클릭하면 해당 페이지로 이동 */}
         <li> 
           <h3>제목 : 시퀀스 다이어 그램 작성</h3>
           <div className='post-info'>
             <span>작성자 : kim</span>
             <span>2023년 6월 12일</span>
           </div>
-          {/* <span>작성 번호 : id</span> */}
-          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
-        </li>
-        <li> 
-          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
-          <div className='post-info'>
-            <span>작성자 : kim</span>
-            <span>2023년 6월 12일</span>
-          </div>
-          {/* <span>작성 번호 : id</span> */}
-          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
-        </li>
-        <li> 
-          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
-          <div className='post-info'>
-            <span>작성자 : kim</span>
-            <span>2023년 6월 12일</span>
-          </div>
-          {/* <span>작성 번호 : id</span> */}
-          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
-        </li>
-        <li> 
-          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
-          <div className='post-info'>
-          <span>작성자 : kim</span>
-            <span>2023년 6월 12일</span>
-          </div>
-          {/* <span>작성 번호 : id</span> */}
-          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
-        </li>
-        <li> 
-          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
-          <span>작성자 : kim</span>
-          {/* <span>작성 번호 : id</span> */}
-          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
-        </li>
-        <li> 
-          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
-          <span>작성자 : kim</span>
           {/* <span>작성 번호 : id</span> */}
           <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
         </li>
@@ -112,10 +70,6 @@ return (
           })} */
         }
       </ul>
-      {/* 비회원은 로그인 페이지로 */}
-      <button className='community-add-icon' onClick={()=>{navigate('/community/write')}}>
-        <TbPencil />
-      </button>
     </div>
   </main>
 </div>

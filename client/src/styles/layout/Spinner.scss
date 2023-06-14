@@ -1,0 +1,72 @@
+@import "../common/common.scss";
+
+.spinner-box{
+  z-index: 100;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: #d5d9de83;
+  width: 100%;
+  height: 100vh;
+  font-family: $font-NoSansKR;
+  .spinner-box-inner{
+    position: relative;
+    top: 30%;
+    margin: 0 auto;
+    width: 350px;
+    height: 100px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 5px 5px 10px rgba(135, 126, 126, 0.376);
+    .spinner{
+      position: absolute;
+      left: 30px;
+      top: calc(50% - 33px);
+      stroke: $back-color1;
+      animation: rotation 1.35s linear infinite;
+      .circle{
+        stroke-dasharray: 180;
+        stroke-dashoffset: 0;
+        -webkit-transform-origin: center;
+        -ms-transform-origin: center;
+        transform-origin: center;
+        animation: turn 1.35s ease-in-out infinite;
+      }
+      @keyframes rotation{
+        0% {transform: rotate(0deg);}
+        100% {transform: rotate(270deg);}
+      }
+      @keyframes turn{
+        0% {stroke-dashoffset: 180;}
+        50% {
+          stroke-dashoffset: 45;
+          transform: rotate(135deg);
+        }
+        100% {
+          stroke-dashoffset: 180;
+          transform: rotate(450deg);
+        }
+      }
+    }
+    .spinner-text{
+      position: absolute;
+      left: 140px;
+      top: calc(50% - 14px);
+      color: $font-color;
+      font-size: $font-lg;
+      font-family: $font-NoSansKR;
+    }
+  }
+}
+
+// common scss variable
+$font-xs: 12px; 
+$font-sm: 14px;   // mobile-본문
+$font-base: 16px; // web-본문
+$font-lg: 18px;   // 소제목
+$font-xl: 20px;   // 대제목
+$font-NoSansKR: 'Noto Sans KR', sans-serif; //폰트
+$font-color: rgba(0,0,0,0.80);
+$back-color1: #79b1ff;
+$back-color2: #dfe0ff;
+$back-color3: #EFF0FF;
