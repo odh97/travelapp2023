@@ -5,7 +5,7 @@ import '../styles/layout/Header.scss'
 import { CiUser } from "react-icons/ci";
 
 // router
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // axios
 import axios from 'axios';
 // redux
@@ -64,7 +64,7 @@ return (
           : <Link to={"/member/"+storeData.userChatArr[0].id}>채팅<span></span></Link>
           }
           <Link to={"/community"}>커뮤니티<span></span></Link>
-          <Link to={"/updateHistory"}>업데이트 내역<span></span></Link>
+          <Link to={"/developInfo"}>개발 정보<span></span></Link>
           <Link to={"/developer"}>개발자<span></span></Link>
         </div>
       </nav>
@@ -103,12 +103,12 @@ function DefaultHeader(){
 return(
   <header>
   <div className='header-inner'>
-    <div className='brand-Name'><h1><Link to={"/member/1"}>travel</Link></h1></div>
+    <div className='brand-Name'><h1><Link to={""}>travel</Link></h1></div>
     <nav>
       <div className='nav-inner'>
         <Link to={"/guest"}>채팅<span></span></Link>
         <Link to={"/community"}>커뮤니티<span></span></Link>
-        <Link to={"/updateHistory"}>업데이트 내역<span></span></Link>
+        <Link to={"/developInfo"}>개발 정보<span></span></Link>
         <Link to={"/developer"}>개발자<span></span></Link>
       </div>
     </nav>

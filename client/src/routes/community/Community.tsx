@@ -33,6 +33,7 @@ let dispatch = useDispatch();
 
 // 타이틀 변경
 let [title, setTitle] = useState<string>("");
+let [spinnerCheck, setSpinnerCheck] = useState<boolean>(false);
 
 // axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/basicChatData', { withCredentials: true })
 // .then((result)=>{
@@ -48,7 +49,7 @@ useEffect(()=>{
 
 return (
 <div className='community'>
-  <Spinner />
+  {spinnerCheck ? <Spinner /> : null}
   <Header />
   <main className='community-inner'>
     <div className='community-post-box'>

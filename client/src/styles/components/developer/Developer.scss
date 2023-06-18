@@ -1,0 +1,78 @@
+@import "../../common/common.scss";
+
+.developer{
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  .developer-inner{
+    overflow: auto;
+    padding-top: 50px;
+    height: 100%;
+    background-color: #f9fbff;
+    h2{
+      margin: 30px 0 20px;
+      text-align: left;
+      font-size: 30px;
+    }
+    .developer-info{
+      position: relative;
+      margin: 0 auto;
+      max-width: 1080px;
+      width: 80%;
+
+      > img{
+        position: absolute;
+        left: 0;
+        top: 70px;
+        padding: 5px;
+        width: 150px;
+        border-radius: 5px;
+        background: #fff;
+        box-shadow: 5px 5px 10px rgba(135, 126, 126, 0.376);
+      }
+      .blog-link{
+        position: absolute;
+        left: 0;
+        top: 300px;
+        height: 100%;
+        a{
+          display: block;
+          padding: 5px;
+          margin-bottom: 10px;
+          width: 150px;
+          color: $font-color;
+          font-weight: 400;
+          border-radius: 3px;
+          background-color: #fff;
+          box-shadow: 3px 3px 10px rgba(99, 93, 93, 0.376);
+          img{
+            margin-right: 5px;
+            width: 15px;
+            transform: translateY(-2px);
+          }
+          &:hover{
+            background-color: #ededed;
+            transition: all 0.6s;
+          }
+        }
+      }
+      .profile{
+        position: absolute;
+        left: 200px;
+        top: 80px;
+        text-align: left;
+      }
+    }
+  }
+}
+// common scss variable
+$font-xs: 12px; 
+$font-sm: 14px;   // mobile-본문
+$font-base: 16px; // web-본문
+$font-lg: 18px;   // 소제목
+$font-xl: 20px;   // 대제목
+$font-NoSansKR: 'Noto Sans KR', sans-serif; //폰트
+$font-color: rgba(0,0,0,0.80);
+$back-color1: #79b1ff;
+$back-color2: #dfe0ff;
+$back-color3: #EFF0FF;

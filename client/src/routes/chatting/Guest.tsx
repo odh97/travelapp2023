@@ -5,6 +5,8 @@ import '../../styles/components/chatting/ChatRoom.scss'
 import Header from '../../_layout/Header';
 import Alert from '../../_layout/Alert';
 import ChatList from './ChatList';
+import Spinner from '../../_layout/Spinner';
+
 // icon 
 import { CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
 import { TbBrandTelegram } from "react-icons/tb";
@@ -39,9 +41,14 @@ declare global {
   }
 }
 
+
+
 function Guest(): JSX.Element{
   window.trackingData = "아직 데이터가 없습니다";
 
+  // loading
+  let [spinnerCheck, setSpinnerCheck] = useState<boolean>(false);
+  
   // redux setting
   let dispatch = useDispatch();
   let storeState = useSelector((state:storeStateType) => state );
@@ -52,7 +59,7 @@ function Guest(): JSX.Element{
   // 대화 내용 데이터 조회
   useEffect(() => {
     let getLocalStorage = localStorage.getItem('chatRoom_local_obj');
-
+    
     // 로컬 데이터 조회
     if(getLocalStorage !== null){
       let chatRoom_local_obj = JSON.parse(getLocalStorage);
@@ -60,7 +67,7 @@ function Guest(): JSX.Element{
       if(storeDataSetting === false){
         dispatch(setState([chatRoom_local_obj]));
         storeDataSetting = true;
-      }
+    }
     } else{
       // ajax 요청
       axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/basicChatData')
@@ -109,6 +116,7 @@ function Guest(): JSX.Element{
   let [chatInputValue, setChatInputValue]= useState(``);
 
   function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLTextAreaElement>){
+    setSpinnerCheck(true);
     console.log("chatBtnFn 실행 체크");
     // 예외처리
     event.preventDefault();
@@ -136,6 +144,7 @@ function Guest(): JSX.Element{
       let resultData = result.data.DB_chat_data;
       console.log(storeState.userChatArr[0]);
       dispatch(chatUpdate({resultData : resultData, index : 0}));
+      setSpinnerCheck(false);
     })
     .catch((error)=>{
       console.log(error);
@@ -159,6 +168,7 @@ function Guest(): JSX.Element{
   return (
   <div className='chat'>
     {alertClick === true ? <Alert text={"질문을 작성해 주세요."} handleAlert={handleAlert} /> : null}
+    {spinnerCheck === true ? <Spinner /> : null}
     <Header />
     <main>
       <ChatList />

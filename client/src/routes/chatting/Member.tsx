@@ -14,6 +14,7 @@ import axios from 'axios';
 // redux
 import { useDispatch, useSelector } from "react-redux"
 import { setState, chatUpdate, updateChatNumber } from "../../store/store"
+import Spinner from '../../_layout/Spinner';
 
 // type 지정
 type DBHistoryType = {
@@ -43,6 +44,10 @@ declare global {
 function Member(): JSX.Element{
 window.trackingData = "아직 데이터가 없습니다";
 
+// loading
+let [spinnerCheck, setSpinnerCheck] = useState<boolean>(false);
+
+
 // redux setting
 let dispatch = useDispatch();
 let storeState = useSelector((state:storeStateType) => state );
@@ -59,7 +64,7 @@ useEffect(() => {
     
     if(storeDataSetting === false){
       dispatch(setState(copy));
-      storeDataSetting = true;      
+      storeDataSetting = true;
     }
   })
   .catch((error)=>{console.log(error)});
@@ -99,6 +104,8 @@ let [chatInputValue, setChatInputValue]= useState(``);
 
 function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLTextAreaElement>){
   console.log("chatBtnFn 실행 체크");
+  setSpinnerCheck(true);
+
   // 예외처리
   event.preventDefault();
   if(!chatInputValue.trim() === true) return setAlertClick(true); // 빈값과 스페이스 값만을 전송했을 경우
@@ -125,6 +132,7 @@ function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEv
     let resultData = result.data.DB_chat_data;
     console.log(storeState.userChatArr[storeState.chatNumber.target]);
     dispatch(chatUpdate({resultData : resultData, index : storeState.chatNumber.target}));
+    setSpinnerCheck(false);
   })
   .catch((error)=>{
     console.log(error);
@@ -137,6 +145,7 @@ function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEv
 return (
 <div className='chat'>
   {alertClick === true ? <Alert text={"질문을 작성해 주세요."} handleAlert={handleAlert} /> : null}
+  {spinnerCheck === true ? <Spinner /> : null}
   <Header />
   <main>
     <ChatList />
