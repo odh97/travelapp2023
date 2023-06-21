@@ -23,7 +23,7 @@ import axios from 'axios';
 // mainText : 본문
 // date : 날짜
 
-function Community(): JSX.Element {
+function CommunityMy(): JSX.Element {
 // navigate
 const navigate = useNavigate();
 // redux setting
@@ -46,10 +46,10 @@ useEffect(()=>{
 },[]);
 
 return (
-<div className='community'>
+<div className='CommunityMy'>
   <Header />
-  <main className='community-inner'>
-    <div className='community-post-box'>
+  <main className='CommunityMy-inner'>
+    <div className='CommunityMy-post-box'>
     <h2>나의 게시글</h2>
       <ul>
         <li> 
@@ -78,4 +78,4 @@ return (
 
 
 
-export default Community;
+export default CommunityMy;

@@ -15,6 +15,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from "react-redux"
 import { setState, chatUpdate, updateChatNumber } from "../../store/store"
 import Spinner from '../../_layout/Spinner';
+import { useNavigate } from 'react-router-dom';
 
 // type 지정
 type DBHistoryType = {
@@ -40,14 +41,12 @@ declare global {
     trackingData: string | number | object,
   }
 }
-
 function Member(): JSX.Element{
 window.trackingData = "아직 데이터가 없습니다";
-
+// navigate
+const navigate = useNavigate();
 // loading
 let [spinnerCheck, setSpinnerCheck] = useState<boolean>(false);
-
-
 // redux setting
 let dispatch = useDispatch();
 let storeState = useSelector((state:storeStateType) => state );
@@ -60,6 +59,8 @@ useEffect(() => {
   // ajax 요청
   axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/member',{ withCredentials: true })
   .then((result)=>{
+    console.log(result.data);
+    if(result.data.authentication === 'failed') navigate('/error');
     let copy:DBHistoryType[] = result.data.chat_Data_Arr;
     
     if(storeDataSetting === false){

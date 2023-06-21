@@ -20,7 +20,7 @@
       max-width: 1080px;
       width: 80%;
 
-      > img{
+      .myImg{
         position: absolute;
         left: 0;
         top: 70px;
@@ -61,6 +61,56 @@
         left: 200px;
         top: 80px;
         text-align: left;
+        h3{
+          padding-bottom: 5px;
+          color: $back-color1;
+          font-size: 20px;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+        
+        > div{&:not(:first-child){margin-top: 30px;}}
+        .about{}
+        .contact{
+          svg{
+            margin-right: 10px;
+            transform: translateY(3px);
+          }
+        }
+        .skill{
+            h3{margin-bottom: 10px;}
+          .img-flex{
+            display: flex;
+            flex-wrap: wrap;
+            width: 280px;
+            div{
+              overflow: hidden;
+              margin-right: 10px;
+              margin-bottom: 10px;
+              width: 50px;
+              height: 50px;
+              border-radius: 10px;
+              box-shadow: 5px 5px 3px rgba(135, 126, 126, 0.376);
+              img{
+                width: 100%;
+                height: 100%;
+              }
+              &:first-child, &:nth-child(3){
+                img{
+                  width: 40px;
+                  height: 40px;
+                  transform: translate(5px, 5px);
+                }
+                background-color: #3c3c3c;
+              }
+              &:nth-child(4){background-color: #13AA52;}
+            }
+          }
+        }
+        .experience p span{
+          padding-bottom: 100px;
+          margin-right: 20px;
+        }
       }
     }
   }

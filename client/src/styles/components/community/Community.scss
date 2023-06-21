@@ -19,10 +19,13 @@
       height: 100%;
       max-width: 1100px;
       ul{
+
         overflow: auto;
         margin: 0 auto;
         width: 100%;
         height: 70%;
+        scroll-behavior: smooth;
+        transition: scroll-behavior 1s linear;
         li{
           cursor: pointer;
           position: relative;
@@ -38,11 +41,14 @@
           transform: scale(1);
           transition: all 0.6s;
           h3{
+            overflow: hidden;
             position: absolute;
             left: 10px;
             top: 20px;
-            width: 500px;
+            width: 400px;
             font-size: $font-xl;
+            text-overflow:ellipsis;
+            white-space:nowrap;
           }
           .post-info{
             position: absolute;
@@ -55,12 +61,15 @@
             }
           }
           p{
+            overflow: hidden;
             position: absolute;
             left: 10px;
             top: 70px;
-            width: 780px;
+            width: 500px;
             height: 80px;
             font-size: $font-base;
+            text-overflow:ellipsis;
+            white-space:nowrap;
           }
           &:hover{
             transform: scale(1.1);
@@ -95,6 +104,49 @@
           }
         }
       }
+      .pagination{
+        overflow: hidden;
+        margin-top: 20px;
+        display: inline-block;
+        border: 1px solid #bebebe;
+        border-radius: 5px;
+        .pagination-flex{
+          display: flex;
+          justify-content: center;
+          > *{
+            width: 40px;
+            height: 35px;
+            font-size: $font-sm;
+            svg{
+              width: 40%;
+              height: 40%;
+              transform: translateY(1px);
+            }
+            &:hover{
+              color: #fff;
+              background-color: $back-color1;
+            }
+          }
+          .prev-btn{
+            width: 50px;
+            border-right: 1px solid #bebebe;
+          }
+          .next-btn{
+            width: 50px;
+            border-left: 1px solid #bebebe;
+          }
+
+        }
+      }
     }
   }
 }
+// common scss variable
+$font-xs: 12px; 
+$font-sm: 14px;   // mobile-본문
+$font-base: 16px; // web-본문
+$font-lg: 18px;   // 소제목
+$font-xl: 20px;   // 대제목
+$back-color1: #79b1ff;
+$back-color2: #dfe0ff;
+$back-color3: #EFF0FF;

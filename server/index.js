@@ -46,6 +46,7 @@ client.connect(function(error, client){
   db = client.db('travel');
 
   console.log('listening on 8080');
+
   });
 })
 
@@ -101,9 +102,9 @@ function loginChack(req, res, next){
 // date
 var date = new Date();
 var today_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date);
-var style_date2 = new Intl.RelativeTimeFormat().format(7, 'days');
+var today_date2 = date.toISOString().split('T')[0];
+var style_date3 = new Intl.RelativeTimeFormat().format(7, 'days');
 var next_week_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date.setDate(date.getDate() + 7));
-
 
 app.use(express.static(path.join(__dirname, '/../client/build')));
 app.get('/', function(req, res){
@@ -434,6 +435,17 @@ app.post('/logout', function(req, res) {
   });
 });
 
+app.get('/GETcommunity', function(req, res){
+  console.log("community");
+  let userID = null;
+  if(req.user) userID = req.user.id
+
+  db.collection('community-post').find({}).toArray(function(err, result) {
+    if (err) return console.error(err);
+  
+    res.json({communityArr : result, userID : userID});
+  });
+});
 
 app.get('/mypage', loginChack, function(req, res){
   console.log("member in");
@@ -441,11 +453,6 @@ app.get('/mypage', loginChack, function(req, res){
   res.send("mypage 접속이 되는가?");
 });
 
-app.get('/community', loginChack, function(req, res){
-  console.log("member in");
-
-  res.send("community 접속이 되는가?");
-});
 
 
 
