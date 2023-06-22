@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-var request = require('request');
+let request = require('request');
 const rp = require('request-promise');
 
 // DB (id, pw 배포전 수정)
@@ -11,7 +11,7 @@ const client = new MongoClient(DB_URI, { useUnifiedTopology: true });
 
 // cors / ajax
 app.use(express.json());
-var cors = require('cors');
+let cors = require('cors');
 
 app.use(cors({
   origin: true, // 출처 허용 옵션
@@ -33,12 +33,12 @@ const configuration = new Configuration({ apiKey: "sk-LASL9cx79XX7U43k0XWpT3Blbk
 const openai = new OpenAIApi(configuration);
 
 // papago API
-var client_id = 'tyDodzGry78dFOOdgyA6'; // 배포 전 재발급
-var client_secret = 'Efl5YyRqwk'; // 배포 전 재발급
-var api_url = 'https://openapi.naver.com/v1/papago/n2mt';
+let client_id = 'tyDodzGry78dFOOdgyA6'; // 배포 전 재발급
+let client_secret = 'Efl5YyRqwk'; // 배포 전 재발급
+let api_url = 'https://openapi.naver.com/v1/papago/n2mt';
 
 // server open
-var db;
+let db;
 client.connect(function(error, client){
   if (error) return console.log(error);
   app.listen('8080', function(){
@@ -100,11 +100,9 @@ function loginChack(req, res, next){
 }
 
 // date
-var date = new Date();
-var today_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date);
-var today_date2 = date.toISOString().split('T')[0];
-var style_date3 = new Intl.RelativeTimeFormat().format(7, 'days');
-var next_week_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date.setDate(date.getDate() + 7));
+let date = new Date();
+let today_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date);
+let today_date2 = date.toISOString().split('T')[0];
 
 app.use(express.static(path.join(__dirname, '/../client/build')));
 app.get('/', function(req, res){
@@ -440,17 +438,69 @@ app.get('/GETcommunity', function(req, res){
   let userID = null;
   if(req.user) userID = req.user.id
 
-  db.collection('community-post').find({}).toArray(function(err, result) {
+  db.collection('community-post').find({}).sort({ id: -1 }).toArray(function(err, result) {
     if (err) return console.error(err);
   
     res.json({communityArr : result, userID : userID});
   });
 });
 
-app.get('/mypage', loginChack, function(req, res){
-  console.log("member in");
+app.post('/POSTcommunity', async function(req, res){
+  console.log("POSTcommunity");
+  if(!req.user) return res.send({result :'failure'});
+  const totalNumber = await new Promise((resolve, reject) => {
+    db.collection('counter').findOne({ name: 'communityPostNumber' }, function(error, result) {
+      if (error) reject(error);
 
-  res.send("mypage 접속이 되는가?");
+      resolve(result.totalNumber);
+    });
+  });
+  
+  let pushData = {
+  id : totalNumber,
+  name : req.user.id,
+  title : req.body.title,
+  text : req.body.mainText,
+  date : today_date2,
+  }
+
+  db.collection('community-post').insertOne( pushData , function(){
+    console.log('community-post DB 저장완료');
+    res.json({ result: 'success' });
+  });
+  db.collection('counter').updateOne({name : 'communityPostNumber'},{ $inc : {totalNumber:1} },function(){})
+});
+
+app.get('/GETcommunityDetail', function(req, res){
+  console.log("GETcommunityDetail");
+  
+  let userID = null;
+  if(req.user) userID = req.user.id
+
+  db.collection('community-post').findOne({ id: Number(req.query.paramsId) }, function(error, result) {
+    if(error) console.log(error);
+
+    res.json({ result: result, loginUser: userID });
+  });
+});
+
+app.delete('/DELETEcommunityPost', function(req, res){
+  console.log("community-post DELETE in");
+  if(req.user.id !== req.query.userId) return res.send('failure');
+
+
+  let deleteData = {id : Number(req.query.paramsId), name : req.user.id}
+  // DELETE
+  db.collection('community-post').deleteOne(deleteData, function(error, result){
+      console.log('DB community-post 데이터 삭제 완료');
+      if(error) console.log(error)
+      res.status(200).send({ message : 'success' });
+  });
+});
+
+app.get('/GETmypage', loginChack, function(req, res){
+  console.log("GETmypage in");
+  res.json({userid:req.user.id});
 });
 
 

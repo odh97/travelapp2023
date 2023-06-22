@@ -3,18 +3,13 @@ import '../../styles/components/community/Community.scss'
 
 // components import
 import Header from '../../_layout/Header';
-import Alert from '../../_layout/Alert';
 // icons
 import { TbPencil,TbChevronLeft,TbChevronRight } from "react-icons/tb";
 
 // router
 import { useNavigate } from 'react-router-dom';
-// redux
-import { useDispatch, useSelector } from 'react-redux';
-import { newState, changeTitle, deleteData, updateChatNumber } from "../../store/store";
 // axios
 import axios from 'axios';
-import Spinner from '../../_layout/Spinner';
 
 type CommunityPostType = {
   _id:string,
@@ -30,7 +25,6 @@ function Community(): JSX.Element {
 const navigate = useNavigate();
 
 // 공통 state
-let [spinnerCheck, setSpinnerCheck] = useState<boolean>(false);
 let [communityPostData, setCommunityPostData] = useState<CommunityPostType[]>();
 let [userCheck, setuserCheck] = useState<null | number>(null);
 
@@ -53,21 +47,23 @@ const contentUl = useRef<HTMLUListElement>(null);
 const [renderData, setRenderData] = useState<CommunityPostType[]>([]);
 const [pageNavigator, setPageNavigator] = useState(1);
 const [maxPage, setMaxPage] = useState(0);
-if(communityPostData && maxPage === 0) setMaxPage(Math.ceil((communityPostData.length/5)));
+if(communityPostData && maxPage === 0) setMaxPage(Math.ceil((communityPostData.length/7)));
 function setPageNumber(pageNumber:number, checkNumber:number){
   // 페이지게이션 번호 업데이트
   let navPageNumber = pageNumber;
   
-  if(pageNumber <= 1 || maxPage < 7) navPageNumber = 1
-  if(maxPage-6 <= pageNumber && maxPage > 5) navPageNumber = maxPage-6
+  console.log(navPageNumber);
+  if(pageNumber <= 1 || maxPage < 4) navPageNumber = 1
+  if(maxPage-4 <= pageNumber && maxPage > 5) navPageNumber = maxPage-4
+  console.log(navPageNumber);
   setPageNavigator(navPageNumber);
 
   // 커뮤티니 게시글 리스트 업데이트
-  let setNumber = (checkNumber - 1) * 5;
+  let setNumber = (checkNumber - 1) * 7;
   
   if(setNumber <= 0) setNumber = 0;
-  if(communityPostData && communityPostData.length <= setNumber) setNumber = (maxPage - 1) * 5;
-  if(communityPostData) setRenderData(communityPostData.slice(setNumber, setNumber+5));
+  if(communityPostData && communityPostData.length <= setNumber) setNumber = (maxPage - 1) * 7;
+  if(communityPostData) setRenderData(communityPostData.slice(setNumber, setNumber+7));
 
   // chatRoom scroll 최신 콘텐츠 위치로 이동
   if(contentUl.current) contentUl.current.scrollTop = 0;
@@ -76,7 +72,6 @@ function setPageNumber(pageNumber:number, checkNumber:number){
 
 return (
 <div className='community'>
-  {spinnerCheck ? <Spinner /> : null}
   <Header />
   <main className='community-inner'>
     <div className='community-post-box'>

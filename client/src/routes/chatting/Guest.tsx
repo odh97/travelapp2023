@@ -8,7 +8,7 @@ import ChatList from './ChatList';
 import Spinner from '../../_layout/Spinner';
 
 // icon 
-import { CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
+import { CiUser,CiLocationArrow1 } from "react-icons/ci";
 import { TbBrandTelegram } from "react-icons/tb";
 
 // axios
@@ -167,6 +167,7 @@ function Guest(): JSX.Element{
 
   return (
   <div className='chat'>
+    
     {alertClick === true ? <Alert text={"질문을 작성해 주세요."} handleAlert={handleAlert} /> : null}
     {spinnerCheck === true ? <Spinner /> : null}
     <Header />

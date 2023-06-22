@@ -4,61 +4,85 @@ import '../../styles/components/community/CommunityPost.scss'
 // components import
 import Header from '../../_layout/Header';
 import Alert from '../../_layout/Alert';
-// icons
-import { CiChat1,CiEdit,CiSquareCheck,CiSquareRemove,CiSquarePlus } from "react-icons/ci";
-import { TbPencil } from "react-icons/tb";
 
 // router
-import { useNavigate } from 'react-router-dom';
-// redux
-import { useDispatch, useSelector } from 'react-redux';
-import { newState, changeTitle, deleteData, updateChatNumber } from "../../store/store";
+import { useNavigate, useParams } from 'react-router-dom';
 // axios
 import axios from 'axios';
 
+type CommunityPostType = {
+  _id:string,
+  id:number,
+  name:string,
+  title:string,
+  text:string,
+  date:string,
+}
 
 function CommunityPost(): JSX.Element {
+// alert 컴포넌트
+let [alertClick, setAlertClick] = useState(false);
+function handleAlert(){setAlertClick(false);}
+// params
+const params = useParams();
 // navigate
 const navigate = useNavigate();
-// redux setting
-let dispatch = useDispatch();
-// const storeData = useSelector((state:storeStateType) => state);CommunityPost
 
-// 타이틀 변경
-
-// axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/basicChatData', { withCredentials: true })
-// .then((result)=>{
-//   let basic_chat_data:DBHistoryType[] = result.data.basic_chat_data;
-//   dispatch(newState({id : storeData.userChatArr[0].id, data : basic_chat_data}));
-// })
-// .catch((error)=>{console.log(error)});
-
-
-// storeData 업데이트 리렌더링
+let [communityPostData, setCommunityPostData] = useState<CommunityPostType>();
+let [loginUser, setloginUser] = useState(null);
 useEffect(()=>{
+  axios.get(process.env.REACT_APP_LOCAL_SERVER_URL + '/GETcommunityDetail', {params: { paramsId: params.id },withCredentials: true})
+    .then((result) => {
+      console.log(result);
+      setloginUser(result.data.loginUser);
+      setCommunityPostData(result.data.result);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 },[]);
 
-let [titleInput, setTitleInput] = useState<string>('');
-let [mainTextInput,  setMainTextInput] = useState<string>('');
+function handleDelete(){
 
+  let pramData = {
+    paramsId: params.id,
+    userId: loginUser,
+  }
 
-// DB 구조
-// id : post id값
-// name : user.id
-// title : 대제목
-// mainText : 본문
-// date : 날짜
+  axios.delete(process.env.REACT_APP_LOCAL_SERVER_URL + '/DELETEcommunityPost', {params : pramData, withCredentials: true})
+  .then((result) => {
+    if(result.data.message === "success") navigate('/community');
+    if(result.data.message === "failure") setAlertClick(true);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}
 
 return (
 <div className='CommunityPost'>
+  {alertClick === true ? <Alert text={'유저 정보가 일치하지 않습니다. 나중에 다시 시도해주세요.'} handleAlert={handleAlert} /> : null}
   <Header />
   <main className='CommunityPost-inner'>
-    <h2>게시글 제목 하드코딩</h2>
-    <div className='post-info'>
-      <span className='post-name'>user name</span>
-      <span className='post-date'>날짜 : date</span>
-    </div>
-    <div className='mainText'>mainText</div>
+    {communityPostData === undefined
+      ? null
+      : <>
+        <div className='title'>
+          <h2>{communityPostData.title}</h2>
+          {
+            communityPostData.name === loginUser
+            ? <button className='delete-btn' onClick={handleDelete}>삭제하기</button>
+            : null
+          }
+        </div>
+        <div className='post-info'>
+          <span className='post-name'>이름 : {communityPostData.name}</span>
+          <span className='post-date'>No.{communityPostData.id} | {communityPostData.date}</span>
+        </div>
+        <pre className='mainText'>{communityPostData.text}</pre>
+      </>
+    }
+
   </main>
 </div>
 );

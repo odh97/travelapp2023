@@ -1,75 +1,123 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect, useRef } from 'react';
 import '../../styles/components/community/CommunityMy.scss'
 
 // components import
 import Header from '../../_layout/Header';
-import Alert from '../../_layout/Alert';
 // icons
-import { CiChat1,CiEdit,CiSquareCheck,CiSquareRemove,CiSquarePlus } from "react-icons/ci";
-import { TbPencil } from "react-icons/tb";
+import { TbPencil,TbChevronLeft,TbChevronRight } from "react-icons/tb";
 
 // router
 import { useNavigate } from 'react-router-dom';
-// redux
-import { useDispatch, useSelector } from 'react-redux';
-import { newState, changeTitle, deleteData, updateChatNumber } from "../../store/store";
 // axios
 import axios from 'axios';
 
-// DB 구조
-// id : post id값
-// name : user.id
-// title : 대제목
-// mainText : 본문
-// date : 날짜
+type CommunityPostType = {
+  _id:string,
+  id:number,
+  name:string,
+  title:string,
+  text:string,
+  date:string,
+}
 
 function CommunityMy(): JSX.Element {
 // navigate
 const navigate = useNavigate();
-// redux setting
-let dispatch = useDispatch();
-// const storeData = useSelector((state:storeStateType) => state);
 
-// 타이틀 변경
-let [title, setTitle] = useState<string>("");
+// 공통 state
+let [communityPostData, setCommunityPostData] = useState<CommunityPostType[]>();
+let [userCheck, setuserCheck] = useState<null | number>(null);
 
-// axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/basicChatData', { withCredentials: true })
-// .then((result)=>{
-//   let basic_chat_data:DBHistoryType[] = result.data.basic_chat_data;
-//   dispatch(newState({id : storeData.userChatArr[0].id, data : basic_chat_data}));
-// })
-// .catch((error)=>{console.log(error)});
-
-
-// storeData 업데이트 리렌더링
+// 커뮤티니 게시글 리스트 조회
 useEffect(()=>{
+  axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/GETcommunity', { withCredentials: true })
+  .then((result)=>{
+    setuserCheck(result.data.userID);
+    setCommunityPostData(result.data.communityArr);
+    setRenderData(result.data.communityArr.slice(0, 5));
+  })
+  .catch((error)=>{console.log(error)});
 },[]);
 
+
+
+// 페이지게이션 번호 업데이트
+// 커뮤티니 게시글 리스트 업데이트
+const contentUl = useRef<HTMLUListElement>(null);
+const [renderData, setRenderData] = useState<CommunityPostType[]>([]);
+const [pageNavigator, setPageNavigator] = useState(1);
+const [maxPage, setMaxPage] = useState(0);
+if(communityPostData && maxPage === 0) setMaxPage(Math.ceil((communityPostData.length/7)));
+function setPageNumber(pageNumber:number, checkNumber:number){
+  // 페이지게이션 번호 업데이트
+  let navPageNumber = pageNumber;
+  
+  console.log(navPageNumber);
+  if(pageNumber <= 1 || maxPage < 4) navPageNumber = 1
+  if(maxPage-4 <= pageNumber && maxPage > 5) navPageNumber = maxPage-4
+  console.log(navPageNumber);
+  setPageNavigator(navPageNumber);
+
+  // 커뮤티니 게시글 리스트 업데이트
+  let setNumber = (checkNumber - 1) * 7;
+  
+  if(setNumber <= 0) setNumber = 0;
+  if(communityPostData && communityPostData.length <= setNumber) setNumber = (maxPage - 1) * 7;
+  if(communityPostData) setRenderData(communityPostData.slice(setNumber, setNumber+7));
+
+  // chatRoom scroll 최신 콘텐츠 위치로 이동
+  if(contentUl.current) contentUl.current.scrollTop = 0;
+}
+
+
 return (
-<div className='CommunityMy'>
+<div className='communityMy'>
   <Header />
-  <main className='CommunityMy-inner'>
-    <div className='CommunityMy-post-box'>
-    <h2>나의 게시글</h2>
-      <ul>
-        <li> 
-          <h3>제목 : 시퀀스 다이어 그램 작성</h3>
-          <div className='post-info'>
-            <span>작성자 : kim</span>
-            <span>2023년 6월 12일</span>
-          </div>
-          {/* <span>작성 번호 : id</span> */}
-          <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
-        </li>
+  <main className='communityMy-inner'>
+    <div className='communityMy-post-box'>
+    <h2>자유 게시판</h2>
+      <ul ref={contentUl}>
         {
-          /* {storeData.userChatArr.map((value, index)=>{
+          renderData.map((value, index)=>{
           return(
-          <li key={index} className={deleteNumber === index ? 'fade-out' : (chatAddClass ? 'addItem' : '')}>
-          </li>
+            <li key={index} onClick={()=>{navigate('/community/'+value.id)}}>
+              <h3>{value.title}</h3>
+              <div className='post-info'>
+                <span>No.{value.id}</span>
+                <span>작성자 : {value.name}</span>
+                <span>{value.date}</span>
+              </div>
+              {/* <span>작성 번호 : id</span> */}
+              <p>{value.text}</p>
+            </li>
           )
-          })} */
+          })
         }
       </ul>
+      {
+        userCheck === null
+        ? <button className='community-add-icon' onClick={()=>{navigate('/login')}}><TbPencil /></button>
+        : <button className='community-add-icon' onClick={()=>{navigate('/community/write')}}><TbPencil /></button>
+      }
+      <div className='pagination'>
+        <div className='pagination-flex'>
+          {
+            maxPage > 5
+            ? <button className='prev-btn' onClick={()=>{setPageNumber(pageNavigator-5, pageNavigator-5)}}><TbChevronLeft /></button>
+            : null
+          }
+          <button onClick={()=>{setPageNumber(pageNavigator-2, pageNavigator)}}>{pageNavigator}</button>
+          <button onClick={()=>{setPageNumber(pageNavigator-1, pageNavigator+1)}}>{pageNavigator+1}</button>
+          <button onClick={()=>{setPageNumber(pageNavigator, pageNavigator+2)}}>{pageNavigator+2}</button>
+          <button onClick={()=>{setPageNumber(pageNavigator+1, pageNavigator+3)}}>{pageNavigator+3}</button>
+          <button onClick={()=>{setPageNumber(pageNavigator+2, pageNavigator+4)}}>{pageNavigator+4}</button>
+          {
+            maxPage > 5
+            ? <button className='next-btn' onClick={()=>{setPageNumber(pageNavigator+5, pageNavigator+5)}}><TbChevronRight /></button>
+            : null
+          }
+        </div>
+      </div>
     </div>
   </main>
 </div>
