@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React from 'react';
 import '../../styles/components/developer/Developer.scss'
 
 // components import
@@ -15,53 +15,16 @@ import ReactImg from '../../images/icon/react.png'
 import NodeImg from '../../images/icon/node-icon.png'
 import MongodbImg from '../../images/icon/mongodb.png'
 // icons
-import { CiChat1,CiEdit,CiSquareCheck,CiSquareRemove,CiSquarePlus } from "react-icons/ci";
 import { TbMail, TbPhone } from "react-icons/tb";
 
 // router
-import { Link, useNavigate } from 'react-router-dom';
-// redux
-import { useDispatch, useSelector } from 'react-redux';
-import { newState, changeTitle, deleteData, updateChatNumber } from "../../store/store";
-// axios
-import axios from 'axios';
-import Spinner from '../../_layout/Spinner';
+import { Link } from 'react-router-dom';
 
-// DB 구조
-// id : post id값
-// name : user.id
-// title : 대제목
-// mainText : 본문
-// date : 날짜
 
 function Developer(): JSX.Element {
-// navigate
-const navigate = useNavigate();
-// redux setting
-let dispatch = useDispatch();
-// const storeData = useSelector((state:storeStateType) => state);
-
-// 타이틀 변경
-let [title, setTitle] = useState<string>("");
-let [spinnerCheck, setSpinnerCheck] = useState<boolean>(false);
-
-// axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/basicChatData', { withCredentials: true })
-// .then((result)=>{
-//   let basic_chat_data:DBHistoryType[] = result.data.basic_chat_data;
-//   dispatch(newState({id : storeData.userChatArr[0].id, data : basic_chat_data}));
-// })
-// .catch((error)=>{console.log(error)});
-
-
-// storeData 업데이트 리렌더링
-useEffect(()=>{
-},[]);
-
-
 
 return (
 <div className='developer'>
-  {spinnerCheck ? <Spinner /> : null}
   <Header />
   <main className='developer-inner'>
       <div className='developer-info'>

@@ -23,7 +23,7 @@ let [userData, setUserData] = useState<{userid:string}>();
 useEffect(()=>{
 axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/GETmypage', { withCredentials: true })
 .then((result)=>{
-  console.log(result.data.userid);
+  if(result.data.authentication === 'failed') navigate('/login');
   setUserData(result.data);
 })
 .catch((error)=>{console.log(error)});

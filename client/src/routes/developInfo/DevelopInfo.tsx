@@ -1,58 +1,64 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect, useRef } from 'react';
 import '../../styles/components/developInfo/DevelopInfo.scss'
 
 // components import
 import Header from '../../_layout/Header';
 // images
 import infoStructure from '../../images/info-structure.png';
-// icons
-import { CiChat1,CiEdit,CiSquareCheck,CiSquareRemove,CiSquarePlus } from "react-icons/ci";
-import { TbPencil } from "react-icons/tb";
+// icon
+import { TbChevronLeft,TbChevronRight } from "react-icons/tb";
 
-// router
-import { useNavigate } from 'react-router-dom';
-// redux
-import { useDispatch, useSelector } from 'react-redux';
-import { newState, changeTitle, deleteData, updateChatNumber } from "../../store/store";
 // axios
 import axios from 'axios';
-import Spinner from '../../_layout/Spinner';
 
-// DB 구조
-// id : post id값
-// name : user.id
-// title : 대제목
-// mainText : 본문
-// date : 날짜
+
 
 function DevelopInfo(): JSX.Element {
-// navigate
-const navigate = useNavigate();
-// redux setting
-let dispatch = useDispatch();
-// const storeData = useSelector((state:storeStateType) => state);
 
-// 타이틀 변경
-let [title, setTitle] = useState<string>("");
-let [spinnerCheck, setSpinnerCheck] = useState<boolean>(false);
+let [versionInfoData, setVersionInfoData] = useState<{title:string,text:string}[]>();
 
-// axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/basicChatData', { withCredentials: true })
-// .then((result)=>{
-//   let basic_chat_data:DBHistoryType[] = result.data.basic_chat_data;
-//   dispatch(newState({id : storeData.userChatArr[0].id, data : basic_chat_data}));
-// })
-// .catch((error)=>{console.log(error)});
-
-
-// storeData 업데이트 리렌더링
 useEffect(()=>{
+  axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/GETversionInfo', { withCredentials: true })
+  .then((result)=>{
+    setVersionInfoData(result.data.result);
+    setRenderData(result.data.result.slice(0, 5));
+  })
+  .catch((error)=>{console.log(error)});
 },[]);
 
 
 
+// 페이지게이션 번호 업데이트
+// 커뮤티니 게시글 리스트 업데이트
+const contentUl = useRef<HTMLUListElement>(null);
+const [renderData, setRenderData] = useState<{title:string,text:string}[]>([]);
+const [pageNavigator, setPageNavigator] = useState(1);
+const [maxPage, setMaxPage] = useState(0);
+if(versionInfoData && maxPage === 0) setMaxPage(Math.ceil((versionInfoData.length/5)));
+function setPageNumber(pageNumber:number, checkNumber:number){
+  // 페이지게이션 번호 업데이트
+  let navPageNumber = pageNumber;
+  
+  console.log(navPageNumber);
+  if(pageNumber <= 1 || maxPage < 4) navPageNumber = 1
+  if(maxPage-4 <= pageNumber && maxPage > 5) navPageNumber = maxPage-4
+  console.log(navPageNumber);
+  setPageNavigator(navPageNumber);
+
+  // 커뮤티니 게시글 리스트 업데이트
+  let setNumber = (checkNumber - 1) * 5;
+  
+  if(setNumber <= 0) setNumber = 0;
+  if(versionInfoData && versionInfoData.length <= setNumber) setNumber = (maxPage - 1) * 5;
+  if(versionInfoData) setRenderData(versionInfoData.slice(setNumber, setNumber+5));
+
+  // chatRoom scroll 최신 콘텐츠 위치로 이동
+  if(contentUl.current) contentUl.current.scrollTop = 0;
+}
+
+
 return (
 <div className='developInfo'>
-  {spinnerCheck ? <Spinner /> : null}
   <Header />
   <main className='developInfo-inner'>
       <div className='info-structure'>
@@ -61,30 +67,42 @@ return (
       </div>
       <div className='develop-version'>
         <h2>깃허브 개발 정보</h2>
-        <ul>
-          <li> 
-            <h3>버전 : v 1.0.0</h3>
-            <div>
-              <p>안녕하세요 제가 오늘 작업한 내용입니다.</p>
-            </div>
-          </li>
-          <li> 
-            <h3>버전 : v 1.0.0</h3>
-            <div>
-              <p>
-                안녕하세요 제가 오늘 작업한 내용입니다.
-                <br/>
-                <br/>
-                안녕하세요 제가 오늘 작업한 내용입니다.
-                <br/>
-                <br/>
-                안녕하세요 제가 오늘 작업한 내용입니다.안녕하세요 제가 오늘 작업한 내용입니다.
-                안녕하세요 제가 오늘 작업한 내용입니다.안녕하세요 제가 오늘 작업한 내용입니다.
-                안녕하세요 제가 오늘 작업한 내용입니다.안녕하세요 제가 오늘
-              </p>
-            </div>
-          </li>
+        <ul ref={contentUl}>
+          {
+            renderData === undefined
+            ? undefined
+            :
+            renderData.map((value,index)=>{
+              return(
+                <li> 
+                  <h3>{value.title}</h3>
+                  <div>
+                    <pre>{value.text}</pre>
+                  </div>
+                </li>
+              )
+            })
+          }
         </ul>
+        <div className='pagination'>
+          <div className='pagination-flex'>
+            {
+              maxPage > 5
+              ? <button className='prev-btn' onClick={()=>{setPageNumber(pageNavigator-5, pageNavigator-5)}}><TbChevronLeft /></button>
+              : null
+            }
+            <button onClick={()=>{setPageNumber(pageNavigator-2, pageNavigator)}}>{pageNavigator}</button>
+            <button onClick={()=>{setPageNumber(pageNavigator-1, pageNavigator+1)}}>{pageNavigator+1}</button>
+            <button onClick={()=>{setPageNumber(pageNavigator, pageNavigator+2)}}>{pageNavigator+2}</button>
+            <button onClick={()=>{setPageNumber(pageNavigator+1, pageNavigator+3)}}>{pageNavigator+3}</button>
+            <button onClick={()=>{setPageNumber(pageNavigator+2, pageNavigator+4)}}>{pageNavigator+4}</button>
+            {
+              maxPage > 5
+              ? <button className='next-btn' onClick={()=>{setPageNumber(pageNavigator+5, pageNavigator+5)}}><TbChevronRight /></button>
+              : null
+            }
+          </div>
+        </div>
       </div>
   </main>
 </div>

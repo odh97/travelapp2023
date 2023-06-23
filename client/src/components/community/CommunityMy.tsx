@@ -25,16 +25,24 @@ function CommunityMy(): JSX.Element {
 const navigate = useNavigate();
 
 // 공통 state
-let [communityPostData, setCommunityPostData] = useState<CommunityPostType[]>();
+let [communityPostData, setCommunityPostData] = useState<CommunityPostType[] | null>(null);
 let [userCheck, setuserCheck] = useState<null | number>(null);
 
 // 커뮤티니 게시글 리스트 조회
 useEffect(()=>{
-  axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/GETcommunity', { withCredentials: true })
+  axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/GETcommunityMy', { withCredentials: true })
   .then((result)=>{
-    setuserCheck(result.data.userID);
-    setCommunityPostData(result.data.communityArr);
-    setRenderData(result.data.communityArr.slice(0, 5));
+    if(result.data.authentication === 'failed') navigate('/login');
+
+    if(result.data.communityArr === null){
+      setuserCheck(result.data.userID);
+      setCommunityPostData(result.data.communityArr);
+    }
+    if(result.data.communityArr !== null){
+      setuserCheck(result.data.userID);
+      setCommunityPostData(result.data.communityArr);
+      setRenderData(result.data.communityArr.slice(0, 7));
+    }
   })
   .catch((error)=>{console.log(error)});
 },[]);
@@ -55,7 +63,6 @@ function setPageNumber(pageNumber:number, checkNumber:number){
   console.log(navPageNumber);
   if(pageNumber <= 1 || maxPage < 4) navPageNumber = 1
   if(maxPage-4 <= pageNumber && maxPage > 5) navPageNumber = maxPage-4
-  console.log(navPageNumber);
   setPageNavigator(navPageNumber);
 
   // 커뮤티니 게시글 리스트 업데이트
@@ -75,31 +82,38 @@ return (
   <Header />
   <main className='communityMy-inner'>
     <div className='communityMy-post-box'>
-    <h2>자유 게시판</h2>
-      <ul ref={contentUl}>
-        {
-          renderData.map((value, index)=>{
-          return(
-            <li key={index} onClick={()=>{navigate('/community/'+value.id)}}>
-              <h3>{value.title}</h3>
-              <div className='post-info'>
-                <span>No.{value.id}</span>
-                <span>작성자 : {value.name}</span>
-                <span>{value.date}</span>
-              </div>
-              {/* <span>작성 번호 : id</span> */}
-              <p>{value.text}</p>
-            </li>
-          )
-          })
-        }
-      </ul>
+    <h2>나의 게시글</h2>
+      {
+        communityPostData === null
+        ? <div className='notContent'>커뮤니티에 작성하신 게시글이 없습니다<br/><br/>게시글을 작성해 다른 사람과 재밌는 이야기를 공유해 보세요!!!</div>
+        :
+        <ul ref={contentUl}>
+          {
+            renderData.map((value, index)=>{
+            return(
+              <li key={index} onClick={()=>{navigate('/community/'+value.id)}}>
+                <h3>{value.title}</h3>
+                <div className='post-info'>
+                  <span>No.{value.id}</span>
+                  <span>작성자 : {value.name}</span>
+                  <span>{value.date}</span>
+                </div>
+                <p>{value.text}</p>
+              </li>
+            )
+            })
+          }
+        </ul>
+      }
       {
         userCheck === null
         ? <button className='community-add-icon' onClick={()=>{navigate('/login')}}><TbPencil /></button>
         : <button className='community-add-icon' onClick={()=>{navigate('/community/write')}}><TbPencil /></button>
       }
-      <div className='pagination'>
+      {
+        communityPostData === null
+        ? null
+        :<div className='pagination'>
         <div className='pagination-flex'>
           {
             maxPage > 5
@@ -117,7 +131,8 @@ return (
             : null
           }
         </div>
-      </div>
+        </div>
+      }
     </div>
   </main>
 </div>

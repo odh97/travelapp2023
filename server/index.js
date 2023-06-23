@@ -37,6 +37,7 @@ let client_id = 'tyDodzGry78dFOOdgyA6'; // 배포 전 재발급
 let client_secret = 'Efl5YyRqwk'; // 배포 전 재발급
 let api_url = 'https://openapi.naver.com/v1/papago/n2mt';
 
+
 // server open
 let db;
 client.connect(function(error, client){
@@ -49,6 +50,7 @@ client.connect(function(error, client){
 
   });
 })
+
 
 // passport
 passport.use(new LocalStrategy({
@@ -445,6 +447,19 @@ app.get('/GETcommunity', function(req, res){
   });
 });
 
+app.get('/GETcommunityMy', loginChack, function(req, res){
+  console.log("GETcommunityMy");
+  let userID = null;
+  if(req.user) userID = req.user.id
+
+  db.collection('community-post').find({name : userID}).sort({ id: -1 }).toArray(function(err, result) {
+    if (err) return console.error(err);
+
+    if(result.length === 0) res.json({communityArr : null, userID : userID});
+    if(result.length !== 0) res.json({communityArr : result, userID : userID});
+  });
+});
+
 app.post('/POSTcommunity', async function(req, res){
   console.log("POSTcommunity");
   if(!req.user) return res.send({result :'failure'});
@@ -503,7 +518,16 @@ app.get('/GETmypage', loginChack, function(req, res){
   res.json({userid:req.user.id});
 });
 
+app.get('/GETversionInfo', function(req, res){
+  console.log("GETcommunityDetail");
+  
+  db.collection('version-info').find().sort({_id:-1}).toArray(function(error, result) {
+    if(error) console.log(error);
+    console.log(result);
 
+    res.json({ result: result });
+  });
+});
 
 
 // React Router (항상 최하단으로)

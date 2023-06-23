@@ -34,7 +34,7 @@ useEffect(()=>{
   .then((result)=>{
     setuserCheck(result.data.userID);
     setCommunityPostData(result.data.communityArr);
-    setRenderData(result.data.communityArr.slice(0, 5));
+    setRenderData(result.data.communityArr.slice(0, 7));
   })
   .catch((error)=>{console.log(error)});
 },[]);
@@ -68,7 +68,6 @@ function setPageNumber(pageNumber:number, checkNumber:number){
   // chatRoom scroll 최신 콘텐츠 위치로 이동
   if(contentUl.current) contentUl.current.scrollTop = 0;
 }
-
 
 return (
 <div className='community'>
