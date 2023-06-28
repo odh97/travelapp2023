@@ -3,100 +3,64 @@
 .chat main{
   width: 100%;
   height: 100vh;
-  display: flex;
-
-  .chat-list{
-    overflow: auto;
-    min-width: 260px;
-    max-width: 260px;
-    height: calc(100vh - 50px);
-    margin-top: 50px;
-    background-color: #EFF0FF;
-    ul > li, .chatroom-create-btn > button{
-      position: relative;
+  overflow: hidden;
+  /* Web */
+  @media screen and (min-width:768px) {
+    .chat-list{
+      overflow: auto;
       display: inline-block;
-      margin-top: 10px;
-      width: 240px;
-      color: $font-color;
-      text-align: left;
-      font-size: 16px;
-      font-family: $font-NoSansKR;
-      border-radius: 5px;
+      margin-top: 50px;
+      width: 260px;
+      height: calc(100vh - 50px);
       background-color: #EFF0FF;
-      cursor: pointer;
-
-      span{
-        overflow: hidden;
-        display: inline-block;
-        width: 160px;
-        text-indent: 15px;
-        text-align: left;
-        text-overflow:ellipsis;
-        font-family: $font-NoSansKR;
-        font-weight: 400;
-        font-size: $font-base;
-        color: $font-color;
-        white-space: nowrap;
-      }
-      svg{
+      ul > li, .chatroom-create-btn > button{
         position: relative;
-        left: 10px;
-        top: -2px;
-      }
-    }
-
-    ul > li{
-      > div{height: 47px;
-        > button{
-          padding: 10px 0;
-          background-color: transparent;
-        }
-      }
-      
-      .title-edit-btn, .chat-room-delete{
-        display: none;
-        position: absolute;
-        width: 24px;
-        height: 24px;
-        border-radius: 3px;
-        background-color:transparent;
-        svg{
-          position: absolute;
-          left: 4px;
-          top: 4px;
-          width: 16px;
-          height: 16px;
-          color: #5c5c5c;
-        }
-      }
-      .title-edit-btn{
-        right: 40px;
-        bottom: 12px;
-      }
-      .chat-room-delete{
-        right: 10px;
-        bottom: 12px;
-      }
-      .title-edit-box{
-        display: flex;
-        align-items: center;
-        margin: 0 auto;
+        display: inline-block;
+        margin-top: 10px;
+        width: 240px;
+        color: $font-color;
+        text-align: left;
+        font-size: 16px;
+        font-family: $font-NoSansKR;
         border-radius: 5px;
-        background-color: transparent;
-        input{
-          margin-left: 7px;
-          height: 24px;
-          text-indent: 5px;
-          border-radius: 3px;
-        }
-        button{
-          position: relative;
+        background-color: #EFF0FF;
+        cursor: pointer;
+  
+        span{
+          overflow: hidden;
           display: inline-block;
-          margin-left: 7px;
+          width: 160px;
+          text-indent: 15px;
+          text-align: left;
+          text-overflow:ellipsis;
+          font-family: $font-NoSansKR;
+          font-weight: 400;
+          font-size: $font-base;
+          color: $font-color;
+          white-space: nowrap;
+        }
+        svg{
+          position: relative;
+          left: 10px;
+          top: -2px;
+        }
+      }
+  
+      ul > li{
+        > div{height: 47px;
+          > button{
+            padding: 10px 0;
+            background-color: transparent;
+          }
+        }
+        
+        .title-edit-btn, .chat-room-delete{
+          display: none;
+          position: absolute;
           width: 24px;
           height: 24px;
           border-radius: 3px;
-          background-color: transparent;
+          background-color:transparent;
           svg{
             position: absolute;
             left: 4px;
@@ -106,153 +70,477 @@
             color: #5c5c5c;
           }
         }
-      }
-      &:hover{
-        background-color: #dfe0ff;
-        .chat-room-delete, .title-edit-btn{
-          display: inline-block;
-          &:hover{background-color: #caccff;}
+        .title-edit-btn{
+          right: 40px;
+          bottom: 12px;
+        }
+        .chat-room-delete{
+          right: 10px;
+          bottom: 12px;
         }
         .title-edit-box{
-          background-color: #dfe0ff;
-          button{&:hover{background-color: #caccff;}}
-        }
-      }
-      &.fade-out{
-        opacity: 0;
-        transform: translateX(-30px);
-        transition: all 0.3s;
-      }
-      &.addItem{
-        opacity: 1s;
-        animation: aniAction 0.6s normal forwards;
-        &:first-child{opacity: 0;background-color: $back-color1;}
-        @keyframes aniAction {
-          0%{
-            transform: translateY(-47px);
-          }
-          100%{
-            opacity: 1;
-            transform: translateY(0px);
-            background-color: $back-color3;
-          }
-        }
-      }
-    }
-    .chatroom-create-btn > button{
-      padding: 10px 0;
-      margin-bottom: 50px;
-      border: 2px solid #fff;
-      &:hover{background-color: #dfe0ff;}
-    }
-
-  }
-  .chat-room{
-    width: 100%;
-    height: calc(100vh - 50px);
-    margin-top: 50px;
-    
-    /* txt-box */
-    .txt-box{
-      text-align: left;
-      height: calc(100vh - 50px);
-      overflow-y: scroll;
-      scroll-behavior: smooth;
-      transition: scroll-behavior 1s linear;
-
-      > ul > li{
-        position: relative;
-        padding: 20px 0px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-
-        &::before{
-          position: absolute;
-          left: 0;
-          bottom: 0;
-          width: 100%;
-          display: block;
-          content: "";
-          border-bottom: 1px solid #dadcff;
-        }
-
-        .icon-box{
-          position: relative;
-          width: 40px;
-          height: 40px;
-          border: 1px solid #9298ff;
+          display: flex;
+          align-items: center;
+          margin: 0 auto;
           border-radius: 5px;
-          background-color: #fff;
-          svg{
-            position: absolute;
-            left: 2px;
-            top: 5px;
-            width: 36px;
-            height: 30px;
-            color: #9298ff;
+          background-color: transparent;
+          input{
+            margin-left: 7px;
+            height: 24px;
+            text-indent: 5px;
+            border-radius: 3px;
           }
-        }
-        pre{
-          width: 90%;
-          height: auto;
-          margin-left: 10px;
-          margin-top: 7px;
-          font-family: $font-NoSansKR;
-        }
-      }
-      .chat-bot{
-        background-color: rgb(247,247,248);
-      }
-      .empty-box{
-        height: 190px;
-      }
-    }
-    // txt-box
-
-    /* chat-input-box */
-    .chat-input-box{
-      position: fixed;
-      left: calc(50% - (382px - 130px));
-      bottom: 50px;
-      width: 750px;
-      
-      .chat-input-box-inner{
-        width: 750px;
-        min-height: 60px;
-        max-height: 230px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid #ebebeb;
-        border-radius: 5px;
-        background-color: #fff;
-        box-shadow: 4px 4px 5px rgb(210, 210, 210);
-        textarea{
-          min-height: 30px;
-          max-height: 200px;
-          font-family: 'Noto Sans KR', sans-serif;
-          line-height: 1.5rem;
-          font-size: $font-base;
-        }
-        button{
-          width: 30px;
-          height: 30px;
-          cursor: pointer;
-          svg{
-            color: #bbbbbb;
-            width: 100%;
-            height: 100%;
-            transform: rotate(10deg);
-          }
-          &:hover{
+          button{
+            position: relative;
+            display: inline-block;
+            margin-left: 7px;
+            width: 24px;
+            height: 24px;
+            border-radius: 3px;
+            background-color: transparent;
             svg{
-              color: #000000;
+              position: absolute;
+              left: 4px;
+              top: 4px;
+              width: 16px;
+              height: 16px;
+              color: #5c5c5c;
+            }
+          }
+        }
+        &:hover{
+          background-color: #dfe0ff;
+          .chat-room-delete, .title-edit-btn{
+            display: inline-block;
+            &:hover{background-color: #caccff;}
+          }
+          .title-edit-box{
+            background-color: #dfe0ff;
+            button{&:hover{background-color: #caccff;}}
+          }
+        }
+        &.fade-out{
+          opacity: 0;
+          transform: translateX(-30px);
+          transition: all 0.3s;
+        }
+        &.addItem{
+          opacity: 1s;
+          animation: aniAction 0.6s normal forwards;
+          &:first-child{opacity: 0;background-color: $back-color1;}
+          @keyframes aniAction {
+            0%{
+              transform: translateY(-47px);
+            }
+            100%{
+              opacity: 1;
+              transform: translateY(0px);
+              background-color: $back-color3;
             }
           }
         }
       }
+      .chatroom-create-btn > button{
+        padding: 10px 0;
+        margin-bottom: 50px;
+        border: 2px solid #fff;
+        &:hover{background-color: #dfe0ff;}
+      }
+      .mobile-box{display: none;}
     }
-    // chat-input-box
+    .chat-room{
+      display: inline-block;
+      margin-top: 50px;
+      width: calc(100% - 260px);
+      height: calc(100vh - 50px);
+      .mobile-box{
+        display: none;
+      }
+      /* txt-box */
+      .txt-box{
+        width: 100%;
+        text-align: left;
+        height: calc(100vh - 50px);
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        transition: scroll-behavior 1s linear;
+        >ul{width: 100%;}
+        > ul > li{
+          position: relative;
+          padding: 20px 0px;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+  
+          &::before{
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            display: block;
+            content: "";
+            border-bottom: 1px solid #dadcff;
+          }
+  
+          .icon-box{
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #9298ff;
+            border-radius: 5px;
+            background-color: #fff;
+            svg{
+              position: absolute;
+              left: 2px;
+              top: 5px;
+              width: 36px;
+              height: 30px;
+              color: #9298ff;
+            }
+          }
+          pre{
+            width: 90%;
+            height: auto;
+            margin-left: 10px;
+            margin-top: 7px;
+            font-family: $font-NoSansKR;
+          }
+        }
+        .chat-bot{
+          background-color: rgb(247,247,248);
+        }
+        .empty-box{
+          height: 190px;
+        }
+      }
+      // txt-box
+  
+      /* chat-input-box */
+      .chat-input-box{
+        position: fixed;
+        left: 260px;
+        bottom: 50px;
+        width: calc(100% - 260px);
+        .chat-input-box-inner{
+          margin: 0 auto;
+          width: 90%;
+          max-width: 900px;
+          min-height: 60px;
+          max-height: 230px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #ebebeb;
+          border-radius: 5px;
+          background-color: #fff;
+          box-shadow: 4px 4px 5px rgb(210, 210, 210);
+          textarea{
+            width: 90%;
+            min-height: 30px;
+            max-height: 200px;
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.5rem;
+            font-size: $font-base;
+          }
+          button{
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            svg{
+              color: #bbbbbb;
+              width: 100%;
+              height: 100%;
+              transform: rotate(10deg);
+            }
+            &:hover{
+              svg{
+                color: #000000;
+              }
+            }
+          }
+        }
+      }
+      // chat-input-box
+    }
+  }
+  /* 모바일 */
+  @media screen and (max-width:767px) {
+    .chat-list{
+      overflow: auto;
+      z-index: 50;
+      position: fixed;
+      left: 0;
+      top: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-color: #EFF0FF;
+      ul > li, .chatroom-create-btn > button{
+        position: relative;
+        display: block;
+        padding: 5px 0;
+        width: 100%;
+        height: 47px;
+        color: $font-color;
+        text-align: left;
+        font-size: 16px;
+        font-family: $font-NoSansKR;
+        background-color: #EFF0FF;
+        cursor: pointer;
+  
+        span{
+          overflow: hidden;
+          display: inline-block;
+          width: 40vh;
+          text-indent: 20px;
+          text-align: left;
+          text-overflow:ellipsis;
+          font-family: $font-NoSansKR;
+          font-weight: 400;
+          font-size: $font-base;
+          color: $font-color;
+          white-space: nowrap;
+        }
+        svg{
+          position: relative;
+          left: 15px;
+          top: -2px;
+        }
+      }
+      ul > li{
+        > div button{
+          padding: 10px 0;
+          background-color: transparent;
+        }
+        
+        .title-edit-btn, .chat-room-delete{
+          position: absolute;
+          top: 0;
+          display: none;
+          width: 56px;
+          height: 100%;
+          background-color:transparent;
+          svg{
+            position: absolute;
+            left: 16px;
+            top: 18px;
+            width: 20px;
+            height: 20px;
+            color: #5c5c5c;
+          }
+        }
+        .title-edit-btn{
+          right: 66px;
+        }
+        .chat-room-delete{
+          right: 10px;
+        }
+        .title-edit-box{
+          display: flex;
+          align-items: center;
+          margin: 0 auto;
+          height: 47px;
+          border-radius: 5px;
+          background-color: transparent;
+          input{
+            margin-left: 7px;
+            height: 24px;
+            text-indent: 5px;
+            border-radius: 3px;
+          }
+          button{
+            position: relative;
+            display: inline-block;
+            margin-left: 7px;
+            width: 24px;
+            height: 24px;
+            border-radius: 3px;
+            background-color: transparent;
+            svg{
+              position: absolute;
+              left: 4px;
+              top: 4px;
+              width: 16px;
+              height: 16px;
+              color: #5c5c5c;
+            }
+          }
+        }
+        &:hover{
+          background-color: #dfe0ff;
+          .chat-room-delete, .title-edit-btn{
+            display: inline-block;
+            &:hover{background-color: #caccff;}
+          }
+          .title-edit-box{
+            background-color: #dfe0ff;
+            button{&:hover{background-color: #caccff;}}
+          }
+        }
+        &.fade-out{
+          opacity: 0;
+          transform: translateX(-30px);
+          transition: all 0.3s;
+        }
+        &.addItem{
+          opacity: 1s;
+          animation: aniAction 0.6s normal forwards;
+          &:first-child{opacity: 0;background-color: $back-color1;}
+          @keyframes aniAction {
+            0%{
+              transform: translateY(-47px);
+            }
+            100%{
+              opacity: 1;
+              transform: translateY(0px);
+              background-color: $back-color3;
+            }
+          }
+        }
+      }
+      .chatroom-create-btn > button{
+        margin-bottom: 100px;
+        height: 57px;
+        border-top: 2px solid #fff;
+        &:hover{background-color: #dfe0ff;}
+      }
+      .mobile-box{display: none;}
+      &.mobile-control{
+        height: 50px;
+        ul, .chatroom-create-btn{display: none;}
+        .mobile-box{
+          display: flex;
+          justify-content: space-between;
+          height: 50px;
+          button{
+            width: 50px;
+            height: 50px;
+            background-color: transparent;
+            svg{
+              width: 20px;
+              height: 20px;
+              transform: rotateZ(180deg);
+            }
+          }
+          h2{
+            height: 50px;
+            line-height: 50px;
+          }
+          div{
+            width: 50px;
+          }
+        }
+      }
+
+    }
+    .chat-room{
+      overflow-y: auto;
+      display: inline-block;
+      margin-top: 50px;
+      width: 100%;
+      height: calc(100vh - 160px);
+      /* txt-box */
+      .txt-box{
+        width: 100%;
+        text-align: left;
+        scroll-behavior: smooth;
+        transition: scroll-behavior 1s linear;
+        >ul{width: 100%;}
+        > ul > li{
+          position: relative;
+          padding: 20px 0px;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+  
+          &::before{
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            display: block;
+            content: "";
+            border-bottom: 1px solid #dadcff;
+          }
+  
+          .icon-box{
+            position: relative;
+            margin-left: 5px;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #9298ff;
+            border-radius: 5px;
+            background-color: #fff;
+            svg{
+              position: absolute;
+              left: 2px;
+              top: 5px;
+              width: 36px;
+              height: 30px;
+              color: #9298ff;
+            }
+          }
+          pre{
+            margin-left: 10px;
+            margin-top: 7px;
+            margin-right: 5px;
+            width: 90%;
+            height: auto;
+            
+            font-family: $font-NoSansKR;
+          }
+        }
+        .chat-bot{
+          background-color: rgb(247,247,248);
+        }
+        .empty-box{
+          height: 50px;
+        }
+      }
+      // txt-box
+      
+      /* chat-input-box */
+      .chat-input-box{
+        position: fixed;
+        bottom: 50px;
+        width: 100%;
+        .chat-input-box-inner{
+          margin: 0 auto;
+          min-height: 60px;
+          max-height: 230px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-top: 1px solid #ebebeb;
+          background-color: #fff;
+          textarea{
+            width: 85%;
+            min-height: 30px;
+            max-height: 200px;
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.5rem;
+            font-size: $font-base;
+          }
+          button{
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            svg{
+              color: #bbbbbb;
+              width: 100%;
+              height: 100%;
+              transform: rotate(10deg);
+            }
+            &:hover{
+              svg{
+                color: #000000;
+              }
+            }
+          }
+        }
+      }
+      // chat-input-box
+    }
   }
 }
+

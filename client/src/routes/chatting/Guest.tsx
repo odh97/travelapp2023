@@ -120,7 +120,13 @@ function Guest(): JSX.Element{
     console.log("chatBtnFn 실행 체크");
     // 예외처리
     event.preventDefault();
-    if(!chatInputValue.trim() === true) return setAlertClick(true); // 빈값과 스페이스 값만을 전송했을 경우
+
+    // 빈값과 스페이스 값만을 전송했을 경우
+    if(!chatInputValue.trim() === true){
+      setSpinnerCheck(false);
+      return setAlertClick(true);
+    }
+
     //POST data Data
     let storeState_copy = storeState.userChatArr[0];
     let newChatting = {
@@ -142,7 +148,7 @@ function Guest(): JSX.Element{
     axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/chatEnter', postData)
     .then((result)=>{
       let resultData = result.data.DB_chat_data;
-      console.log(storeState.userChatArr[0]);
+      console.log(result);
       dispatch(chatUpdate({resultData : resultData, index : 0}));
       setSpinnerCheck(false);
     })
@@ -164,10 +170,8 @@ function Guest(): JSX.Element{
     }
   },[storeState]);
 
-
   return (
   <div className='chat'>
-    
     {alertClick === true ? <Alert text={"질문을 작성해 주세요."} handleAlert={handleAlert} /> : null}
     {spinnerCheck === true ? <Spinner /> : null}
     <Header />
@@ -179,21 +183,21 @@ function Guest(): JSX.Element{
           {
           storeState.userChatArr[0] !== undefined ?
             storeState.userChatArr[0].chatting_arr.ko_chat_arr.map((value, index)=>{
-              if(value.startsWith("user:") === true){
+              if(value.indexOf("user:") !== -1){
                 return(
                 <li className='user' key={index}>
                   <div className='icon-box'><CiUser/></div>
-                  <pre>{value.replace("user:","")}</pre>
+                  <pre>{value.substring(value.indexOf("user:")+6)}</pre>
                 </li>
                 )
               }
-              if(value.startsWith("AI:") === true){
+              if(value.indexOf("AI:") !== -1){
                 return(
-                  <li className='chat-bot' key={index}>
-                    <div className='icon-box'><TbBrandTelegram /></div>
-                    <pre>{value.replace("AI:","")}</pre>
-                  </li>
-                  )
+                <li className='chat-bot' key={index}>
+                  <div className='icon-box'><TbBrandTelegram/></div>
+                  <pre>{value.substring(value.indexOf("AI:")+4)}</pre>
+                </li>
+                )
               }
             })
           :<li>데이터가 없습니다. CSS 처리 해야됩니다.</li>

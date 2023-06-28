@@ -5,58 +5,96 @@
   height: 100vh;
   overflow: hidden;
 
-  .communityWrite-inner{
-    padding-top: 50px;
-    height: 100%;
-    h2{
-      margin: 30px auto 15px;
-      max-width: 1080px;
-      width: 80%;
-      text-align: left;
-      font-size: 30px;
-    }
-    .communityWrite-formBox{
-      margin: 0 auto;
-      width: 80%;
-      >*{
-        display: block;
-        margin: 30px auto 0;
+  /* Web */
+  @media screen and (min-width:768px) {
+    .communityWrite-inner{
+      padding-top: 50px;
+      height: 100%;
+      h2{
+        margin: 30px auto 15px;
         max-width: 1080px;
-        width: 100%;
-        font-family: $font-NoSansKR;
-        font-weight: 300;
-        border-radius: 5px;
-        border: 1px solid #e3e3e3;
+        width: 80%;
+        text-align: left;
+        font-size: 30px;
       }
-      input{
-        height: 50px;
-        font-size: $font-base;
-        text-indent: 10px;
+      .communityWrite-formBox{
+        margin: 0 auto;
+        width: 80%;
+        >*{
+          display: block;
+          margin: 30px auto 0;
+          max-width: 1080px;
+          width: 100%;
+          font-family: $font-NoSansKR;
+          font-weight: 300;
+          border-radius: 5px;
+          border: 1px solid #e3e3e3;
+        }
+        input{
+          height: 50px;
+          font-size: $font-base;
+          text-indent: 10px;
+        }
+        textarea{
+          padding: 5px 10px;
+          max-width: 1060px;
+          width: calc(100% - 20px);
+          height: 300px;
+          font-size: $font-base;
+        }
+        button{
+          font-size: $font-lg;
+          height: 50px;
+          color: #fff;
+          background-color: $back-color1;
+        }
       }
-      textarea{
-        padding: 5px 10px;
-        max-width: 1060px;
-        width: calc(100% - 20px);
-        height: 300px;
-        font-size: $font-base;
+    }
+  }
+  /* 모바일 */
+  @media screen and (max-width:767px) {
+    .communityWrite-inner{
+      height: 100%;
+      h2{
+        margin: 15px auto 0px;
+        max-width: 1080px;
+        width: 90%;
+        text-align: left;
+        font-size: $font-xl;
       }
-      button{
-        font-size: $font-lg;
-        height: 50px;
-        color: #fff;
-        background-color: $back-color1;
+      .communityWrite-formBox{
+        margin: 0 auto;
+        width: 90%;
+        >*{
+          display: block;
+          margin: 30px auto 0;
+          max-width: 1080px;
+          width: 100%;
+          font-family: $font-NoSansKR;
+          font-weight: 300;
+          border-radius: 5px;
+          border: 1px solid #e3e3e3;
+        }
+        input{
+          margin-top: 15px;
+          height: 50px;
+          font-size: $font-base;
+          text-indent: 10px;
+        }
+        textarea{
+          padding: 5px 10px;
+          max-width: 1060px;
+          width: calc(100% - 20px);
+          height: 300px;
+          font-size: $font-base;
+        }
+        button{
+          font-size: $font-lg;
+          height: 50px;
+          color: #fff;
+          background-color: $back-color1;
+        }
       }
     }
   }
 }
-// common scss variable
-$font-xs: 12px; 
-$font-sm: 14px;   // mobile-본문
-$font-base: 16px; // web-본문
-$font-lg: 18px;   // 소제목
-$font-xl: 20px;   // 대제목
-$font-NoSansKR: 'Noto Sans KR', sans-serif; //폰트
-$font-color: rgba(0,0,0,0.80);
-$back-color1: #79b1ff;
-$back-color2: #dfe0ff;
-$back-color3: #EFF0FF;

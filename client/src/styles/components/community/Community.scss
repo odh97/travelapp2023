@@ -1,144 +1,285 @@
 @import "../../common/common.scss";
 
 .community{
+  overflow: hidden;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
-  .community-inner{
-    padding-top: 50px;
-    height: 100%;
-    background-color: #f9fbff;
-    h2{
-      margin: 30px 0 15px 55px;
-      text-align: left;
-      font-size: 30px;
-    }
-    .community-post-box{
-      position: relative;
-      margin: 0 auto;
-      height: 100%;
-      max-width: 1100px;
-      ul{
-        overflow: auto;
-        margin: 0 auto;
-        width: 100%;
-        height: 70%;
-        scroll-behavior: smooth;
-        transition: scroll-behavior 1s linear;
-        li{
-          cursor: pointer;
-          position: relative;
-          margin: 25px auto 0;
-          width: 80%;
-          height: 120px;
+  background-color: #f9fbff;
+
+    /* Web */
+    @media screen and (min-width:768px) {
+      .community-inner{
+        padding-top: 50px;
+        height: 100%;
+        background-color: #f9fbff;
+        h2{
+          margin: 30px 0 15px;
           text-align: left;
-          border: 1px solid #fff;
-          border-radius: 5px;
-          box-sizing: border-box;
-          box-shadow: 5px 5px 10px rgba(135, 126, 126, 0.376);
-          background: #fff;
-          transform: scale(1);
-          transition: all 0.6s;
-          h3{
-            overflow: hidden;
-            position: absolute;
-            left: 10px;
-            top: 20px;
-            width: 400px;
-            font-size: $font-xl;
-            text-overflow:ellipsis;
-            white-space:nowrap;
-          }
-          .post-info{
-            position: absolute;
-            right: 10px;
-            top: 24px;
-            font-size: $font-sm;
-            span{
-              display: block;
-              text-align: right;
+          font-size: 30px;
+        }
+        .community-post-box{
+          position: relative;
+          margin: 0 auto;
+          height: 100%;
+          max-width: 1100px;
+          ul{
+            overflow: auto;
+            margin: 0 auto;
+            width: 100%;
+            height: 70%;
+            scroll-behavior: smooth;
+            transition: scroll-behavior 1s linear;
+            li{
+              cursor: pointer;
+              position: relative;
+              margin: 25px auto 0;
+              width: 80%;
+              height: 120px;
+              text-align: left;
+              border: 1px solid #fff;
+              border-radius: 5px;
+              box-sizing: border-box;
+              box-shadow: 5px 5px 10px rgba(135, 126, 126, 0.376);
+              background: #fff;
+              transform: scale(1);
+              transition: all 0.6s;
+              h3{
+                overflow: hidden;
+                position: absolute;
+                left: 10px;
+                top: 20px;
+                width: 400px;
+                font-size: $font-xl;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+              }
+              .post-info{
+                position: absolute;
+                right: 10px;
+                top: 24px;
+                font-size: $font-sm;
+                span{
+                  display: block;
+                  text-align: right;
+                }
+              }
+              p{
+                overflow: hidden;
+                position: absolute;
+                left: 10px;
+                top: 70px;
+                width: 500px;
+                height: 80px;
+                font-size: $font-base;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+              }
+              &:hover{
+                transform: scale(1.1);
+                border-color: $back-color1;
+              }
             }
           }
-          p{
-            overflow: hidden;
+          .community-add-icon{
             position: absolute;
-            left: 10px;
-            top: 70px;
-            width: 500px;
-            height: 80px;
-            font-size: $font-base;
-            text-overflow:ellipsis;
-            white-space:nowrap;
-          }
-          &:hover{
-            transform: scale(1.1);
-            border-color: $back-color1;
-          }
-        }
-      }
-      .community-add-icon{
-        position: absolute;
-        right: 3%;
-        bottom: 27%;
-        width: 60px;
-        height: 60px;
-        border: 1px solid $back-color1;
-        border-radius: 50%;
-        background-color: rgb(255, 255, 255);
-        box-shadow: 5px 5px 10px #e3e3e3;
-        transform: scale(1);
-        transition: all 0.6s;
-        svg{
-          width: 60%;
-          height: 100%;
-          color: $back-color1;
-          text-align: center;
-        }
-        &:hover{
-          transform: scale(1.1);
-          border-color: $back-color1;
-          background-color: $back-color1;
-          svg{
-            color: #fff;
-          }
-        }
-      }
-      .pagination{
-        overflow: hidden;
-        margin-top: 20px;
-        display: inline-block;
-        border: 1px solid #bebebe;
-        border-radius: 5px;
-        .pagination-flex{
-          display: flex;
-          justify-content: center;
-          > *{
-            width: 40px;
-            height: 35px;
-            font-size: $font-sm;
+            right: 3%;
+            bottom: 27%;
+            width: 60px;
+            height: 60px;
+            border: 1px solid $back-color1;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 5px 5px 10px #e3e3e3;
+            transform: scale(1);
+            transition: all 0.6s;
             svg{
-              width: 40%;
-              height: 40%;
-              transform: translateY(1px);
+              width: 60%;
+              height: 100%;
+              color: $back-color1;
+              text-align: center;
             }
             &:hover{
-              color: #fff;
+              transform: scale(1.1);
+              border-color: $back-color1;
               background-color: $back-color1;
+              svg{
+                color: #fff;
+              }
             }
           }
-          .prev-btn{
-            width: 50px;
-            border-right: 1px solid #bebebe;
+          .pagination{
+            overflow: hidden;
+            margin-top: 20px;
+            display: inline-block;
+            border: 1px solid #bebebe;
+            border-radius: 5px;
+            .pagination-flex{
+              display: flex;
+              justify-content: center;
+              > *{
+                width: 40px;
+                height: 35px;
+                font-size: $font-sm;
+                svg{
+                  width: 40%;
+                  height: 40%;
+                  transform: translateY(1px);
+                }
+                &:hover{
+                  color: #fff;
+                  background-color: $back-color1;
+                }
+              }
+              .prev-btn{
+                width: 50px;
+                border-right: 1px solid #bebebe;
+              }
+              .next-btn{
+                width: 50px;
+                border-left: 1px solid #bebebe;
+              }
+    
+            }
           }
-          .next-btn{
-            width: 50px;
-            border-left: 1px solid #bebebe;
-          }
-
         }
       }
     }
-  }
+    /* 모바일 */
+    @media screen and (max-width:767px) {
+      .community-inner{
+        margin: 0 auto;
+        width: 100%;
+        height: 100%;
+        h2{
+          padding: 5px 0;
+          font-size: 20px;
+          font-weight: 300;
+          font-family: $font-NoSansKR;
+          color: $font-color;
+          background-color: #fff;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+        }
+        .community-post-box{
+          position: relative;
+          margin: 0 auto;
+          height: 100%;
+          ul{
+            overflow-y: auto;
+            margin: 0 auto;
+            width: 100%;
+            height: 70%;
+            scroll-behavior: smooth;
+            transition: scroll-behavior 1s linear;
+            li{
+              cursor: pointer;
+              position: relative;
+              margin: 25px auto 0;
+              width: 95%;
+              height: 120px;
+              text-align: left;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+              box-sizing: border-box;
+              h3{
+                overflow: hidden;
+                position: absolute;
+                left: 10px;
+                top: 20px;
+                width: 60%;
+                font-size: $font-lg;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+              }
+              .post-info{
+                position: absolute;
+                right: 10px;
+                top: 24px;
+                font-size: $font-xs;
+                span{
+                  overflow: hidden;
+                  display: block;
+                  width: 100px;
+                  text-align: right;
+                  text-overflow:ellipsis;
+                  white-space:nowrap;
+                }
+              }
+              p{
+                overflow: hidden;
+                position: absolute;
+                left: 10px;
+                top: 70px;
+                width: 70%;
+                height: 80px;
+                font-size: $font-sm;
+                text-overflow:ellipsis;
+                white-space:nowrap;
+              }
+            }
+          }
+          .community-add-icon{
+            position: absolute;
+            right: 3%;
+            bottom: 27%;
+            width: 60px;
+            height: 60px;
+            border: 1px solid $back-color1;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 5px 5px 10px #e3e3e3;
+            transform: scale(1);
+            transition: all 0.6s;
+            svg{
+              width: 60%;
+              height: 100%;
+              color: $back-color1;
+              text-align: center;
+            }
+            &:hover{
+              transform: scale(1.1);
+              border-color: $back-color1;
+              background-color: $back-color1;
+              svg{
+                color: #fff;
+              }
+            }
+          }
+          .pagination{
+            overflow: hidden;
+            margin-top: 20px;
+            display: inline-block;
+            border: 1px solid #bebebe;
+            border-radius: 5px;
+            .pagination-flex{
+              display: flex;
+              justify-content: center;
+              > *{
+                width: 40px;
+                height: 35px;
+                font-size: $font-sm;
+                svg{
+                  width: 40%;
+                  height: 40%;
+                  transform: translateY(1px);
+                }
+                &:hover{
+                  color: #fff;
+                  background-color: $back-color1;
+                }
+              }
+              .prev-btn{
+                width: 50px;
+                border-right: 1px solid #bebebe;
+              }
+              .next-btn{
+                width: 50px;
+                border-left: 1px solid #bebebe;
+              }
+    
+            }
+          }
+        }
+      }
+    }
 }
 // common scss variable
 $font-xs: 12px; 

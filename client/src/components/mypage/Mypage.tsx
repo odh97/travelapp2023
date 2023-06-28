@@ -29,6 +29,17 @@ axios.get(process.env.REACT_APP_LOCAL_SERVER_URL+'/GETmypage', { withCredentials
 .catch((error)=>{console.log(error)});
 },[]);
 
+function logoutHandle(){
+  axios.post(process.env.REACT_APP_LOCAL_SERVER_URL+'/logout', { withCredentials: true })
+  .then((result)=>{
+    if(result.data.message === 'success'){
+      navigate('/guest');
+    }
+  })
+  .catch((error)=>{
+    console.log(error);
+  });
+}
 
 return (
 <div className='mypage'>
@@ -50,6 +61,14 @@ return (
       <tr>
         <th>커뮤니티</th>
         <td onClick={()=>{navigate('/community/my')}}>게시글 관리</td>
+      </tr>
+      <tr>
+        <th>어플리케이션 정보</th>
+        <td onClick={()=>{navigate('/developInfo')}}>개발 정보</td>
+        <td onClick={()=>{navigate('/developer')}}>개발자 정보</td>
+      </tr>
+      <tr className='user-logout'>
+        <td><button onClick={logoutHandle}>로그아웃</button></td>
       </tr>
     </table>
   </main>

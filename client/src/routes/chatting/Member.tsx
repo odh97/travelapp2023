@@ -6,7 +6,7 @@ import Header from '../../_layout/Header';
 import Alert from '../../_layout/Alert';
 import ChatList from './ChatList';
 // icon 
-import { CiChat2,CiPaperplane,CiUser,CiFolderOn,CiLocationArrow1 } from "react-icons/ci";
+import { CiUser,CiLocationArrow1 } from "react-icons/ci";
 import { TbBrandTelegram } from "react-icons/tb";
 
 // axios
@@ -106,10 +106,15 @@ let [chatInputValue, setChatInputValue]= useState(``);
 function chatBtnFn(event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLTextAreaElement>){
   console.log("chatBtnFn 실행 체크");
   setSpinnerCheck(true);
+  event.preventDefault();
 
   // 예외처리
-  event.preventDefault();
-  if(!chatInputValue.trim() === true) return setAlertClick(true); // 빈값과 스페이스 값만을 전송했을 경우
+  // 빈값과 스페이스 값만을 전송했을 경우
+  if(!chatInputValue.trim() === true){
+    setSpinnerCheck(false);
+    return setAlertClick(true);
+  }
+
   //POST data Data
   let storeState_copy = storeState.userChatArr[storeState.chatNumber.target];
   let newChatting = {
@@ -156,21 +161,21 @@ return (
         {
         storeState.userChatArr[storeState.chatNumber.target] ?
         storeState.userChatArr[storeState.chatNumber.target].chatting_arr.ko_chat_arr.map((value, index)=>{
-          if(value.startsWith("user:") === true){
+          if(value.indexOf("user:") !== -1){
             return(
             <li className='user' key={index}>
               <div className='icon-box'><CiUser/></div>
-              <pre>{value.replace("user:","")}</pre>
+              <pre>{value.substring(value.indexOf("user:")+6)}</pre>
             </li>
             )
           }
-          if(value.startsWith("AI:") === true){
+          if(value.indexOf("AI:") !== -1){
             return(
               <li className='chat-bot' key={index}>
-                <div className='icon-box'><TbBrandTelegram /></div>
-                <pre>{value.replace("AI:","")}</pre>
-              </li>
-              )
+              <div className='icon-box'><TbBrandTelegram/></div>
+              <pre>{value.substring(value.indexOf("AI:")+4)}</pre>
+            </li>
+            )
           }
         })
         :<li>새로운 대화를 만들어 채팅을 이용해 보세요!</li>

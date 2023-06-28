@@ -4,117 +4,213 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  .developInfo-inner{
-    overflow: auto;
-    padding-top: 50px;
-    height: 100%;
-    background-color: #f9fbff;
-    h2{
-      margin: 30px 0 20px;
-      text-align: left;
-      font-size: 30px;
-    }
-    .info-structure{
-      margin: 0 auto;
-      max-width: 1080px;
-      width: 80%;
-      img{
-        width: 100%;
-        border-radius: 5px;
-        box-shadow: 5px 5px 10px rgba(135, 126, 126, 0.376);
+  /* Web */
+  @media screen and (min-width:768px) {
+    .developInfo-inner{
+      overflow: auto;
+      padding-top: 50px;
+      height: 100%;
+      background-color: #f9fbff;
+      h2{
+        margin: 30px 0 20px;
+        text-align: left;
+        font-size: 30px;
       }
-    }
-    .develop-version{
-      margin: 0 auto;
-      padding-bottom: 300px;
-      max-width: 1080px;
-      width: 80%;
-      ul{
-        border: 1px solid #bebebe;
-        border-radius: 5px;
-        box-shadow: 5px 5px 10px rgba(135, 126, 126, 0.376);
-        li{
-          padding: 0 10px;
-          height: 50px;
-          text-align: left;
-          border-bottom: 1px solid #bebebe;
-          h3{
+      .info-structure{
+        margin: 0 auto;
+        max-width: 1080px;
+        width: 80%;
+        img{
+          width: 100%;
+          border-radius: 5px;
+          box-shadow: 5px 5px 10px rgba(135, 126, 126, 0.376);
+        }
+      }
+      .develop-version{
+        margin: 0 auto;
+        padding-bottom: 300px;
+        max-width: 1080px;
+        width: 80%;
+        ul{
+          border: 1px solid #bebebe;
+          border-radius: 5px;
+          box-shadow: 5px 5px 10px rgba(135, 126, 126, 0.376);
+          li{
+            padding: 0 10px;
             height: 50px;
-            line-height: 50px;
-            text-indent: 5px;
-          }
-          div pre{
-            height: 0;
-            opacity: 0;
-          }
-          &:last-child{border: none;}
-          &:hover{
-            height: 100%;
-            background-color: $back-color3;
-            transition: all 0.3s;
+            text-align: left;
+            border-bottom: 1px solid #bebebe;
             h3{
-              height: 33px;
-              line-height: 33px;
-              border-bottom: 1px solid #bebebe;
-              transition: all 0.3s;
+              height: 50px;
+              line-height: 50px;
+              text-indent: 5px;
             }
             div pre{
-              opacity: 1;
-              padding: 10px 0;
-              height: auto;
-              color: $font-color;
-              font-size: $font-base;
-              font-family: $font-NoSansKR;
-              transition: all 0.6s 0.3s;
+              height: 0;
+              opacity: 0;
+            }
+            &:last-child{border: none;}
+            &:hover{
+              height: 100%;
+              background-color: $back-color3;
+              transition: all 0.3s;
+              h3{
+                height: 33px;
+                line-height: 33px;
+                border-bottom: 1px solid #bebebe;
+                transition: all 0.3s;
+              }
+              div pre{
+                opacity: 1;
+                padding: 10px 0;
+                height: auto;
+                color: $font-color;
+                font-size: $font-base;
+                font-family: $font-NoSansKR;
+                transition: all 0.6s 0.3s;
+              }
             }
           }
         }
       }
+      .pagination{
+        overflow: hidden;
+        margin-top: 20px;
+        display: inline-block;
+        border: 1px solid #bebebe;
+        border-radius: 5px;
+        .pagination-flex{
+          display: flex;
+          justify-content: center;
+          > *{
+            width: 40px;
+            height: 35px;
+            font-size: $font-sm;
+            svg{
+              width: 40%;
+              height: 40%;
+              transform: translateY(1px);
+            }
+            &:hover{
+              color: #fff;
+              background-color: $back-color1;
+            }
+          }
+          .prev-btn{
+            width: 50px;
+            border-right: 1px solid #bebebe;
+          }
+          .next-btn{
+            width: 50px;
+            border-left: 1px solid #bebebe;
+          }
+  
+        }
+      }
     }
-    .pagination{
-      overflow: hidden;
-      margin-top: 20px;
-      display: inline-block;
-      border: 1px solid #bebebe;
-      border-radius: 5px;
-      .pagination-flex{
-        display: flex;
-        justify-content: center;
-        > *{
-          width: 40px;
-          height: 35px;
-          font-size: $font-sm;
-          svg{
-            width: 40%;
-            height: 40%;
-            transform: translateY(1px);
+  }
+  /* 모바일 */
+  @media screen and (max-width:767px) {
+    .developInfo-inner{
+      overflow: auto;
+      height: 100%;
+      background-color: #f9fbff;
+      h2{
+        margin: 30px 0 20px;
+        text-align: left;
+        font-size: 30px;
+      }
+      .info-structure{
+        margin: 0 auto;
+        max-width: 1080px;
+        width: 80%;
+        img{
+          width: 100%;
+          border-radius: 5px;
+          box-shadow: 5px 5px 10px rgba(135, 126, 126, 0.376);
+        }
+      }
+      .develop-version{
+        margin: 0 auto;
+        padding-bottom: 300px;
+        max-width: 1080px;
+        width: 80%;
+        ul{
+          border: 1px solid #bebebe;
+          border-radius: 5px;
+          box-shadow: 5px 5px 10px rgba(135, 126, 126, 0.376);
+          li{
+            padding: 0 10px;
+            height: 50px;
+            text-align: left;
+            border-bottom: 1px solid #bebebe;
+            h3{
+              height: 50px;
+              line-height: 50px;
+              text-indent: 5px;
+            }
+            div pre{
+              height: 0;
+              opacity: 0;
+            }
+            &:last-child{border: none;}
+            &:hover{
+              height: 100%;
+              background-color: $back-color3;
+              transition: all 0.3s;
+              h3{
+                height: 33px;
+                line-height: 33px;
+                border-bottom: 1px solid #bebebe;
+                transition: all 0.3s;
+              }
+              div pre{
+                opacity: 1;
+                padding: 10px 0;
+                height: auto;
+                color: $font-color;
+                font-size: $font-base;
+                font-family: $font-NoSansKR;
+                transition: all 0.6s 0.3s;
+              }
+            }
           }
-          &:hover{
-            color: #fff;
-            background-color: $back-color1;
+        }
+      }
+      .pagination{
+        overflow: hidden;
+        margin-top: 20px;
+        display: inline-block;
+        border: 1px solid #bebebe;
+        border-radius: 5px;
+        .pagination-flex{
+          display: flex;
+          justify-content: center;
+          > *{
+            width: 40px;
+            height: 35px;
+            font-size: $font-sm;
+            svg{
+              width: 40%;
+              height: 40%;
+              transform: translateY(1px);
+            }
+            &:hover{
+              color: #fff;
+              background-color: $back-color1;
+            }
           }
+          .prev-btn{
+            width: 50px;
+            border-right: 1px solid #bebebe;
+          }
+          .next-btn{
+            width: 50px;
+            border-left: 1px solid #bebebe;
+          }
+  
         }
-        .prev-btn{
-          width: 50px;
-          border-right: 1px solid #bebebe;
-        }
-        .next-btn{
-          width: 50px;
-          border-left: 1px solid #bebebe;
-        }
-
       }
     }
   }
 }
-// common scss variable
-$font-xs: 12px; 
-$font-sm: 14px;   // mobile-본문
-$font-base: 16px; // web-본문
-$font-lg: 18px;   // 소제목
-$font-xl: 20px;   // 대제목
-$font-NoSansKR: 'Noto Sans KR', sans-serif; //폰트
-$font-color: rgba(0,0,0,0.80);
-$back-color1: #79b1ff;
-$back-color2: #dfe0ff;
-$back-color3: #EFF0FF;

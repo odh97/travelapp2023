@@ -2,6 +2,7 @@ import React, { useState,useEffect } from 'react';
 // icons
 import { CiChat1,CiEdit,CiSquareCheck,CiSquareRemove,CiSquarePlus } from "react-icons/ci";
 import { HiArrowPath } from "react-icons/hi2";
+import { TbChevronRight } from "react-icons/tb";
 
 // router
 import { useNavigate } from 'react-router-dom';
@@ -92,10 +93,10 @@ function deleteChat(id:number | null, name:string | null, index:number){
 function listCheck(index:number, valueID:number | null){
   if(valueID === null) return false
 
+  setMobileTitle(index);
   dispatch(updateChatNumber(index));
   navigate('/member/'+valueID);
 }
-
 // storeData 업데이트 리렌더링
 useEffect(()=>{
   if(typeof(deleteNumber) === 'number'){
@@ -114,8 +115,11 @@ useEffect(()=>{
   }
 },[storeData]);
 
+// mobile
+const [mobileTitle, setMobileTitle] = useState<number>(0);
+const [mobileControl, setMobileControl] = useState<boolean>(false);
 return (
-  <div className='chat-list'>
+  <div className={mobileControl === false ? 'chat-list' : 'chat-list mobile-control'}>
     <ul>
     {
     storeData.userChatArr.map((value, index)=>{
@@ -123,15 +127,15 @@ return (
       editNumber !== index
       ?
       <li key={index} className={deleteNumber === index ? 'fade-out' : (chatAddClass ? 'addItem' : '')}>
-        <div className='title-link'>
-          <button onClick={()=>{listCheck(index, value.id)}} ><CiChat1 /><span>{value.title} {value.id}</span></button>
+        <div className='title-link'  onClick={()=>{setMobileControl(!mobileControl); listCheck(index, value.id);}}>
+          <button><CiChat1 /><span>{value.title}</span></button>
           {
             value.id === null
-            ? <button className='title-edit-btn' onClick={()=>{setTitle(value.title); setEditNumber(index);}}  style={{right : 10}}><CiEdit /></button>
+            ? <button className='title-edit-btn' onClick={(e)=>{e.stopPropagation(); setTitle(value.title); setEditNumber(index);}}  style={{right : 10}}><CiEdit /></button>
             :
             <>
-              <button className='title-edit-btn' onClick={()=>{setTitle(value.title); setEditNumber(index);}}><CiEdit /></button>
-              <button className='chat-room-delete' onClick={()=>{deleteChat(value.id, value.name, index)}}><CiSquareRemove /></button>
+              <button className='title-edit-btn' onClick={(e)=>{e.stopPropagation(); setTitle(value.title); setEditNumber(index);}}><CiEdit /></button>
+              <button className='chat-room-delete' onClick={(e)=>{e.stopPropagation(); deleteChat(value.id, value.name, index)}}><CiSquareRemove /></button>
             </>
           }
         </div>
@@ -139,9 +143,9 @@ return (
       :
       <li key={index}>
         <div className='title-edit-box'>
-          <input value={title} onChange={(e)=>{setTitle(e.target.value)}} />
-          <button onClick={()=>{titleEdit(value.id)}}><CiSquareCheck /></button>
-          <button onClick={()=>{setEditNumber(null)}}><CiSquareRemove /></button>
+          <input value={title} onChange={(e)=>{e.stopPropagation(); setTitle(e.target.value)}} />
+          <button onClick={(e)=>{e.stopPropagation(); titleEdit(value.id)}}><CiSquareCheck /></button>
+          <button onClick={(e)=>{e.stopPropagation(); setEditNumber(null)}}><CiSquareRemove /></button>
         </div>
       </li>
       )
@@ -155,6 +159,11 @@ return (
         : <div className='chatroom-create-btn'><button onClick={newChatAdd}><CiSquarePlus /><span>채팅방 추가</span></button></div>
       )
     }
+    <div className='mobile-box'>
+      <button onClick={()=>{setMobileControl(!mobileControl);}}><TbChevronRight /></button>
+      <h2>{storeData.userChatArr[0] !== undefined ? storeData.userChatArr[mobileTitle].title : null}</h2>
+      <div></div>
+    </div>
   </div>
 );
 };

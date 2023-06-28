@@ -283,14 +283,10 @@ app.post('/chatEnter', async function (req, res) {
   console.log("chatEnter start");
   let chatDBHistory = req.body.chatDBHistory;
   let chatArr = req.body.chatDBHistory.chatting_arr;
-  // ko_chat_arr
-  // en_chat_arr
-  console.log(req.body);
-  console.log(chatArr);
+
 
   try{
     // API 통신
-/*
     chatArr.ko_chat_arr.push(req.body.userValue);
 
     const result1 = await papagoAPI("ko", "en", req.body.userValue);
@@ -307,14 +303,6 @@ app.post('/chatEnter', async function (req, res) {
     chatArr.ko_chat_arr.push(result3);
     console.log("마지막 번역 API 작업이 끝났습니다.");
     console.log(chatArr);
-*/
-
-    let number = chatArr.ko_chat_arr.length;
-    chatArr.ko_chat_arr.push(req.body.userValue);
-    chatArr.en_chat_arr.push("user: test Data string"+number+number+number+number);
-    chatArr.en_chat_arr.push("AI: test Data string"+number+number+number+number);
-    chatArr.ko_chat_arr.push("AI: AI 테스트 데이터 문자"+number+number+number+number);
-    chatDBHistory.chatting_arr = chatArr;
 
 
     // 회원 데이터 DB 연동
@@ -523,7 +511,6 @@ app.get('/GETversionInfo', function(req, res){
   
   db.collection('version-info').find().sort({_id:-1}).toArray(function(error, result) {
     if(error) console.log(error);
-    console.log(result);
 
     res.json({ result: result });
   });

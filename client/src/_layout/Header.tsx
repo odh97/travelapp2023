@@ -2,7 +2,10 @@ import React, { useState } from 'react'
 import '../styles/layout/Header.scss'
 
 // icon
-import { CiUser } from "react-icons/ci";
+import { CiUser, CiChat1 } from "react-icons/ci";
+import { HiOutlineClipboardDocumentCheck } from "react-icons/hi2";
+import { DiCode } from "react-icons/di";
+import { IoChatboxOutline } from "react-icons/io5";
 
 // router
 import { Link, useNavigate } from 'react-router-dom';
@@ -55,43 +58,59 @@ return (
   <header>
     {storeData.userChatArr.length === 0 ? <DefaultHeader /> :
     <div className='header-inner'>
-      <div className='brand-Name'><h1><Link to={""}>travel</Link></h1></div>
-      <nav>
-        <div className='nav-inner'>
+      <div className='web-header-inner'>
+        <div className='brand-Name'><h1><Link to={""}>travel</Link></h1></div>
+        <nav>
+          <div className='nav-inner'>
+            {
+            storeData.userChatArr[0].id === null
+            ? <Link to={"/guest"}>채팅<span></span></Link>
+            : <Link to={"/member/"+storeData.userChatArr[0].id}>채팅<span></span></Link>
+            }
+            <Link to={"/community"}>커뮤니티<span></span></Link>
+            <Link to={"/developInfo"}>개발 정보<span></span></Link>
+            <Link to={"/developer"}>개발자<span></span></Link>
+          </div>
+        </nav>
+        <div className='user'>
           {
           storeData.userChatArr[0].id === null
-          ? <Link to={"/guest"}>채팅<span></span></Link>
-          : <Link to={"/member/"+storeData.userChatArr[0].id}>채팅<span></span></Link>
-          }
-          <Link to={"/community"}>커뮤니티<span></span></Link>
-          <Link to={"/developInfo"}>개발 정보<span></span></Link>
-          <Link to={"/developer"}>개발자<span></span></Link>
-        </div>
-      </nav>
-      <div className='user'>
-        {
-        storeData.userChatArr[0].id === null
-        ?
-        <>
-          <div className='user-icon'><CiUser/></div>
-          <Link className='user-name' to={"/login"}>로그인</Link>
-        </>        
-        :
-        <>
-          <div className='user-icon'><CiUser/></div>
-          <div className={hoverHidden ? 'user-name hidden' : 'user-name'}
-                onMouseEnter={()=>{serHoverHidden(!hoverHidden)}}
-                onMouseLeave={()=>{serHoverHidden(!hoverHidden)}}>
-            <span>{storeData.userChatArr[0].name}</span>
-            <div className='member-list'>
-              <ul>
-                <li><Link className='member-mypage' to={"/mypage"}>마이 페이지</Link></li>
-                <li><button className='member-logout' onClick={logoutHandle}>로그아웃</button></li>
-              </ul>
+          ?
+          <>
+            <div className='user-icon'><CiUser/></div>
+            <Link className='user-name' to={"/login"}>로그인</Link>
+          </>        
+          :
+          <>
+            <div className='user-icon'><CiUser/></div>
+            <div className={hoverHidden ? 'user-name hidden' : 'user-name'}
+                  onMouseEnter={()=>{serHoverHidden(!hoverHidden)}}
+                  onMouseLeave={()=>{serHoverHidden(!hoverHidden)}}>
+              <span>{storeData.userChatArr[0].name}</span>
+              <div className='member-list'>
+                <ul>
+                  <li><Link className='member-mypage' to={"/mypage"}>마이 페이지</Link></li>
+                  <li><button className='member-logout' onClick={logoutHandle}>로그아웃</button></li>
+                </ul>
+              </div>
             </div>
+          </>
+          }
+        </div>
+      </div>
+      <div className='mobile-header-inner'>
+        <nav>
+          <div className='nav-inner'>
+            <Link  to={storeData.userChatArr[0].id === null ? "/guest" : "/member/"+storeData.userChatArr[0].id}>
+              <IoChatboxOutline className='chat'/><span></span>
+            </Link>
+            <Link to={"/community"}><HiOutlineClipboardDocumentCheck className='community' /><span></span></Link>
+            <Link to={"/developInfo"}><DiCode className='developInfo' /><span></span></Link>
+            <Link  to={storeData.userChatArr[0].id === null ? "/login" : "/mypage"}>
+              <CiUser className='member'/><span></span>
+            </Link>
           </div>
-        </>
-        }
+        </nav>
       </div>
     </div>
     }
@@ -103,18 +122,30 @@ function DefaultHeader(){
 return(
   <header>
   <div className='header-inner'>
-    <div className='brand-Name'><h1><Link to={""}>travel</Link></h1></div>
-    <nav>
-      <div className='nav-inner'>
-        <Link to={"/guest"}>채팅<span></span></Link>
-        <Link to={"/community"}>커뮤니티<span></span></Link>
-        <Link to={"/developInfo"}>개발 정보<span></span></Link>
-        <Link to={"/developer"}>개발자<span></span></Link>
+    <div className='web-header-inner'>
+      <div className='brand-Name'><h1><Link to={""}>travel</Link></h1></div>
+      <nav>
+        <div className='nav-inner'>
+          <Link to={"/guest"}>채팅<span></span></Link>
+          <Link to={"/community"}>커뮤니티<span></span></Link>
+          <Link to={"/developInfo"}>개발 정보<span></span></Link>
+          <Link to={"/developer"}>개발자<span></span></Link>
+        </div>
+      </nav>
+      <div className='user'>
+        <div className='user-icon'><CiUser/></div>
+        <Link className='user-name' to={"/login"}>로그인</Link>
       </div>
-    </nav>
-    <div className='user'>
-      <div className='user-icon'><CiUser/></div>
-      <Link className='user-name' to={"/login"}>로그인</Link>
+    </div>
+    <div className='mobile-header-inner'>
+      <nav>
+        <div className='nav-inner'>
+          <Link to={"/guest"}>채팅<span></span></Link>
+          <Link to={"/community"}>커뮤니티<span></span></Link>
+          <Link to={"/developInfo"}>개발 정보<span></span></Link>
+          <Link to={"/developer"}>개발자<span></span></Link>
+        </div>
+      </nav>
     </div>
   </div>
 </header>

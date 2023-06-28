@@ -5,90 +5,212 @@
   width: 100%;
   height: 100vh;
   background-color: #f9fbff;
-  .mypage-inner{
-    margin: 0 auto;
-    padding-top: 50px;
-    width: 80%;
-    height: 100%;
-    h2{
-      margin: 30px 0 15px;
-      text-align: left;
-      font-size: 30px;
-    }
-    .user-profile{
-      position: relative;
-      height: 150px;
-      border-bottom: 1px solid #d7d7d7;
-      .user-img{
-        position: absolute;
-        left: 0;
-        top: 35px;
-        width: 80px;
-        height: 80px;
-        border: 1px solid #9298ff;
-        border-radius: 50%;
-        transform: scale(1);
-        transition: all 0.6s;
-        svg{
-          width: 70%;
-          height: 100%;
-          color: #9298ff;
-        }
-        &:hover{
-          transform: scale(1.1);
-        }
-      }
-      .user-img-icon{
-        opacity: 0.8;
-        position: absolute;
-        left: 50px;
-        top: 80px;
-        width: 40px;
-        height: 40px;
-        border: 1px solid #9298ff;
-        border-radius: 50%;
-        background-color: #fff;
-        transition: all 0.6s;
-        svg{
-          width: 70%;
-          height: 100%;
-          color: #9298ff;
-          transition: all 0.6s;
-        }
-        &:hover{
-          opacity: 1;
-          transform: scale(1.1);
-          background-color: #9298ff;
-          svg{color: #fff;}
-        }
-      }
-      .user-name{
-        position: absolute;
-        left: 100px;
-        top: 55px;
-        font-size: $font-lg;
-        font-family: $font-NoSansKR;
-      }
-    }
-    table{
-      width: 100%;
-      tr{
-        display: block;
-        padding: 5px 0 20px;
-        width: 100%;
+  /* Web */
+  @media screen and (min-width:768px) {
+    .mypage-inner{
+      margin: 0 auto;
+      padding-top: 50px;
+      width: 80%;
+      height: 100%;
+      h2{
+        margin: 30px 0 15px;
         text-align: left;
-        th{
-          display: block;
-          color: #616161;
-          font-size: $font-sm;
+        font-size: 30px;
+      }
+      .user-profile{
+        position: relative;
+        height: 150px;
+        .user-img{
+          position: absolute;
+          left: 0;
+          top: 35px;
+          width: 80px;
+          height: 80px;
+          border: 1px solid #9298ff;
+          border-radius: 50%;
+          transform: scale(1);
+          transition: all 0.6s;
+          svg{
+            width: 70%;
+            height: 100%;
+            color: #9298ff;
+          }
+          &:hover{
+            transform: scale(1.1);
+          }
         }
-        td{
-          cursor: pointer;
-          display: inline-block;
-          padding: 5px 0 0;
+        .user-img-icon{
+          opacity: 0.8;
+          position: absolute;
+          left: 50px;
+          top: 80px;
+          width: 40px;
+          height: 40px;
+          border: 1px solid #9298ff;
+          border-radius: 50%;
+          background-color: #fff;
+          transition: all 0.6s;
+          svg{
+            width: 70%;
+            height: 100%;
+            color: #9298ff;
+            transition: all 0.6s;
+          }
+          &:hover{
+            opacity: 1;
+            transform: scale(1.1);
+            background-color: #9298ff;
+            svg{color: #fff;}
+          }
+        }
+        .user-name{
+          position: absolute;
+          left: 100px;
+          top: 55px;
+          font-size: $font-lg;
+          font-family: $font-NoSansKR;
+        }
+      }
+      table{
+        width: 100%;
+        tr{
+          display: block;
+          padding: 5px 0 20px;
+          width: 100%;
+          text-align: left;
+          border-top: 1px solid #d7d7d7;
+          th{
+            display: block;
+            color: #616161;
+            font-size: $font-sm;
+          }
+          td{
+            cursor: pointer;
+            display: block;
+            padding: 5px 0 0;
+            font-size: $font-base;
+          }
+        }
+        .user-logout{display: none;}
+      }
+    }
+  }
+  /* 모바일 */
+  @media screen and (max-width:767px) {
+    .mypage-inner{
+      margin: 0 auto;
+      width: 100%;
+      height: 100%;
+
+      h2{
+        padding: 5px 0;
+        font-size: 20px;
+        font-weight: 300;
+        font-family: $font-NoSansKR;
+        color: $font-color;
+        background-color: #fff;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+      }
+      .user-profile{
+        position: relative;
+        margin: 0 auto;
+        width: 90%;
+        height: 150px;
+        .user-img{
+          position: absolute;
+          left: 0;
+          top: 35px;
+          width: 80px;
+          height: 80px;
+          border: 1px solid #9298ff;
+          border-radius: 50%;
+          transform: scale(1);
+          transition: all 0.6s;
+          svg{
+            width: 70%;
+            height: 100%;
+            color: #9298ff;
+          }
+          &:hover{
+            transform: scale(1.1);
+          }
+        }
+        .user-img-icon{
+          opacity: 0.8;
+          position: absolute;
+          left: 50px;
+          top: 80px;
+          width: 40px;
+          height: 40px;
+          border: 1px solid #9298ff;
+          border-radius: 50%;
+          background-color: #fff;
+          transition: all 0.6s;
+          svg{
+            width: 70%;
+            height: 100%;
+            color: #9298ff;
+            transition: all 0.6s;
+          }
+          &:hover{
+            opacity: 1;
+            transform: scale(1.1);
+            background-color: #9298ff;
+            svg{color: #fff;}
+          }
+        }
+        .user-name{
+          position: absolute;
+          left: 100px;
+          top: 55px;
+          font-size: $font-lg;
+          font-family: $font-NoSansKR;
+        }
+      }
+      table{
+        margin: 0 auto;
+        width: 90%;
+        tr{
+          display: block;
+          padding: 5px 0 20px;
+          width: 100%;
+          text-align: left;
+          border-top: 1px solid #d7d7d7;
+          th{
+            display: block;
+            color: #616161;
+            font-size: $font-sm;
+          }
+          td{
+            cursor: pointer;
+            display: block;
+            padding: 5px 0 0;
+            font-size: $font-base;
+          }
+        }
+        .user-logout td button{
+          display: block;
+          width: 100%;
+          height: 40px;
+          color: #fff;
+          font-weight: 300;
           font-size: $font-base;
+          font-family: $font-NoSansKR;
+          border-radius: 5px;
+          background-color: #ff9292;
         }
       }
     }
   }
 }
+// common scss variable
+$font-xs: 12px; 
+$font-sm: 14px;   // mobile-본문
+$font-base: 16px; // web-본문
+$font-lg: 18px;   // 소제목
+$font-xl: 20px;   // 대제목
+$font-NoSansKR: 'Noto Sans KR', sans-serif; //폰트
+$font-color: rgba(0,0,0,0.80);
+$back-color1: #79b1ff;
+$back-color2: #dfe0ff;
+$back-color3: #EFF0FF;

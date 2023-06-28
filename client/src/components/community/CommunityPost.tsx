@@ -4,6 +4,9 @@ import '../../styles/components/community/CommunityPost.scss'
 // components import
 import Header from '../../_layout/Header';
 import Alert from '../../_layout/Alert';
+// icon
+import { TbChevronRight } from "react-icons/tb";
+
 
 // router
 import { useNavigate, useParams } from 'react-router-dom';
@@ -59,6 +62,8 @@ function handleDelete(){
   });
 }
 
+// mobile
+
 return (
 <div className='CommunityPost'>
   {alertClick === true ? <Alert text={'유저 정보가 일치하지 않습니다. 나중에 다시 시도해주세요.'} handleAlert={handleAlert} /> : null}
@@ -67,6 +72,15 @@ return (
     {communityPostData === undefined
       ? null
       : <>
+        <div className='mobile-box'>
+          <button className='backspace' onClick={() => navigate(-1)}><TbChevronRight /></button>
+          <h2>{communityPostData.title}</h2>
+            {
+              communityPostData.name === loginUser
+              ? <button className='delete-btn' onClick={handleDelete}>삭제하기</button>
+              : null
+            }
+        </div>
         <div className='title'>
           <h2>{communityPostData.title}</h2>
           {
