@@ -7,7 +7,7 @@ const rp = require('request-promise');
 
 // DB
 const MongoClient = require('mongodb').MongoClient;
-const client = new MongoClient(process.env.DB_URI, { useUnifiedTopology: true });
+const client = new MongoClient(process.env.DB_URL, { useUnifiedTopology: true });
 
 // cors / ajax
 app.use(express.json());
@@ -29,7 +29,7 @@ app.use(passport.session());
 
 // openai API
 const { Configuration, OpenAIApi } = require("openai");
-const configuration = new Configuration({ apiKey: process.env.API_key });
+const configuration = new Configuration({ apiKey: process.env.API_KEY });
 const openai = new OpenAIApi(configuration);
 
 // papago API
@@ -234,8 +234,8 @@ async function papagoAPI(sourcePram, targetPram, message){
       text: message
     },
     headers: {
-      'X-Naver-Client-Id': process.env.Client_ID,
-      'X-Naver-Client-Secret': process.env.Client_Secret
+      'X-Naver-Client-Id': process.env.CLIENT_ID,
+      'X-Naver-Client-Secret': process.env.CLIENT_SECRET
     },
     json: true
   };
