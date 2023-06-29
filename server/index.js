@@ -1,13 +1,13 @@
 const express = require('express');
+require('dotenv').config();
 const path = require('path');
 const app = express();
 let request = require('request');
 const rp = require('request-promise');
 
-// DB (id, pw 배포전 수정)
-const DB_URI = 'mongodb+srv://eogus-travel-GPT-2023:4rTNhDpCitx6qRkr@cluster0.awi9wey.mongodb.net/?retryWrites=true&w=majority'
+// DB
 const MongoClient = require('mongodb').MongoClient;
-const client = new MongoClient(DB_URI, { useUnifiedTopology: true });
+const client = new MongoClient(process.env.DB_URI, { useUnifiedTopology: true });
 
 // cors / ajax
 app.use(express.json());
@@ -29,20 +29,17 @@ app.use(passport.session());
 
 // openai API
 const { Configuration, OpenAIApi } = require("openai");
-const configuration = new Configuration({ apiKey: "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",  /* 배포 전 재발급 */ });
+const configuration = new Configuration({ apiKey: process.env.API_key });
 const openai = new OpenAIApi(configuration);
 
 // papago API
-let client_id = 'tyDodzGry78dFOOdgyA6'; // 배포 전 재발급
-let client_secret = 'Efl5YyRqwk'; // 배포 전 재발급
 let api_url = 'https://openapi.naver.com/v1/papago/n2mt';
-
 
 // server open
 let db;
 client.connect(function(error, client){
   if (error) return console.log(error);
-  app.listen('8080', function(){
+  app.listen(process.env.PORT, function(){
 
   db = client.db('travel');
 
@@ -106,9 +103,9 @@ let date = new Date();
 let today_date = new Intl.DateTimeFormat('kr',{dateStyle : 'long',timeStyle: 'medium'}).format(date);
 let today_date2 = date.toISOString().split('T')[0];
 
-app.use(express.static(path.join(__dirname, '/../client/build')));
+app.use(express.static(path.join(__dirname, '/build')));
 app.get('/', function(req, res){
-  res.sendFile(path.join(__dirname, '/../client/build/index.html'));
+  res.sendFile(path.join(__dirname, '/build/index.html'));
 })
 
 app.get('/basicChatData', function(req, res){
@@ -199,6 +196,7 @@ app.post('/newChatAdd', loginChack, async function(req, res){
     res.json({ basic_chat_data: [basic_chat_data] });
   });
   db.collection('counter').updateOne({name : 'postNumber'},{ $inc : {totalNumber:1} },function(){})
+  
 });
 app.post('/chatTitleUpdate', loginChack, async function(req, res){
   console.log("chatTitleUpdate in");
@@ -236,8 +234,8 @@ async function papagoAPI(sourcePram, targetPram, message){
       text: message
     },
     headers: {
-      'X-Naver-Client-Id': client_id,
-      'X-Naver-Client-Secret': client_secret
+      'X-Naver-Client-Id': process.env.Client_ID,
+      'X-Naver-Client-Secret': process.env.Client_Secret
     },
     json: true
   };
@@ -519,5 +517,5 @@ app.get('/GETversionInfo', function(req, res){
 
 // React Router (항상 최하단으로)
 app.get('*', function(req, res){
-  res.sendFile(path.join(__dirname, '/../client/build/index.html'));
+  res.sendFile(path.join(__dirname, '/build/index.html'));
 })

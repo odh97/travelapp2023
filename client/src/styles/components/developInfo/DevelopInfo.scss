@@ -16,7 +16,7 @@
         text-align: left;
         font-size: 30px;
       }
-      .info-structure{
+      .info-structure, .sequenceDiagram{
         margin: 0 auto;
         max-width: 1080px;
         width: 80%;
@@ -120,7 +120,7 @@
         text-align: left;
         font-size: 30px;
       }
-      .info-structure{
+      .info-structure, .sequenceDiagram{
         margin: 0 auto;
         max-width: 1080px;
         width: 80%;
@@ -132,7 +132,7 @@
       }
       .develop-version{
         margin: 0 auto;
-        padding-bottom: 300px;
+        padding-bottom: 100px;
         max-width: 1080px;
         width: 80%;
         ul{

@@ -4,7 +4,9 @@ import '../../styles/components/developInfo/DevelopInfo.scss'
 // components import
 import Header from '../../_layout/Header';
 // images
-import infoStructure from '../../images/info-structure.png';
+import moblieInfoStructure from '../../images/Moblie-info-structure.png';
+import webInfoStructure from '../../images/Web-info-structure.png';
+import sequenceDiagram from '../../images/Sequence Diagram.png';
 // icon
 import { TbChevronLeft,TbChevronRight } from "react-icons/tb";
 
@@ -62,8 +64,16 @@ return (
   <Header />
   <main className='developInfo-inner'>
       <div className='info-structure'>
-        <h2>정보 구조도</h2>
-        <img src={infoStructure} />
+        <h2>Web 정보 구조도</h2>
+        <img src={webInfoStructure} />
+      </div>
+      <div className='info-structure'>
+        <h2>Mobile 정보 구조도</h2>
+        <img src={moblieInfoStructure} />
+      </div>
+      <div className='sequenceDiagram'>
+        <h2>시퀀스 다이어그램</h2>
+        <img src={sequenceDiagram} />
       </div>
       <div className='develop-version'>
         <h2>깃허브 개발 정보</h2>
