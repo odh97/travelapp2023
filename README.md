@@ -17,7 +17,7 @@ chat-GPT를 이용해 여행 일정 계획을 도와주는 애플리케이션 �
 
 ## TRAVEL URL
 ✅ https://port-0-travelapp2023-6g2llf6xddzr.sel3.cloudtype.app/guest ✅
-<img src="./image/mainpage.png" />
+<img src="./image/mainpage2.png" />
 
 <br />
 
