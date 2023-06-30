@@ -78,7 +78,7 @@ return (
             {
               communityPostData.name === loginUser
               ? <button className='delete-btn' onClick={handleDelete}>삭제하기</button>
-              : null
+              : <div className='empty-box'></div>
             }
         </div>
         <div className='title'>

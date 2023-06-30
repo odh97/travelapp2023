@@ -109,6 +109,10 @@
           background-color: rgb(255, 124, 124);
           &:hover{background-color: rgb(255, 77, 77);}
         }
+        .empty-box{
+          width: 50px;
+          height: 50px;
+        }
       }
       .title{display: none;}
       .post-info{
