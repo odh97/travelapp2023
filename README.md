@@ -12,6 +12,7 @@ chat-GPT를 이용해 여행 일정 계획을 도와주는 애플리케이션 �
 ![Typescript](https://img.shields.io/badge/Typescript-3178C6?style=flat&logo=Typescript&logoColor=ffffff)
 ![Express](https://img.shields.io/badge/Express-263238?style=flat&logo=express&logoColor=ffffff)
 ![MongoDB](https://img.shields.io/badge/MongoDB-339933?style=flat&logo=MongoDB&logoColor=ffffff)
+![Sass](https://img.shields.io/badge/Sass-CC6699?style=flat&logo=sass&logoColor=ffffff)
 
 <br />
 
